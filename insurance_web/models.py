@@ -84,7 +84,6 @@ def save_user_profile(sender, instance, **kwargs):
     if hasattr(instance, 'profile'):
         instance.profile.save()
 
-
 class Appointment(models.Model):
     conseiller = models.ForeignKey(
         User, 
@@ -111,3 +110,23 @@ class Appointment(models.Model):
     
     def __str__(self):
         return f"Appointment {self.conseiller.username} - {self.client.username} - {self.date_time.strftime('%m/%d/%Y %H:%M')}"
+
+class Prediction(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='predictions')
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='predictions_created_by')
+    predicted_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True)
+    age = models.IntegerField(null=True, blank=True, verbose_name="Age")
+    sex = models.CharField(max_length=10, choices=Profile.SEX_CHOICES, null=True, blank=True, verbose_name="Gender")
+    bmi = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, verbose_name="BMI (Body Mass Index)")
+    children = models.IntegerField(default=0, verbose_name="Number of Children")
+    smoker = models.CharField(max_length=3, choices=Profile.SMOKER_CHOICES, null=True, blank=True, verbose_name="Smoker")
+    region = models.CharField(max_length=20, choices=Profile.REGION_CHOICES, null=True, blank=True, verbose_name="Region")
+
+    class Meta: 
+        verbose_name = "Prediction"
+        verbose_name_plural = "Predictions"
+        ordering = ['created_at']
+
+    def __str__(self):
+        return f"Prediction for {self.user.username} - {self.predicted_amount} €"
