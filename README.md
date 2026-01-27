@@ -323,10 +323,5 @@ DB_PORT=5432
 - Ensure `model/gb_pipeline.joblib` exists
 - Check file permissions
 
-## 📞 Support
 
-For issues and questions, please open an issue on the repository.
-
----
-
-**Note**: This is a development project. For production deployment, ensure proper security configurations, use a production-ready WSGI server (like Gunicorn), and configure proper static file serving.
+**Note**: This is a study project. For study case only.
