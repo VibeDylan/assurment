@@ -90,9 +90,11 @@ def conseiller_calendar(request):
 @conseiller_required
 def conseiller_clients_list(request):
     conseiller = request.user
-    clients = User.objects.filter(
+    clients_with_appointments = User.objects.filter(
         appointments_as_client__conseiller=conseiller
     ).distinct()
+    all_users = User.objects.exclude(id=conseiller.id).exclude(profile__role='conseiller').exclude(profile__role='admin')
     return render(request, 'conseiller/clients_list.html', {
-        'clients': clients,
+        'clients': clients_with_appointments,
+        'all_users': all_users,
     })
