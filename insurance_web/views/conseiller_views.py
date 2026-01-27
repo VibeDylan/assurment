@@ -12,15 +12,25 @@ from ..prediction_service import calculate_insurance_premium
 @conseiller_required
 def conseiller_dashboard(request):
     conseiller = request.user
-    total_appointments = Appointment.objects.filter(conseiller=conseiller).count()
-    upcoming_appointments = Appointment.objects.filter(
-        conseiller=conseiller,
-        date_time__gte=datetime.now()
-    ).count()
-    next_appointments = Appointment.objects.filter(
-        conseiller=conseiller,
-        date_time__gte=datetime.now()
-    ).order_by('date_time')[:5]
+    # If admin, show all appointments; if conseiller, only their appointments
+    if request.user.profile.is_admin():
+        total_appointments = Appointment.objects.count()
+        upcoming_appointments = Appointment.objects.filter(
+            date_time__gte=datetime.now()
+        ).count()
+        next_appointments = Appointment.objects.filter(
+            date_time__gte=datetime.now()
+        ).order_by('date_time')[:5]
+    else:
+        total_appointments = Appointment.objects.filter(conseiller=conseiller).count()
+        upcoming_appointments = Appointment.objects.filter(
+            conseiller=conseiller,
+            date_time__gte=datetime.now()
+        ).count()
+        next_appointments = Appointment.objects.filter(
+            conseiller=conseiller,
+            date_time__gte=datetime.now()
+        ).order_by('date_time')[:5]
     return render(request, 'conseiller/dashboard.html', {
         'total_appointments': total_appointments,
         'upcoming_appointments': upcoming_appointments,
@@ -87,7 +97,6 @@ def conseiller_predict_for_client(request, client_id=None):
 def conseiller_calendar(request):
     conseiller = request.user
     
-    # Gestion de la navigation par mois
     year = request.GET.get('year')
     month = request.GET.get('month')
     
@@ -103,11 +112,18 @@ def conseiller_calendar(request):
     last_day_num = monthrange(current_date.year, current_date.month)[1]
     last_day = current_date.replace(day=last_day_num)
     
-    appointments = Appointment.objects.filter(
-        conseiller=conseiller,
-        date_time__date__gte=first_day,
-        date_time__date__lte=last_day
-    ).order_by('date_time')
+    # If admin, show all appointments; if conseiller, only their appointments
+    if request.user.profile.is_admin():
+        appointments = Appointment.objects.filter(
+            date_time__date__gte=first_day,
+            date_time__date__lte=last_day
+        ).order_by('date_time')
+    else:
+        appointments = Appointment.objects.filter(
+            conseiller=conseiller,
+            date_time__date__gte=first_day,
+            date_time__date__lte=last_day
+        ).order_by('date_time')
     
     appointments_by_date = {}
     for appointment in appointments:
@@ -116,7 +132,7 @@ def conseiller_calendar(request):
             appointments_by_date[day] = []
         appointments_by_date[day].append(appointment)
     
-    first_weekday = first_day.weekday()  # 0 = lundi, 6 = dimanche
+    first_weekday = first_day.weekday()
     calendar_days = []
     
     if first_weekday > 0:
@@ -170,10 +186,17 @@ def conseiller_calendar(request):
 @conseiller_required
 def conseiller_clients_list(request):
     conseiller = request.user
-    clients_with_appointments = User.objects.filter(
-        appointments_as_client__conseiller=conseiller
-    ).distinct()
-    all_users = User.objects.exclude(id=conseiller.id).exclude(profile__role='conseiller').exclude(profile__role='admin')
+    # If admin, show all appointments; if conseiller, only their appointments
+    if request.user.profile.is_admin():
+        clients_with_appointments = User.objects.filter(
+            appointments_as_client__isnull=False
+        ).distinct()
+        all_users = User.objects.exclude(id=conseiller.id).exclude(profile__role='conseiller')
+    else:
+        clients_with_appointments = User.objects.filter(
+            appointments_as_client__conseiller=conseiller
+        ).distinct()
+        all_users = User.objects.exclude(id=conseiller.id).exclude(profile__role='conseiller').exclude(profile__role='admin')
     return render(request, 'conseiller/clients_list.html', {
         'clients': clients_with_appointments,
         'all_users': all_users,
