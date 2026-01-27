@@ -16,20 +16,20 @@
     </style>
     {% block extra_css %}{% endblock %}
 </head>
-<body class="min-h-screen bg-gray-50 flex">
-    <!-- Sidebar Navigation -->
-    <nav class="w-64 bg-white border-r border-gray-200 shadow-sm flex flex-col min-h-screen">
-        <div class="p-6 border-b border-gray-200">
-            <a href="{% url 'insurance_web:home' %}" class="flex items-center space-x-2.5 hover:opacity-80 transition-opacity">
-                <div class="w-9 h-9 bg-slate-800 rounded-lg flex items-center justify-center shadow-sm">
-                    <span class="text-white font-semibold text-sm">A</span>
-                </div>
-                <span class="text-xl font-semibold text-slate-900 tracking-tight">Assurement</span>
-            </a>
-        </div>
+<body class="min-h-screen bg-gray-50 {% if user.is_authenticated %}flex{% endif %}">
+    {% if user.is_authenticated %}
+        <!-- Sidebar Navigation (connecté) -->
+        <nav class="w-64 bg-white border-r border-gray-200 shadow-sm flex flex-col min-h-screen">
+            <div class="p-6 border-b border-gray-200">
+                <a href="{% url 'insurance_web:home' %}" class="flex items-center space-x-2.5 hover:opacity-80 transition-opacity">
+                    <div class="w-9 h-9 bg-slate-800 rounded-lg flex items-center justify-center shadow-sm">
+                        <span class="text-white font-semibold text-sm">A</span>
+                    </div>
+                    <span class="text-xl font-semibold text-slate-900 tracking-tight">Assurement</span>
+                </a>
+            </div>
 
-        <div class="flex-1 py-6 px-4">
-            {% if user.is_authenticated %}
+            <div class="flex-1 py-6 px-4">
                 <div class="space-y-1">
                     <a href="{% url 'insurance_web:home' %}" class="flex items-center px-4 py-3 text-sm font-medium text-slate-700 hover:bg-gray-50 hover:text-slate-900 rounded-lg transition-colors">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -78,20 +78,9 @@
                         Mon Profil
                     </a>
                 </div>
-            {% else %}
-                <div class="space-y-1">
-                    <a href="{% url 'insurance_web:home' %}" class="flex items-center px-4 py-3 text-sm font-medium text-slate-700 hover:bg-gray-50 hover:text-slate-900 rounded-lg transition-colors">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-                        </svg>
-                        Accueil
-                    </a>
-                </div>
-            {% endif %}
-        </div>
+            </div>
 
-        <div class="p-4 border-t border-gray-200">
-            {% if user.is_authenticated %}
+            <div class="p-4 border-t border-gray-200">
                 <div class="mb-3 px-4 py-2 bg-gray-50 rounded-lg">
                     <p class="text-xs font-medium text-slate-500 mb-1">Connecté en tant que</p>
                     <p class="text-sm font-semibold text-slate-900">{{ user.get_full_name|default:user.username }}</p>
@@ -105,31 +94,63 @@
                         Déconnexion
                     </button>
                 </form>
-            {% else %}
-                <div class="space-y-2">
-                    <a href="{% url 'insurance_web:login' %}" class="block w-full px-4 py-3 text-sm font-medium text-center text-slate-700 hover:bg-gray-50 rounded-lg transition-colors">
-                        Connexion
-                    </a>
-                    <a href="{% url 'insurance_web:signup' %}" class="block w-full px-4 py-3 text-sm font-medium text-center bg-slate-900 hover:bg-slate-800 text-white rounded-lg transition-colors shadow-sm">
-                        Inscription
-                    </a>
+            </div>
+        </nav>
+    {% else %}
+        <!-- Navigation horizontale (non connecté) -->
+        <nav class="bg-white border-b border-gray-200 shadow-sm">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <div class="flex items-center">
+                        <a href="{% url 'insurance_web:home' %}" class="flex items-center space-x-2.5 hover:opacity-80 transition-opacity">
+                            <div class="w-9 h-9 bg-slate-800 rounded-lg flex items-center justify-center shadow-sm">
+                                <span class="text-white font-semibold text-sm">A</span>
+                            </div>
+                            <span class="text-xl font-semibold text-slate-900 tracking-tight">Assurement</span>
+                        </a>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <a href="{% url 'insurance_web:login' %}" class="text-slate-700 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">
+                            Connexion
+                        </a>
+                        <a href="{% url 'insurance_web:signup' %}" class="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors shadow-sm">
+                            Inscription
+                        </a>
+                    </div>
                 </div>
-            {% endif %}
-        </div>
-    </nav>
+            </div>
+        </nav>
+    {% endif %}
 
-    <!-- Main Content -->
-    <div class="flex-1 flex flex-col min-h-screen">
-        <main class="flex-1">
-            {% block content %}{% endblock %}
+    {% if user.is_authenticated %}
+        <!-- Main Content (connecté) -->
+        <div class="flex-1 flex flex-col min-h-screen">
+            <main class="flex-1">
+    {% else %}
+        <!-- Main Content (non connecté) -->
+        <main>
+    {% endif %}
+                {% block content %}{% endblock %}
+    {% if user.is_authenticated %}
+            </main>
+
+            <footer class="bg-white border-t border-gray-200 py-6 px-4 sm:px-6 lg:px-8">
+                <p class="text-center text-sm text-slate-600">
+                    © 2026 Assurement. Tous droits réservés.
+                </p>
+            </footer>
+        </div>
+    {% else %}
         </main>
 
-        <footer class="bg-white border-t border-gray-200 py-6 px-4 sm:px-6 lg:px-8">
-            <p class="text-center text-sm text-slate-600">
-                © 2026 Assurement. Tous droits réservés.
-            </p>
+        <footer class="bg-white border-t border-gray-200 mt-auto">
+            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                <p class="text-center text-sm text-slate-600">
+                    © 2026 Assurement. Tous droits réservés.
+                </p>
+            </div>
         </footer>
-    </div>
+    {% endif %}
 
     {% block extra_js %}{% endblock %}
 </body>
