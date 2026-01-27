@@ -99,19 +99,16 @@ def conseiller_calendar(request):
     else:
         current_date = date.today().replace(day=1)
     
-    # Calculer le premier et dernier jour du mois
     first_day = current_date.replace(day=1)
     last_day_num = monthrange(current_date.year, current_date.month)[1]
     last_day = current_date.replace(day=last_day_num)
     
-    # Récupérer tous les rendez-vous du mois
     appointments = Appointment.objects.filter(
         conseiller=conseiller,
         date_time__date__gte=first_day,
         date_time__date__lte=last_day
     ).order_by('date_time')
     
-    # Organiser les rendez-vous par jour
     appointments_by_date = {}
     for appointment in appointments:
         day = appointment.date_time.date()
@@ -119,18 +116,15 @@ def conseiller_calendar(request):
             appointments_by_date[day] = []
         appointments_by_date[day].append(appointment)
     
-    # Calculer le calendrier mensuel (lundi = 0)
     first_weekday = first_day.weekday()  # 0 = lundi, 6 = dimanche
     calendar_days = []
     
-    # Ajouter les jours du mois précédent pour compléter la première semaine
     if first_weekday > 0:
         prev_month = first_day - timedelta(days=first_weekday)
         for i in range(first_weekday):
             day = prev_month + timedelta(days=i)
             calendar_days.append({'date': day, 'is_current_month': False, 'appointments': []})
     
-    # Ajouter les jours du mois actuel
     for day_num in range(1, last_day_num + 1):
         day = current_date.replace(day=day_num)
         calendar_days.append({
@@ -139,7 +133,6 @@ def conseiller_calendar(request):
             'appointments': appointments_by_date.get(day, [])
         })
     
-    # Ajouter les jours du mois suivant pour compléter la dernière semaine (6 semaines = 42 jours)
     remaining_days = 42 - len(calendar_days)
     if remaining_days > 0:
         next_month = last_day + timedelta(days=1)
@@ -147,7 +140,6 @@ def conseiller_calendar(request):
             day = next_month + timedelta(days=i)
             calendar_days.append({'date': day, 'is_current_month': False, 'appointments': []})
     
-    # Navigation mois précédent/suivant
     if current_date.month == 1:
         prev_month = current_date.replace(year=current_date.year - 1, month=12)
     else:
@@ -158,7 +150,6 @@ def conseiller_calendar(request):
     else:
         next_month = current_date.replace(month=current_date.month + 1)
     
-    # Créer une liste de tous les rendez-vous du mois pour la liste détaillée
     all_appointments_list = list(appointments)
     
     month_names = ['', 'January', 'February', 'March', 'April', 'May', 'June', 
