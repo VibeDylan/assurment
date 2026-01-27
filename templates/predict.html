@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block title %}Prédiction de Prime - Assurement{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="text-center mb-10">
+        <h1 class="text-3xl sm:text-4xl font-semibold text-slate-900 mb-4 tracking-tight">
+            Estimation de votre prime d'assurance
+        </h1>
+        <p class="text-lg text-slate-600">
+            Remplissez le formulaire ci-dessous pour obtenir une estimation personnalisée
+        </p>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="mb-6 p-4 rounded-lg {% if message.tags == 'success' %}bg-emerald-50 border border-emerald-200 text-emerald-800{% else %}bg-red-50 border border-red-200 text-red-800{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if predicted_amount %}
+        <div class="mb-8 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-8 shadow-sm">
+            <div class="text-center">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-full mb-4">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-semibold text-slate-900 mb-2">Votre prime estimée</h2>
+                <p class="text-4xl font-bold text-blue-600 mb-2">{{ predicted_amount|floatformat:2 }} €</p>
+                <p class="text-slate-600">par an</p>
+                <p class="text-sm text-slate-500 mt-4">
+                    Cette estimation est basée sur les informations que vous avez fournies et peut varier selon les conditions finales de votre contrat.
+                </p>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-8">
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            
+            <div>
+                <h3 class="text-lg font-semibold text-slate-900 mb-4 pb-2 border-b border-gray-200">
+                    Informations personnelles
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="{{ form.age.id_for_label }}" class="block text-sm font-medium text-slate-700 mb-2">
+                            {{ form.age.label }}
+                        </label>
+                        {{ form.age }}
+                        {% if form.age.errors %}
+                            <p class="mt-1 text-sm text-red-600">{{ form.age.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.sex.id_for_label }}" class="block text-sm font-medium text-slate-700 mb-2">
+                            {{ form.sex.label }}
+                        </label>
+                        {{ form.sex }}
+                        {% if form.sex.errors %}
+                            <p class="mt-1 text-sm text-red-600">{{ form.sex.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.bmi.id_for_label }}" class="block text-sm font-medium text-slate-700 mb-2">
+                            {{ form.bmi.label }}
+                            <span class="text-xs text-slate-500 font-normal">(Poids en kg / (Taille en m)²)</span>
+                        </label>
+                        {{ form.bmi }}
+                        {% if form.bmi.errors %}
+                            <p class="mt-1 text-sm text-red-600">{{ form.bmi.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.children.id_for_label }}" class="block text-sm font-medium text-slate-700 mb-2">
+                            {{ form.children.label }}
+                        </label>
+                        {{ form.children }}
+                        {% if form.children.errors %}
+                            <p class="mt-1 text-sm text-red-600">{{ form.children.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.smoker.id_for_label }}" class="block text-sm font-medium text-slate-700 mb-2">
+                            {{ form.smoker.label }}
+                        </label>
+                        {{ form.smoker }}
+                        {% if form.smoker.errors %}
+                            <p class="mt-1 text-sm text-red-600">{{ form.smoker.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.region.id_for_label }}" class="block text-sm font-medium text-slate-700 mb-2">
+                            {{ form.region.label }}
+                        </label>
+                        {{ form.region }}
+                        {% if form.region.errors %}
+                            <p class="mt-1 text-sm text-red-600">{{ form.region.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-4">
+                <button type="submit" class="w-full md:w-auto px-8 py-3 bg-slate-900 hover:bg-slate-800 text-white font-medium rounded-lg shadow-sm hover:shadow transition-all">
+                    Calculer ma prime
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <p class="text-sm text-blue-800">
+            <strong>Note :</strong> Cette estimation est indicative et ne constitue pas une offre contractuelle. 
+            Le montant final de votre prime peut varier selon les conditions spécifiques de votre contrat et les vérifications effectuées par l'assureur.
+        </p>
+    </div>
+</div>
+{% endblock %}
