@@ -52,7 +52,7 @@ class Profile(models.Model):
         verbose_name_plural = "Profiles"
     
     def __str__(self):
-        return f"Profile of {self.user.username}"
+        return f"Profile of {self.user.get_full_name() or self.user.email}"
     
     def is_user(self):
         return self.role == 'user'
@@ -109,7 +109,9 @@ class Appointment(models.Model):
         ordering = ['date_time']
     
     def __str__(self):
-        return f"Appointment {self.conseiller.username} - {self.client.username} - {self.date_time.strftime('%m/%d/%Y %H:%M')}"
+        conseiller_name = self.conseiller.get_full_name() or self.conseiller.email
+        client_name = self.client.get_full_name() or self.client.email
+        return f"Appointment {conseiller_name} - {client_name} - {self.date_time.strftime('%m/%d/%Y %H:%M')}"
 
 class Prediction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='predictions')
@@ -129,4 +131,5 @@ class Prediction(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f"Prediction for {self.user.username} - {self.predicted_amount} €"
+        user_name = self.user.get_full_name() or self.user.email
+        return f"Prediction for {user_name} - {self.predicted_amount} €"

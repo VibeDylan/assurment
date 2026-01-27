@@ -20,12 +20,12 @@
                     <div class="flex items-center mb-4">
                         <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mr-4">
                             <span class="text-blue-600 font-semibold text-xl">
-                                {{ conseiller.get_full_name|default:conseiller.username|first|upper }}
+                                {{ conseiller.get_full_name|default:conseiller.email|first|upper }}
                             </span>
                         </div>
                         <div>
                             <h3 class="text-lg font-semibold text-slate-900">
-                                {{ conseiller.get_full_name|default:conseiller.username }}
+                                {{ conseiller.get_full_name|default:conseiller.email }}
                             </h3>
                             <p class="text-sm text-slate-500">{{ conseiller.email }}</p>
                         </div>

@@ -9,11 +9,11 @@
             <div class="flex items-center space-x-4">
                 <div class="flex-shrink-0">
                     <div class="w-16 h-16 bg-blue-600 rounded-lg flex items-center justify-center">
-                        <span class="text-2xl font-semibold text-white">{{ user.username|first|upper }}</span>
+                        <span class="text-2xl font-semibold text-white">{{ user.get_full_name|default:user.email|first|upper }}</span>
                     </div>
                 </div>
                 <div>
-                    <h1 class="text-2xl font-semibold text-slate-900 mb-1">{{ user.username }}</h1>
+                    <h1 class="text-2xl font-semibold text-slate-900 mb-1">{{ user.get_full_name|default:user.email }}</h1>
                     <p class="text-slate-600">{{ user.email|default:"Email not provided" }}</p>
                 </div>
             </div>
@@ -30,8 +30,8 @@
                         </div>
                     </div>
                     <div>
-                        <dt class="text-sm font-medium text-slate-500 mb-1">Username</dt>
-                        <dd class="text-lg font-semibold text-slate-900">{{ user.username }}</dd>
+                        <dt class="text-sm font-medium text-slate-500 mb-1">Full Name</dt>
+                        <dd class="text-lg font-semibold text-slate-900">{{ user.get_full_name|default:"Not provided" }}</dd>
                     </div>
                 </div>
             </div>
@@ -106,7 +106,7 @@
                                     </div>
                                     {% if prediction.created_by != prediction.user %}
                                     <p class="text-xs text-slate-500 mt-2">
-                                        Created by: {{ prediction.created_by.username }}
+                                        Created by: {{ prediction.created_by.get_full_name|default:prediction.created_by.email }}
                                     </p>
                                     {% endif %}
                                 </div>

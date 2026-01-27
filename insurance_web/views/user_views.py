@@ -176,7 +176,7 @@ def create_appointment(request, conseiller_id):
                         duration_minutes=duration_minutes,
                         notes=notes
                     )
-                    messages.success(request, f'Appointment confirmed with {conseiller.get_full_name() or conseiller.username} on {date_time.strftime("%B %d, %Y at %H:%M")}.')
+                    messages.success(request, f'Appointment confirmed with {conseiller.get_full_name() or conseiller.email} on {date_time.strftime("%B %d, %Y at %H:%M")}.')
                     return redirect('insurance_web:my_appointments')
     else:
         form = AppointmentForm()

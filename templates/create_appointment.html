@@ -12,7 +12,7 @@
             Back to Availability
         </a>
         <h1 class="text-3xl font-semibold text-slate-900 mb-2">Book an Appointment</h1>
-        <p class="text-slate-600">With {{ conseiller.get_full_name|default:conseiller.username }}</p>
+        <p class="text-slate-600">With {{ conseiller.get_full_name|default:conseiller.email }}</p>
     </div>
 
     {% if messages %}

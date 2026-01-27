@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Availability - {{ conseiller.get_full_name|default:conseiller.username }} - Assurement{% endblock %}
+{% block title %}Availability - {{ conseiller.get_full_name|default:conseiller.email }} - Assurement{% endblock %}
 
 {% block content %}
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -12,7 +12,7 @@
             Back to Advisors List
         </a>
         <h1 class="text-3xl font-semibold text-slate-900 mb-2">
-            Availability of {{ conseiller.get_full_name|default:conseiller.username }}
+            Availability of {{ conseiller.get_full_name|default:conseiller.email }}
         </h1>
         <p class="text-slate-600">Choose a date to see available time slots</p>
     </div>

@@ -25,12 +25,12 @@
                                 <div class="flex items-center">
                                     <div class="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mr-3">
                                         <span class="text-slate-600 font-medium">
-                                            {{ client.get_full_name|default:client.username|first|upper }}
+                                            {{ client.get_full_name|default:client.email|first|upper }}
                                         </span>
                                     </div>
                                     <div>
                                         <h3 class="text-lg font-semibold text-slate-900">
-                                            {{ client.get_full_name|default:client.username }}
+                                            {{ client.get_full_name|default:client.email }}
                                         </h3>
                                         <p class="text-sm text-slate-500">{{ client.email }}</p>
                                     </div>
@@ -80,12 +80,12 @@
                                 <div class="flex items-center">
                                     <div class="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mr-3">
                                         <span class="text-slate-600 font-medium">
-                                            {{ user.get_full_name|default:user.username|first|upper }}
+                                            {{ user.get_full_name|default:user.email|first|upper }}
                                         </span>
                                     </div>
                                     <div>
                                         <h3 class="text-lg font-semibold text-slate-900">
-                                            {{ user.get_full_name|default:user.username }}
+                                            {{ user.get_full_name|default:user.email }}
                                         </h3>
                                         <p class="text-sm text-slate-500">{{ user.email }}</p>
                                     </div>

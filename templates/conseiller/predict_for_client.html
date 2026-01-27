@@ -8,7 +8,7 @@
         <h1 class="text-3xl font-semibold text-slate-900 mb-2">Premium Prediction</h1>
         <p class="text-slate-600">
             {% if client %}
-                For {{ client.get_full_name|default:client.username }}
+                For {{ client.get_full_name|default:client.email }}
             {% else %}
                 Fill out the form to calculate a premium
             {% endif %}

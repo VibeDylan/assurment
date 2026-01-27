@@ -6,7 +6,7 @@ from .models import Profile, Appointment
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ('user', 'role', 'age', 'sex', 'region', 'created_at')
     list_filter = ('role', 'sex', 'region', 'smoker')
-    search_fields = ('user__username', 'user__email')
+    search_fields = ('user__email', 'user__first_name', 'user__last_name', 'user__username')
     readonly_fields = ('created_at', 'updated_at')
 
 
@@ -14,6 +14,6 @@ class ProfileAdmin(admin.ModelAdmin):
 class AppointmentAdmin(admin.ModelAdmin):
     list_display = ('conseiller', 'client', 'date_time', 'duration_minutes', 'created_at')
     list_filter = ('date_time', 'conseiller')
-    search_fields = ('conseiller__username', 'client__username', 'notes')
+    search_fields = ('conseiller__email', 'conseiller__first_name', 'conseiller__last_name', 'client__email', 'client__first_name', 'client__last_name', 'notes')
     readonly_fields = ('created_at', 'updated_at')
     date_hierarchy = 'date_time'

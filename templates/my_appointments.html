@@ -35,12 +35,12 @@
                                         <div class="flex items-center">
                                             <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
                                                 <span class="text-blue-600 font-medium text-sm">
-                                                    {{ appointment.conseiller.get_full_name|default:appointment.conseiller.username|first|upper }}
+                                                    {{ appointment.conseiller.get_full_name|default:appointment.conseiller.email|first|upper }}
                                                 </span>
                                             </div>
                                             <div>
                                                 <div class="text-sm font-medium text-slate-900">
-                                                    {{ appointment.conseiller.get_full_name|default:appointment.conseiller.username }}
+                                                    {{ appointment.conseiller.get_full_name|default:appointment.conseiller.email }}
                                                 </div>
                                                 <div class="text-sm text-slate-500">{{ appointment.conseiller.email }}</div>
                                             </div>
@@ -94,12 +94,12 @@
                                         <div class="flex items-center">
                                             <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mr-3">
                                                 <span class="text-gray-600 font-medium text-sm">
-                                                    {{ appointment.conseiller.get_full_name|default:appointment.conseiller.username|first|upper }}
+                                                    {{ appointment.conseiller.get_full_name|default:appointment.conseiller.email|first|upper }}
                                                 </span>
                                             </div>
                                             <div>
                                                 <div class="text-sm font-medium text-slate-900">
-                                                    {{ appointment.conseiller.get_full_name|default:appointment.conseiller.username }}
+                                                    {{ appointment.conseiller.get_full_name|default:appointment.conseiller.email }}
                                                 </div>
                                                 <div class="text-sm text-slate-500">{{ appointment.conseiller.email }}</div>
                                             </div>

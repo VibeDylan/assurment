@@ -61,9 +61,9 @@
                     
                     <div class="space-y-1 overflow-hidden">
                         {% for appointment in day_data.appointments|slice:":2" %}
-                            <div class="text-xs bg-blue-100 text-blue-800 rounded px-2 py-1" title="{{ appointment.client.get_full_name|default:appointment.client.username }} - {{ appointment.date_time|date:'H:i' }}">
+                            <div class="text-xs bg-blue-100 text-blue-800 rounded px-2 py-1" title="{{ appointment.client.get_full_name|default:appointment.client.email }} - {{ appointment.date_time|date:'H:i' }}">
                                 <div class="font-semibold">{{ appointment.date_time|date:"H:i" }}</div>
-                                <div class="truncate">{{ appointment.client.get_full_name|default:appointment.client.username|truncatechars:12 }}</div>
+                                <div class="truncate">{{ appointment.client.get_full_name|default:appointment.client.email|truncatechars:12 }}</div>
                             </div>
                         {% endfor %}
                         {% if day_data.appointments|length > 2 %}
@@ -96,7 +96,7 @@
                             <div>
                                 <div class="flex items-center space-x-2">
                                     <p class="text-sm font-medium text-slate-900">
-                                        {{ appointment.client.get_full_name|default:appointment.client.username }}
+                                        {{ appointment.client.get_full_name|default:appointment.client.email }}
                                     </p>
                                     <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
                                         {{ appointment.duration_minutes }} min

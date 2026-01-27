@@ -86,3 +86,7 @@ STATIC_URL = 'static/'
 LOGIN_REDIRECT_URL = '/predict'
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_URL = '/login/'
+
+AUTHENTICATION_BACKENDS = [
+    'insurance_web.backends.EmailBackend',
+]
