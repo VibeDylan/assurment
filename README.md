@@ -307,9 +307,6 @@ DB_PORT=5432
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## 🐛 Troubleshooting
 
@@ -326,10 +323,5 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - Ensure `model/gb_pipeline.joblib` exists
 - Check file permissions
 
-## 📞 Support
 
-For issues and questions, please open an issue on the repository.
-
----
-
-**Note**: This is a development project. For production deployment, ensure proper security configurations, use a production-ready WSGI server (like Gunicorn), and configure proper static file serving.
+**Note**: This is a study project. For study case only.
