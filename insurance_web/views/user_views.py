@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.utils import timezone
+from django.core.paginator import Paginator
 from datetime import datetime, timedelta
 from ..forms import CustomUserCreationForm, PredictionForm, AppointmentForm
 from ..models import Appointment, Profile, Prediction
@@ -28,7 +29,10 @@ def signup(request):
 
 @login_required
 def profile(request):
-    predictions = Prediction.objects.filter(user=request.user).order_by('-created_at')
+    predictions_list = Prediction.objects.filter(user=request.user).order_by('-created_at')
+    paginator = Paginator(predictions_list, 10)  # 10 prédictions par page
+    page_number = request.GET.get('page')
+    predictions = paginator.get_page(page_number)
     return render(request, 'authentification/profile.html', {'user': request.user, 'predictions': predictions})
 
 
@@ -64,7 +68,6 @@ def predict(request):
             profile.smoker = form_data['smoker']
             profile.region = form_data['region']
             profile.save()
-            prediction.save()
             messages.success(request, f'Your estimated insurance premium is {predicted_amount:.2f} € per year.')
     else:
         initial_data = {}

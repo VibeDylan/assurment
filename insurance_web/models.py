@@ -126,7 +126,7 @@ class Prediction(models.Model):
     class Meta: 
         verbose_name = "Prediction"
         verbose_name_plural = "Predictions"
-        ordering = ['created_at']
+        ordering = ['-created_at']
 
     def __str__(self):
         return f"Prediction for {self.user.username} - {self.predicted_amount} €"

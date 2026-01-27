@@ -5,7 +5,7 @@ from datetime import datetime, date, timedelta
 from calendar import monthrange
 from ..utils.decorators import conseiller_required
 from ..forms import PredictionForm
-from ..models import Appointment
+from ..models import Appointment, Prediction
 from ..prediction_service import calculate_insurance_premium
 
 
@@ -39,6 +39,17 @@ def conseiller_predict_for_client(request, client_id=None):
         if form.is_valid():
             form_data = form.cleaned_data
             predicted_amount = calculate_insurance_premium(form_data)
+            prediction = Prediction.objects.create(
+                user=client,
+                created_by=request.user,
+                predicted_amount=predicted_amount,
+                age=form_data['age'],
+                sex=form_data['sex'],
+                bmi=form_data['bmi'],
+                children=form_data['children'],
+                smoker=form_data['smoker'],
+                region=form_data['region']
+            )
             if client:
                 client.profile.age = form_data['age']
                 client.profile.sex = form_data['sex']
