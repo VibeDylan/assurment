@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Réserver un rendez-vous - Assurement{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="mb-8">
+        <a href="{% url 'insurance_web:conseiller_availability' conseiller.id %}" class="text-blue-600 hover:text-blue-700 mb-4 inline-flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+            Retour aux disponibilités
+        </a>
+        <h1 class="text-3xl font-semibold text-slate-900 mb-2">Réserver un rendez-vous</h1>
+        <p class="text-slate-600">Avec {{ conseiller.get_full_name|default:conseiller.username }}</p>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="mb-6 p-4 rounded-lg {% if message.tags == 'success' %}bg-emerald-50 border border-emerald-200 text-emerald-800{% else %}bg-red-50 border border-red-200 text-red-800{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-8">
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            
+            <div>
+                <label for="{{ form.date_time.id_for_label }}" class="block text-sm font-medium text-slate-700 mb-2">
+                    {{ form.date_time.label }}
+                </label>
+                {{ form.date_time }}
+                {% if form.date_time.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ form.date_time.errors.0 }}</p>
+                {% endif %}
+                {% if request.GET.date_time %}
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            document.getElementById('{{ form.date_time.id_for_label }}').value = '{{ request.GET.date_time }}';
+                        });
+                    </script>
+                {% endif %}
+            </div>
+
+            <div>
+                <label for="{{ form.duration_minutes.id_for_label }}" class="block text-sm font-medium text-slate-700 mb-2">
+                    {{ form.duration_minutes.label }}
+                </label>
+                {{ form.duration_minutes }}
+                {% if form.duration_minutes.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ form.duration_minutes.errors.0 }}</p>
+                {% endif %}
+                <p class="mt-1 text-sm text-slate-500">Durée recommandée : 60 minutes</p>
+            </div>
+
+            <div>
+                <label for="{{ form.notes.id_for_label }}" class="block text-sm font-medium text-slate-700 mb-2">
+                    {{ form.notes.label }}
+                </label>
+                {{ form.notes }}
+                {% if form.notes.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ form.notes.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <div class="pt-4 flex gap-4">
+                <button type="submit" class="px-8 py-3 bg-slate-900 hover:bg-slate-800 text-white font-medium rounded-lg shadow-sm hover:shadow transition-all">
+                    Confirmer la réservation
+                </button>
+                <a href="{% url 'insurance_web:conseiller_availability' conseiller.id %}" class="px-8 py-3 bg-white border border-gray-300 hover:bg-gray-50 text-slate-900 font-medium rounded-lg transition-colors">
+                    Annuler
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

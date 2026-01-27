@@ -124,3 +124,34 @@ class PredictionForm(forms.Form):
             'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 transition-colors'
         })
     )
+
+
+class AppointmentForm(forms.Form):
+    date_time = forms.DateTimeField(
+        label="Date et heure",
+        required=True,
+        widget=forms.DateTimeInput(attrs={
+            'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 transition-colors',
+            'type': 'datetime-local'
+        })
+    )
+    duration_minutes = forms.IntegerField(
+        label="Durée (minutes)",
+        required=True,
+        min_value=15,
+        max_value=240,
+        initial=60,
+        widget=forms.NumberInput(attrs={
+            'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 transition-colors',
+            'placeholder': '60'
+        })
+    )
+    notes = forms.CharField(
+        label="Notes (optionnel)",
+        required=False,
+        widget=forms.Textarea(attrs={
+            'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 transition-colors',
+            'rows': 4,
+            'placeholder': 'Informations supplémentaires...'
+        })
+    )
