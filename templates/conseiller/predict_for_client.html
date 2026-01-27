@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
 
-{% block title %}Prédiction pour client - Assurement{% endblock %}
+{% block title %}Prediction for Client - Assurement{% endblock %}
 
 {% block content %}
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <div class="mb-8">
-        <h1 class="text-3xl font-semibold text-slate-900 mb-2">Prédiction de prime</h1>
+        <h1 class="text-3xl font-semibold text-slate-900 mb-2">Premium Prediction</h1>
         <p class="text-slate-600">
             {% if client %}
-                Pour {{ client.get_full_name|default:client.username }}
+                For {{ client.get_full_name|default:client.username }}
             {% else %}
-                Remplissez le formulaire pour calculer une prime
+                Fill out the form to calculate a premium
             {% endif %}
         </p>
     </div>
@@ -31,9 +31,9 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                 </div>
-                <h2 class="text-2xl font-semibold text-slate-900 mb-2">Prime estimée</h2>
+                <h2 class="text-2xl font-semibold text-slate-900 mb-2">Estimated Premium</h2>
                 <p class="text-4xl font-bold text-blue-600 mb-2">{{ predicted_amount|floatformat:2 }} €</p>
-                <p class="text-slate-600">par an</p>
+                <p class="text-slate-600">per year</p>
             </div>
         </div>
     {% endif %}
@@ -44,7 +44,7 @@
             
             <div>
                 <h3 class="text-lg font-semibold text-slate-900 mb-4 pb-2 border-b border-gray-200">
-                    Informations du client
+                    Client Information
                 </h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
@@ -70,7 +70,7 @@
                     <div>
                         <label for="{{ form.bmi.id_for_label }}" class="block text-sm font-medium text-slate-700 mb-2">
                             {{ form.bmi.label }}
-                            <span class="text-xs text-slate-500 font-normal">(Poids en kg / (Taille en m)²)</span>
+                            <span class="text-xs text-slate-500 font-normal">(Weight in kg / (Height in m)²)</span>
                         </label>
                         {{ form.bmi }}
                         {% if form.bmi.errors %}
@@ -111,11 +111,11 @@
             </div>
 
             <div class="pt-4 flex gap-4">
-                <button type="submit" class="px-8 py-3 bg-slate-900 hover:bg-slate-800 text-white font-medium rounded-lg shadow-sm hover:shadow transition-all">
-                    Calculer la prime
+                <button type="submit" class="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm hover:shadow transition-all">
+                    Calculate Premium
                 </button>
                 <a href="{% url 'insurance_web:conseiller_dashboard' %}" class="px-8 py-3 bg-white border border-gray-300 hover:bg-gray-50 text-slate-900 font-medium rounded-lg transition-colors">
-                    Retour
+                    Back
                 </a>
             </div>
         </form>

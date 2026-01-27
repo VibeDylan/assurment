@@ -1,30 +1,30 @@
 {% extends 'base.html' %}
 
-{% block title %}Mes rendez-vous - Assurement{% endblock %}
+{% block title %}My Appointments - Assurement{% endblock %}
 
 {% block content %}
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <div class="mb-8 flex items-center justify-between">
         <div>
-            <h1 class="text-3xl font-semibold text-slate-900 mb-2">Mes rendez-vous</h1>
-            <p class="text-slate-600">Gérez vos rendez-vous avec vos conseillers</p>
+            <h1 class="text-3xl font-semibold text-slate-900 mb-2">My Appointments</h1>
+            <p class="text-slate-600">Manage your appointments with your advisors</p>
         </div>
-        <a href="{% url 'insurance_web:conseillers_list' %}" class="px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white font-medium rounded-lg transition-colors">
-            Prendre un nouveau rendez-vous
+        <a href="{% url 'insurance_web:conseillers_list' %}" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors">
+            Book New Appointment
         </a>
     </div>
 
     {% if upcoming_appointments %}
         <div class="mb-8">
-            <h2 class="text-xl font-semibold text-slate-900 mb-4">Rendez-vous à venir</h2>
+            <h2 class="text-xl font-semibold text-slate-900 mb-4">Upcoming Appointments</h2>
             <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">Conseiller</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">Date et heure</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">Durée</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">Advisor</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">Date and Time</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">Duration</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">Notes</th>
                             </tr>
                         </thead>
@@ -47,7 +47,7 @@
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-slate-900">{{ appointment.date_time|date:"d/m/Y" }}</div>
+                                        <div class="text-sm text-slate-900">{{ appointment.date_time|date:"M d, Y" }}</div>
                                         <div class="text-sm text-slate-500">{{ appointment.date_time|date:"H:i" }}</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
@@ -60,7 +60,7 @@
                                             {% if appointment.notes %}
                                                 {{ appointment.notes|truncatewords:10 }}
                                             {% else %}
-                                                <span class="text-slate-400">Aucune note</span>
+                                                <span class="text-slate-400">No notes</span>
                                             {% endif %}
                                         </div>
                                     </td>
@@ -75,15 +75,15 @@
 
     {% if past_appointments %}
         <div>
-            <h2 class="text-xl font-semibold text-slate-900 mb-4">Rendez-vous passés</h2>
+            <h2 class="text-xl font-semibold text-slate-900 mb-4">Past Appointments</h2>
             <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">Conseiller</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">Date et heure</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">Durée</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">Advisor</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">Date and Time</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">Duration</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">Notes</th>
                             </tr>
                         </thead>
@@ -106,7 +106,7 @@
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-slate-900">{{ appointment.date_time|date:"d/m/Y" }}</div>
+                                        <div class="text-sm text-slate-900">{{ appointment.date_time|date:"M d, Y" }}</div>
                                         <div class="text-sm text-slate-500">{{ appointment.date_time|date:"H:i" }}</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
@@ -119,7 +119,7 @@
                                             {% if appointment.notes %}
                                                 {{ appointment.notes|truncatewords:10 }}
                                             {% else %}
-                                                <span class="text-slate-400">Aucune note</span>
+                                                <span class="text-slate-400">No notes</span>
                                             {% endif %}
                                         </div>
                                     </td>
@@ -139,10 +139,10 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                 </svg>
             </div>
-            <h3 class="text-lg font-medium text-slate-900 mb-2">Aucun rendez-vous</h3>
-            <p class="text-slate-600 mb-6">Vous n'avez pas encore de rendez-vous planifiés.</p>
-            <a href="{% url 'insurance_web:conseillers_list' %}" class="inline-block px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white font-medium rounded-lg transition-colors">
-                Prendre un rendez-vous
+            <h3 class="text-lg font-medium text-slate-900 mb-2">No Appointments</h3>
+            <p class="text-slate-600 mb-6">You don't have any appointments scheduled yet.</p>
+            <a href="{% url 'insurance_web:conseillers_list' %}" class="inline-block px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors">
+                Book an Appointment
             </a>
         </div>
     {% endif %}

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Profil - Assurement{% endblock %}
+{% block title %}Profile - Assurement{% endblock %}
 
 {% block content %}
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -8,13 +8,13 @@
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-6">
             <div class="flex items-center space-x-4">
                 <div class="flex-shrink-0">
-                    <div class="w-16 h-16 bg-slate-100 rounded-lg flex items-center justify-center">
-                        <span class="text-2xl font-semibold text-slate-700">{{ user.username|first|upper }}</span>
+                    <div class="w-16 h-16 bg-blue-600 rounded-lg flex items-center justify-center">
+                        <span class="text-2xl font-semibold text-white">{{ user.username|first|upper }}</span>
                     </div>
                 </div>
                 <div>
                     <h1 class="text-2xl font-semibold text-slate-900 mb-1">{{ user.username }}</h1>
-                    <p class="text-slate-600">{{ user.email|default:"Email non renseigné" }}</p>
+                    <p class="text-slate-600">{{ user.email|default:"Email not provided" }}</p>
                 </div>
             </div>
         </div>
@@ -31,7 +31,7 @@
                         </div>
                     </div>
                     <div>
-                        <dt class="text-sm font-medium text-slate-500 mb-1">Nom d'utilisateur</dt>
+                        <dt class="text-sm font-medium text-slate-500 mb-1">Username</dt>
                         <dd class="text-lg font-semibold text-slate-900">{{ user.username }}</dd>
                     </div>
                 </div>
@@ -48,13 +48,13 @@
                     </div>
                     <div>
                         <dt class="text-sm font-medium text-slate-500 mb-1">Email</dt>
-                        <dd class="text-lg font-semibold text-slate-900">{{ user.email|default:"Non renseigné" }}</dd>
+                        <dd class="text-lg font-semibold text-slate-900">{{ user.email|default:"Not provided" }}</dd>
                     </div>
                 </div>
             </div>
 
             {% if user.profile %}
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 md:col-span-2">
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 md:col-span-2 hover:shadow-md transition-shadow">
                 <div class="flex items-start space-x-4">
                     <div class="flex-shrink-0">
                         <div class="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
@@ -64,8 +64,8 @@
                         </div>
                     </div>
                     <div>
-                        <dt class="text-sm font-medium text-slate-500 mb-1">Membre depuis</dt>
-                        <dd class="text-lg font-semibold text-slate-900">{{ user.profile.created_at|date:"d F Y" }}</dd>
+                        <dt class="text-sm font-medium text-slate-500 mb-1">Member Since</dt>
+                        <dd class="text-lg font-semibold text-slate-900">{{ user.profile.created_at|date:"F d, Y" }}</dd>
                     </div>
                 </div>
             </div>
@@ -76,8 +76,8 @@
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
                 <div>
-                    <h3 class="text-lg font-semibold text-slate-900 mb-1">Actions du compte</h3>
-                    <p class="text-sm text-slate-600">Gérez votre compte et vos préférences</p>
+                    <h3 class="text-lg font-semibold text-slate-900 mb-1">Account Actions</h3>
+                    <p class="text-sm text-slate-600">Manage your account and preferences</p>
                 </div>
                 <form method="post" action="{% url 'insurance_web:logout' %}" class="inline">
                     {% csrf_token %}
@@ -85,7 +85,7 @@
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                         </svg>
-                        Se déconnecter
+                        Logout
                     </button>
                 </form>
             </div>

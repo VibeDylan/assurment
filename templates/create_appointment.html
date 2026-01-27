@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Réserver un rendez-vous - Assurement{% endblock %}
+{% block title %}Book an Appointment - Assurement{% endblock %}
 
 {% block content %}
 <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -9,10 +9,10 @@
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
             </svg>
-            Retour aux disponibilités
+            Back to Availability
         </a>
-        <h1 class="text-3xl font-semibold text-slate-900 mb-2">Réserver un rendez-vous</h1>
-        <p class="text-slate-600">Avec {{ conseiller.get_full_name|default:conseiller.username }}</p>
+        <h1 class="text-3xl font-semibold text-slate-900 mb-2">Book an Appointment</h1>
+        <p class="text-slate-600">With {{ conseiller.get_full_name|default:conseiller.username }}</p>
     </div>
 
     {% if messages %}
@@ -52,7 +52,7 @@
                 {% if form.duration_minutes.errors %}
                     <p class="mt-1 text-sm text-red-600">{{ form.duration_minutes.errors.0 }}</p>
                 {% endif %}
-                <p class="mt-1 text-sm text-slate-500">Durée recommandée : 60 minutes</p>
+                <p class="mt-1 text-sm text-slate-500">Recommended duration: 60 minutes</p>
             </div>
 
             <div>
@@ -66,11 +66,11 @@
             </div>
 
             <div class="pt-4 flex gap-4">
-                <button type="submit" class="px-8 py-3 bg-slate-900 hover:bg-slate-800 text-white font-medium rounded-lg shadow-sm hover:shadow transition-all">
-                    Confirmer la réservation
+                <button type="submit" class="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm hover:shadow transition-all">
+                    Confirm Booking
                 </button>
                 <a href="{% url 'insurance_web:conseiller_availability' conseiller.id %}" class="px-8 py-3 bg-white border border-gray-300 hover:bg-gray-50 text-slate-900 font-medium rounded-lg transition-colors">
-                    Annuler
+                    Cancel
                 </a>
             </div>
         </form>

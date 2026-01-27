@@ -52,7 +52,7 @@ def predict(request):
             profile.smoker = form_data['smoker']
             profile.region = form_data['region']
             profile.save()
-            messages.success(request, f'Votre prime d\'assurance estimée est de {predicted_amount:.2f} € par an.')
+            messages.success(request, f'Your estimated insurance premium is {predicted_amount:.2f} € per year.')
     else:
         initial_data = {}
         if profile.age is not None:
@@ -142,7 +142,7 @@ def create_appointment(request, conseiller_id):
             notes = form.cleaned_data.get('notes', '')
             
             if date_time <= timezone.now():
-                messages.error(request, 'Vous ne pouvez pas réserver un créneau dans le passé.')
+                messages.error(request, 'You cannot book a time slot in the past.')
             else:
                 conflicting_appointments = Appointment.objects.filter(
                     conseiller=conseiller,
@@ -151,7 +151,7 @@ def create_appointment(request, conseiller_id):
                 )
                 
                 if conflicting_appointments.exists():
-                    messages.error(request, 'Ce créneau n\'est plus disponible. Veuillez en choisir un autre.')
+                    messages.error(request, 'This time slot is no longer available. Please choose another one.')
                 else:
                     appointment = Appointment.objects.create(
                         conseiller=conseiller,
@@ -160,7 +160,7 @@ def create_appointment(request, conseiller_id):
                         duration_minutes=duration_minutes,
                         notes=notes
                     )
-                    messages.success(request, f'Rendez-vous confirmé avec {conseiller.get_full_name() or conseiller.username} le {date_time.strftime("%d/%m/%Y à %H:%M")}.')
+                    messages.success(request, f'Appointment confirmed with {conseiller.get_full_name() or conseiller.username} on {date_time.strftime("%B %d, %Y at %H:%M")}.')
                     return redirect('insurance_web:my_appointments')
     else:
         form = AppointmentForm()

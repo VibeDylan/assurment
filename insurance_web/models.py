@@ -6,26 +6,26 @@ from django.dispatch import receiver
 
 class Profile(models.Model):
     SEX_CHOICES = [
-        ('male', 'Homme'),
-        ('female', 'Femme'),
+        ('male', 'Male'),
+        ('female', 'Female'),
     ]
     
     SMOKER_CHOICES = [
-        ('yes', 'Oui'),
-        ('no', 'Non'),
+        ('yes', 'Yes'),
+        ('no', 'No'),
     ]
     
     REGION_CHOICES = [
-        ('northwest', 'Nord-Ouest'),
-        ('northeast', 'Nord-Est'),
-        ('southwest', 'Sud-Ouest'),
-        ('southeast', 'Sud-Est'),
+        ('northwest', 'Northwest'),
+        ('northeast', 'Northeast'),
+        ('southwest', 'Southwest'),
+        ('southeast', 'Southeast'),
     ]
     
     ROLE_CHOICES = [
-        ('user', 'Utilisateur'),
-        ('conseiller', 'Conseiller'),
-        ('admin', 'Administrateur'),
+        ('user', 'User'),
+        ('conseiller', 'Advisor'),
+        ('admin', 'Administrator'),
     ]
     
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
@@ -34,25 +34,25 @@ class Profile(models.Model):
         max_length=20, 
         choices=ROLE_CHOICES, 
         default='user',
-        verbose_name="Rôle"
+        verbose_name="Role"
     )
     
-    age = models.IntegerField(null=True, blank=True, verbose_name="Âge")
-    sex = models.CharField(max_length=10, choices=SEX_CHOICES, null=True, blank=True, verbose_name="Sexe")
+    age = models.IntegerField(null=True, blank=True, verbose_name="Age")
+    sex = models.CharField(max_length=10, choices=SEX_CHOICES, null=True, blank=True, verbose_name="Gender")
     bmi = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, verbose_name="BMI (Body Mass Index)")
-    children = models.IntegerField(default=0, verbose_name="Nombre d'enfants")
-    smoker = models.CharField(max_length=3, choices=SMOKER_CHOICES, null=True, blank=True, verbose_name="Fumeur")
-    region = models.CharField(max_length=20, choices=REGION_CHOICES, null=True, blank=True, verbose_name="Région")
+    children = models.IntegerField(default=0, verbose_name="Number of Children")
+    smoker = models.CharField(max_length=3, choices=SMOKER_CHOICES, null=True, blank=True, verbose_name="Smoker")
+    region = models.CharField(max_length=20, choices=REGION_CHOICES, null=True, blank=True, verbose_name="Region")
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
     class Meta:
-        verbose_name = "Profil"
-        verbose_name_plural = "Profils"
+        verbose_name = "Profile"
+        verbose_name_plural = "Profiles"
     
     def __str__(self):
-        return f"Profil de {self.user.username}"
+        return f"Profile of {self.user.username}"
     
     def is_user(self):
         return self.role == 'user'
@@ -90,7 +90,7 @@ class Appointment(models.Model):
         User, 
         on_delete=models.CASCADE, 
         related_name='appointments_as_conseiller',
-        verbose_name="Conseiller"
+        verbose_name="Advisor"
     )
     client = models.ForeignKey(
         User, 
@@ -98,16 +98,16 @@ class Appointment(models.Model):
         related_name='appointments_as_client',
         verbose_name="Client"
     )
-    date_time = models.DateTimeField(verbose_name="Date et heure")
-    duration_minutes = models.IntegerField(default=60, verbose_name="Durée (minutes)")
+    date_time = models.DateTimeField(verbose_name="Date and Time")
+    duration_minutes = models.IntegerField(default=60, verbose_name="Duration (minutes)")
     notes = models.TextField(blank=True, verbose_name="Notes")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
     class Meta:
-        verbose_name = "Rendez-vous"
-        verbose_name_plural = "Rendez-vous"
+        verbose_name = "Appointment"
+        verbose_name_plural = "Appointments"
         ordering = ['date_time']
     
     def __str__(self):
-        return f"RDV {self.conseiller.username} - {self.client.username} - {self.date_time.strftime('%d/%m/%Y %H:%M')}"
+        return f"Appointment {self.conseiller.username} - {self.client.username} - {self.date_time.strftime('%m/%d/%Y %H:%M')}"

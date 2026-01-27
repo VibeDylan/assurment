@@ -6,32 +6,32 @@ from .models import Profile
 
 class CustomUserCreationForm(UserCreationForm):
     username = forms.CharField(
-        label="Nom d'utilisateur",
+        label="Username",
         max_length=150,
         required=True,
         widget=forms.TextInput(attrs={
-            'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 transition-colors',
-            'placeholder': "Choisissez un nom d'utilisateur",
+            'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors',
+            'placeholder': 'Choose a username',
             'autocomplete': 'username'
         })
     )
     
     password1 = forms.CharField(
-        label="Mot de passe",
+        label="Password",
         required=True,
         widget=forms.PasswordInput(attrs={
-            'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 transition-colors',
-            'placeholder': 'Créez un mot de passe',
+            'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors',
+            'placeholder': 'Create a password',
             'autocomplete': 'new-password'
         })
     )
     
     password2 = forms.CharField(
-        label="Confirmation du mot de passe",
+        label="Confirm Password",
         required=True,
         widget=forms.PasswordInput(attrs={
-            'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 transition-colors',
-            'placeholder': 'Confirmez votre mot de passe',
+            'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors',
+            'placeholder': 'Confirm your password',
             'autocomplete': 'new-password'
         })
     )
@@ -50,35 +50,35 @@ class CustomUserCreationForm(UserCreationForm):
     def clean_password1(self):
         password1 = self.cleaned_data.get("password1")
         if len(password1) < 8:
-            raise forms.ValidationError("Le mot de passe doit contenir au moins 8 caractères.")
+            raise forms.ValidationError("Password must contain at least 8 characters.")
         return password1
     
     def clean_password2(self):
         password1 = self.cleaned_data.get("password1")
         password2 = self.cleaned_data.get("password2")
         if password1 and password2 and password1 != password2:
-            raise forms.ValidationError("Les deux mots de passe ne correspondent pas.")
+            raise forms.ValidationError("The two passwords do not match.")
         return password2
 
 
 class PredictionForm(forms.Form):
     age = forms.IntegerField(
-        label="Âge",
+        label="Age",
         required=True,
         min_value=18,
         max_value=100,
         widget=forms.NumberInput(attrs={
-            'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 transition-colors',
-            'placeholder': 'Ex: 40'
+            'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors',
+            'placeholder': 'e.g. 40'
         })
     )
     
     sex = forms.ChoiceField(
-        label="Sexe",
+        label="Gender",
         choices=Profile.SEX_CHOICES,
         required=True,
         widget=forms.Select(attrs={
-            'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 transition-colors'
+            'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors'
         })
     )
     
@@ -90,68 +90,68 @@ class PredictionForm(forms.Form):
         min_value=10.0,
         max_value=50.0,
         widget=forms.NumberInput(attrs={
-            'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 transition-colors',
-            'placeholder': 'Ex: 22.5',
+            'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors',
+            'placeholder': 'e.g. 22.5',
             'step': '0.1'
         })
     )
     
     children = forms.IntegerField(
-        label="Nombre d'enfants",
+        label="Number of Children",
         required=True,
         min_value=0,
         max_value=10,
         widget=forms.NumberInput(attrs={
-            'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 transition-colors',
-            'placeholder': 'Ex: 2'
+            'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors',
+            'placeholder': 'e.g. 2'
         })
     )
     
     smoker = forms.ChoiceField(
-        label="Fumeur",
+        label="Smoker",
         choices=Profile.SMOKER_CHOICES,
         required=True,
         widget=forms.Select(attrs={
-            'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 transition-colors'
+            'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors'
         })
     )
     
     region = forms.ChoiceField(
-        label="Région",
+        label="Region",
         choices=Profile.REGION_CHOICES,
         required=True,
         widget=forms.Select(attrs={
-            'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 transition-colors'
+            'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors'
         })
     )
 
 
 class AppointmentForm(forms.Form):
     date_time = forms.DateTimeField(
-        label="Date et heure",
+        label="Date and Time",
         required=True,
         widget=forms.DateTimeInput(attrs={
-            'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 transition-colors',
+            'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors',
             'type': 'datetime-local'
         })
     )
     duration_minutes = forms.IntegerField(
-        label="Durée (minutes)",
+        label="Duration (minutes)",
         required=True,
         min_value=15,
         max_value=240,
         initial=60,
         widget=forms.NumberInput(attrs={
-            'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 transition-colors',
+            'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors',
             'placeholder': '60'
         })
     )
     notes = forms.CharField(
-        label="Notes (optionnel)",
+        label="Notes (optional)",
         required=False,
         widget=forms.Textarea(attrs={
-            'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 transition-colors',
+            'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors',
             'rows': 4,
-            'placeholder': 'Informations supplémentaires...'
+            'placeholder': 'Additional information...'
         })
     )

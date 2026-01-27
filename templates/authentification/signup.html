@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Inscription - Assurement{% endblock %}
+{% block title %}Sign Up - Assurement{% endblock %}
 
 {% block content %}
     <div class="min-h-[calc(100vh-16rem)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -8,12 +8,12 @@
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
                 <div class="text-center mb-8">
                     <h2 class="text-2xl font-semibold text-slate-900 mb-2">
-                        Créer un compte
+                        Create an Account
                     </h2>
                     <p class="text-sm text-slate-600">
-                        Déjà un compte ? 
+                        Already have an account? 
                         <a href="{% url 'insurance_web:login' %}" class="font-medium text-slate-900 hover:text-slate-700">
-                            Se connecter
+                            Sign in
                         </a>
                     </p>
                 </div>
@@ -37,7 +37,7 @@
                                 {{ form.password1.label }}
                             </label>
                             {{ form.password1 }}
-                            <!-- Indicateur de force du mot de passe -->
+                            <!-- Password strength indicator -->
                             <div id="password-strength" class="mt-2 hidden">
                                 <div class="flex items-center space-x-2">
                                     <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
@@ -70,8 +70,8 @@
                         </div>
                     {% endif %}
 
-                    <button type="submit" class="w-full flex justify-center py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white font-medium rounded-md shadow-sm hover:shadow transition-all">
-                        Créer mon compte
+                    <button type="submit" class="w-full flex justify-center py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md shadow-sm hover:shadow transition-all">
+                        Create My Account
                     </button>
                 </form>
             </div>
@@ -93,25 +93,25 @@
                     return { strength: 0, text: '', color: '' };
                 }
 
-                // Longueur
+                // Length
                 if (password.length >= 8) strength += 1;
                 if (password.length >= 12) strength += 1;
                 
-                // Complexité
+                // Complexity
                 if (/[a-z]/.test(password)) strength += 1;
                 if (/[A-Z]/.test(password)) strength += 1;
                 if (/[0-9]/.test(password)) strength += 1;
                 if (/[^a-zA-Z0-9]/.test(password)) strength += 1;
 
-                // Déterminer le niveau
+                // Determine level
                 if (strength <= 2) {
-                    return { strength: 25, text: 'Faible', color: 'bg-red-500' };
+                    return { strength: 25, text: 'Weak', color: 'bg-red-500' };
                 } else if (strength <= 4) {
-                    return { strength: 50, text: 'Moyen', color: 'bg-yellow-500' };
+                    return { strength: 50, text: 'Medium', color: 'bg-yellow-500' };
                 } else if (strength <= 5) {
-                    return { strength: 75, text: 'Fort', color: 'bg-blue-500' };
+                    return { strength: 75, text: 'Strong', color: 'bg-blue-500' };
                 } else {
-                    return { strength: 100, text: 'Très fort', color: 'bg-emerald-500' };
+                    return { strength: 100, text: 'Very Strong', color: 'bg-emerald-500' };
                 }
             }
 
