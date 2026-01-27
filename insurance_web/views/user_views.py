@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.core.paginator import Paginator
 from datetime import datetime, timedelta
 from ..forms import CustomUserCreationForm, PredictionForm, AppointmentForm
-from ..models import Appointment, Profile, Prediction
+from ..models import Appointment, Prediction
 from ..prediction_service import calculate_insurance_premium
 
 
