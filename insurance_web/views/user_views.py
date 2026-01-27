@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.utils import timezone
 from datetime import datetime, timedelta
 from ..forms import CustomUserCreationForm, PredictionForm, AppointmentForm
-from ..models import Appointment, Profile
+from ..models import Appointment, Profile, Prediction
 from ..prediction_service import calculate_insurance_premium
 
 
@@ -28,7 +28,8 @@ def signup(request):
 
 @login_required
 def profile(request):
-    return render(request, 'authentification/profile.html', {'user': request.user})
+    predictions = Prediction.objects.filter(user=request.user).order_by('-created_at')
+    return render(request, 'authentification/profile.html', {'user': request.user, 'predictions': predictions})
 
 
 def logout_view(request):
@@ -45,6 +46,17 @@ def predict(request):
         if form.is_valid():
             form_data = form.cleaned_data
             predicted_amount = calculate_insurance_premium(form_data)
+            prediction = Prediction.objects.create(
+                user=request.user,
+                created_by=request.user,
+                predicted_amount=predicted_amount,
+                age=form_data['age'],
+                sex=form_data['sex'],
+                bmi=form_data['bmi'],
+                children=form_data['children'],
+                smoker=form_data['smoker'],
+                region=form_data['region']
+            )
             profile.age = form_data['age']
             profile.sex = form_data['sex']
             profile.bmi = form_data['bmi']
@@ -52,6 +64,7 @@ def predict(request):
             profile.smoker = form_data['smoker']
             profile.region = form_data['region']
             profile.save()
+            prediction.save()
             messages.success(request, f'Your estimated insurance premium is {predicted_amount:.2f} € per year.')
     else:
         initial_data = {}

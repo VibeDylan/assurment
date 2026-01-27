@@ -37,6 +37,41 @@
                 </div>
             </div>
 
+            {% if predictions %}
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0">
+                        <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div>
+                        <dt class="text-sm font-medium text-slate-500 mb-1">Predictions</dt>
+                        <dd class="text-lg font-semibold text-slate-900">{{ predictions.count }}</dd>
+                    </div>
+                </div>
+            </div>
+            {% for prediction in predictions %}
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0">
+                        <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div>
+                        <dt class="text-sm font-medium text-slate-500 mb-1">Last prediction</dt>
+                        <dd class="text-lg font-semibold text-slate-900">{{ prediction.predicted_amount }} €</dd>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
                 <div class="flex items-start space-x-4">
                     <div class="flex-shrink-0">
