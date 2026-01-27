@@ -28,6 +28,7 @@ A Django-based web application for predicting insurance premiums using machine l
 - **Machine Learning**: scikit-learn, pandas, numpy, joblib
 - **Containerization**: Docker & Docker Compose
 - **Frontend**: HTML, CSS (Tailwind CSS), JavaScript
+- **Testing**: pytest, pytest-django, factory-boy, coverage, model-bakery
 
 ## 📋 Prerequisites
 
@@ -236,9 +237,63 @@ The model is loaded once at startup and reused for all predictions to ensure opt
 ## 🧪 Development
 
 ### Running Tests
+
+The project uses `pytest` for testing. Install test dependencies:
+
 ```bash
-python manage.py test
+pip install -r requirements.txt
 ```
+
+#### Using pytest (Recommended)
+```bash
+# Run all tests
+pytest
+
+# Run specific test file
+pytest insurance_web/tests/test_models.py
+
+# Run with coverage report
+coverage run -m pytest
+coverage report
+coverage html  # Generate HTML report
+
+# Run with verbosity
+pytest -v
+
+# Run specific test
+pytest insurance_web/tests/test_models.py::test_profile_creation
+```
+
+#### Using Django test runner
+```bash
+# Run all tests
+python manage.py test
+
+# Run specific app tests
+python manage.py test insurance_web
+
+# Run with verbosity
+python manage.py test --verbosity=2
+```
+
+#### Test Coverage
+```bash
+# Generate coverage report
+coverage run --source='.' manage.py test
+coverage report
+coverage html  # Open htmlcov/index.html in browser
+```
+
+### Testing Tools
+
+The project includes the following testing tools:
+- **pytest**: Modern testing framework
+- **pytest-django**: Django integration for pytest
+- **factory-boy**: Easy test data generation
+- **coverage**: Code coverage measurement
+- **model-bakery**: Alternative test data factory
+
+See `TESTING_GUIDE.md` for comprehensive testing documentation.
 
 ### Creating Migrations
 ```bash
