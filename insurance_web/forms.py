@@ -48,14 +48,11 @@ class CustomUserCreationForm(UserCreationForm):
         super().__init__(*args, **kwargs)
         for field_name in self.fields:
             self.fields[field_name].help_text = None
-            # Supprimer les validateurs qui génèrent des messages d'aide
             if field_name == 'password1':
-                # Remplacer les validateurs par une validation simple
                 self.fields[field_name].validators = []
     
     def clean_password1(self):
         password1 = self.cleaned_data.get("password1")
-        # Validation simple avec message court
         if len(password1) < 8:
             raise forms.ValidationError("Le mot de passe doit contenir au moins 8 caractères.")
         return password1
@@ -69,8 +66,6 @@ class CustomUserCreationForm(UserCreationForm):
 
 
 class PredictionForm(forms.Form):
-    """Formulaire pour la prédiction de prime d'assurance."""
-    
     age = forms.IntegerField(
         label="Âge",
         required=True,
@@ -92,7 +87,7 @@ class PredictionForm(forms.Form):
     )
     
     bmi = forms.DecimalField(
-        label="IMC (Indice de Masse Corporelle)",
+        label="BMI (Body Mass Index)",
         required=True,
         max_digits=5,
         decimal_places=2,
@@ -100,7 +95,7 @@ class PredictionForm(forms.Form):
         max_value=50.0,
         widget=forms.NumberInput(attrs={
             'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 transition-colors',
-            'placeholder': 'Ex: 28.5',
+            'placeholder': 'Ex: 22.5',
             'step': '0.1'
         })
     )

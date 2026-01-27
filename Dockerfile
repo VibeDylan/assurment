@@ -7,6 +7,9 @@ RUN apt-get update && apt-get install -y \
     postgresql-client \
     && rm -rf /var/lib/apt/lists/*
 
+# Installer setuptools et wheel pour compiler les packages
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel
+
 # Copier requirements et installer les dépendances Python
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
