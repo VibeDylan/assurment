@@ -18,8 +18,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Access environment variables
-SECRET_KEY = os.getenv('SECRET_KEY')
-DEBUG = os.getenv('DEBUG')
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-change-me-in-production')
+DEBUG = os.getenv('DEBUG', 'False').lower() in ('true', '1', 'yes')
 DATABASE_URL = os.getenv('DATABASE_URL')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -123,3 +123,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = '/login/'
