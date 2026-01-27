@@ -1,9 +1,7 @@
-"""
-URL configuration for insurance_web app.
-"""
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views
+from .views import conseiller_views
 
 app_name = 'insurance_web'
 
@@ -14,4 +12,9 @@ urlpatterns = [
     path('signup/', views.signup, name='signup'),
     path('profile/', views.profile, name='profile'),
     path('predict/', views.predict, name='predict'),
+    path('conseiller/', conseiller_views.conseiller_dashboard, name='conseiller_dashboard'),
+    path('conseiller/predict/', conseiller_views.conseiller_predict_for_client, name='conseiller_predict'),
+    path('conseiller/predict/<int:client_id>/', conseiller_views.conseiller_predict_for_client, name='conseiller_predict_client'),
+    path('conseiller/calendar/', conseiller_views.conseiller_calendar, name='conseiller_calendar'),
+    path('conseiller/clients/', conseiller_views.conseiller_clients_list, name='conseiller_clients'),
 ]

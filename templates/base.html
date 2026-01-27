@@ -31,6 +31,11 @@
                 </div>
                 <div class="flex items-center space-x-4">
                     {% if user.is_authenticated %}
+                        {% if user.profile.is_conseiller %}
+                            <a href="{% url 'insurance_web:conseiller_dashboard' %}" class="text-slate-700 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">
+                                Espace Conseiller
+                            </a>
+                        {% endif %}
                         <a href="{% url 'insurance_web:predict' %}" class="text-slate-700 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">
                             Prédiction
                         </a>

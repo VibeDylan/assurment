@@ -5,10 +5,6 @@ from .models import Profile
 
 
 class CustomUserCreationForm(UserCreationForm):
-    """
-    Formulaire d'inscription personnalisé avec labels en français.
-    Sans messages d'aide pour un design épuré.
-    """
     username = forms.CharField(
         label="Nom d'utilisateur",
         max_length=150,
