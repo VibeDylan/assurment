@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.utils import timezone
 from datetime import datetime
 
-from ..models import User, Appointment
+from ..models import User, Appointment, Prediction
 from ..forms import PredictionForm, AppointmentForm
 from ..services import (
     calculate_insurance_premium,
@@ -15,6 +15,13 @@ from ..services import (
     get_profile_initial_data
 )
 from ..utils.mixins import UserProfileMixin
+from ..exceptions import (
+    PredictionError,
+    InvalidPredictionDataError,
+    ModelNotFoundError,
+    AppointmentError,
+    AppointmentConflictError,
+)
 
 
 class ProfileView(UserProfileMixin, ListView):
@@ -40,16 +47,27 @@ class PredictView(UserProfileMixin, FormView):
     
     def form_valid(self, form):
         form_data = form.cleaned_data
-        predicted_amount = calculate_insurance_premium(form_data)
+        try:
+            predicted_amount = calculate_insurance_premium(form_data)
+            
+            create_prediction(
+                user=self.request.user,
+                created_by=self.request.user,
+                form_data=form_data,
+                predicted_amount=predicted_amount
+            )
+            
+            messages.success(self.request, f'Your estimated insurance premium is {predicted_amount:.2f} € per year.')
+        except InvalidPredictionDataError as e:
+            messages.error(self.request, f'Invalid data: {str(e)}')
+            return self.form_invalid(form)
+        except ModelNotFoundError:
+            messages.error(self.request, 'Prediction service is temporarily unavailable. Please try again later.')
+            return self.form_invalid(form)
+        except PredictionError as e:
+            messages.error(self.request, f'An error occurred while processing your prediction: {str(e)}')
+            return self.form_invalid(form)
         
-        create_prediction(
-            user=self.request.user,
-            created_by=self.request.user,
-            form_data=form_data,
-            predicted_amount=predicted_amount
-        )
-        
-        messages.success(self.request, f'Your estimated insurance premium is {predicted_amount:.2f} € per year.')
         return self.form_invalid(form)
     
     def get_context_data(self, **kwargs):
@@ -58,8 +76,11 @@ class PredictView(UserProfileMixin, FormView):
         if self.request.method == 'POST':
             form = self.get_form()
             if form.is_valid():
-                form_data = form.cleaned_data
-                context['predicted_amount'] = calculate_insurance_premium(form_data)
+                try:
+                    form_data = form.cleaned_data
+                    context['predicted_amount'] = calculate_insurance_premium(form_data)
+                except (PredictionError, InvalidPredictionDataError, ModelNotFoundError):
+                    pass
         return context
 
 
@@ -120,29 +141,40 @@ class CreateAppointmentView(UserProfileMixin, CreateView):
         duration_minutes = form.cleaned_data['duration_minutes']
         notes = form.cleaned_data.get('notes', '')
         
-        has_conflict, error_message = check_appointment_conflict(
-            self.conseiller,
-            date_time,
-            duration_minutes
-        )
-        
-        if has_conflict:
-            messages.error(self.request, error_message)
+        try:
+            has_conflict, error_message = check_appointment_conflict(
+                self.conseiller,
+                date_time,
+                duration_minutes
+            )
+            
+            if has_conflict:
+                messages.error(self.request, error_message)
+                return self.form_invalid(form)
+        except AppointmentConflictError as e:
+            messages.error(self.request, str(e))
+            return self.form_invalid(form)
+            
+            create_appointment(
+                conseiller=self.conseiller,
+                client=self.request.user,
+                date_time=date_time,
+                duration_minutes=duration_minutes,
+                notes=notes
+            )
+            
+            messages.success(
+                self.request,
+                f'Appointment confirmed with {self.conseiller.get_full_name() or self.conseiller.email} '
+                f'on {date_time.strftime("%B %d, %Y at %H:%M")}.'
+            )
+        except AppointmentConflictError as e:
+            messages.error(self.request, str(e))
+            return self.form_invalid(form)
+        except AppointmentError as e:
+            messages.error(self.request, f'An error occurred while creating the appointment: {str(e)}')
             return self.form_invalid(form)
         
-        create_appointment(
-            conseiller=self.conseiller,
-            client=self.request.user,
-            date_time=date_time,
-            duration_minutes=duration_minutes,
-            notes=notes
-        )
-        
-        messages.success(
-            self.request,
-            f'Appointment confirmed with {self.conseiller.get_full_name() or self.conseiller.email} '
-            f'on {date_time.strftime("%B %d, %Y at %H:%M")}.'
-        )
         return redirect('insurance_web:my_appointments')
     
     def get_context_data(self, **kwargs):

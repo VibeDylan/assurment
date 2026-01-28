@@ -14,6 +14,11 @@ from ..services import (
     get_profile_initial_data
 )
 from ..utils.mixins import ConseillerRequiredMixin, UserProfileMixin
+from ..exceptions import (
+    PredictionError,
+    InvalidPredictionDataError,
+    ModelNotFoundError,
+)
 
 
 class ConseillerDashboardView(ConseillerRequiredMixin, UserProfileMixin, TemplateView):
@@ -68,16 +73,27 @@ class ConseillerPredictView(ConseillerRequiredMixin, UserProfileMixin, FormView)
     
     def form_valid(self, form):
         form_data = form.cleaned_data
-        predicted_amount = calculate_insurance_premium(form_data)
+        try:
+            predicted_amount = calculate_insurance_premium(form_data)
+            
+            create_prediction(
+                user=self.client,
+                created_by=self.request.user,
+                form_data=form_data,
+                predicted_amount=predicted_amount
+            )
+            
+            messages.success(self.request, f'Estimated premium: {predicted_amount:.2f} € per year')
+        except InvalidPredictionDataError as e:
+            messages.error(self.request, f'Invalid data: {str(e)}')
+            return self.form_invalid(form)
+        except ModelNotFoundError:
+            messages.error(self.request, 'Prediction service is temporarily unavailable. Please try again later.')
+            return self.form_invalid(form)
+        except PredictionError as e:
+            messages.error(self.request, f'An error occurred: {str(e)}')
+            return self.form_invalid(form)
         
-        create_prediction(
-            user=self.client,
-            created_by=self.request.user,
-            form_data=form_data,
-            predicted_amount=predicted_amount
-        )
-        
-        messages.success(self.request, f'Estimated premium: {predicted_amount:.2f} € per year')
         return self.form_invalid(form)
     
     def get_context_data(self, **kwargs):
@@ -86,8 +102,11 @@ class ConseillerPredictView(ConseillerRequiredMixin, UserProfileMixin, FormView)
         if self.request.method == 'POST':
             form = self.get_form()
             if form.is_valid():
-                form_data = form.cleaned_data
-                context['predicted_amount'] = calculate_insurance_premium(form_data)
+                try:
+                    form_data = form.cleaned_data
+                    context['predicted_amount'] = calculate_insurance_premium(form_data)
+                except (PredictionError, InvalidPredictionDataError, ModelNotFoundError):
+                    pass
         return context
 
 

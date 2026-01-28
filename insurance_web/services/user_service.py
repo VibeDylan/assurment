@@ -1,12 +1,19 @@
-from ..models import Profile
-
+from ..utils.logging import log_error
 
 def update_profile_from_form_data(profile, form_data):
     """Met à jour le profil utilisateur avec les données du formulaire"""
     for key, value in form_data.items():
-        if hasattr(profile, key):
-            setattr(profile, key, value)
-    profile.save()
+        try:
+            if hasattr(profile, key):
+                setattr(profile, key, value)
+        except Exception as e:
+            log_error(f"Error updating profile from form data: {e}")
+            continue
+    try:
+        profile.save()
+    except Exception as e:
+        log_error(f"Error saving profile: {e}")
+        return None
     return profile
 
 

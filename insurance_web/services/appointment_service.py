@@ -1,8 +1,11 @@
 from django.utils import timezone
+from django.db import transaction
 from datetime import datetime, timedelta
 from calendar import monthrange
 
 from ..models import Appointment, User
+from ..utils.logging import log_error, log_appointment
+from ..exceptions import AppointmentError, AppointmentConflictError
 
 
 def get_available_slots(conseiller, selected_date, existing_appointments):
@@ -33,16 +36,30 @@ def get_available_slots(conseiller, selected_date, existing_appointments):
             if current_slot not in booked_slots and current_slot > timezone.now():
                 available_slots.append(current_slot)
             current_slot += timedelta(minutes=30)
-    except ValueError:
-        pass
+    except ValueError as e:
+        log_error(f"Error getting available slots: {e}")
+        return available_slots
     
     return available_slots
 
 
 def check_appointment_conflict(conseiller, date_time, duration_minutes):
-    """Vérifie s'il y a un conflit avec un rendez-vous existant"""
+    """
+    Vérifie s'il y a un conflit avec un rendez-vous existant.
+    
+    Args:
+        conseiller: Conseiller pour qui vérifier le conflit
+        date_time: Date et heure du rendez-vous
+        duration_minutes: Durée en minutes
+        
+    Returns:
+        tuple: (has_conflict: bool, error_message: str | None)
+        
+    Raises:
+        AppointmentConflictError: Si le créneau est dans le passé
+    """
     if date_time <= timezone.now():
-        return True, "You cannot book a time slot in the past."
+        raise AppointmentConflictError("You cannot book a time slot in the past.")
     
     conflicting_appointments = Appointment.objects.filter(
         conseiller=conseiller,
@@ -56,16 +73,45 @@ def check_appointment_conflict(conseiller, date_time, duration_minutes):
     return False, None
 
 
+@transaction.atomic
 def create_appointment(conseiller, client, date_time, duration_minutes, notes=''):
-    """Crée un nouveau rendez-vous"""
-    appointment = Appointment.objects.create(
-        conseiller=conseiller,
-        client=client,
-        date_time=date_time,
-        duration_minutes=duration_minutes,
-        notes=notes
-    )
-    return appointment
+    """
+    Crée un nouveau rendez-vous.
+    
+    Args:
+        conseiller: Conseiller pour le rendez-vous
+        client: Client qui réserve
+        date_time: Date et heure du rendez-vous
+        duration_minutes: Durée en minutes
+        notes: Notes optionnelles
+        
+    Returns:
+        Appointment: Instance de rendez-vous créée
+        
+    Raises:
+        AppointmentError: Si une erreur survient lors de la création
+    """
+    try:
+        appointment = Appointment.objects.create(
+            conseiller=conseiller,
+            client=client,
+            date_time=date_time,
+            duration_minutes=duration_minutes,
+            notes=notes
+        )
+        log_appointment(appointment, 'created')
+        return appointment
+    except Exception as e:
+        log_error(
+            f"Error creating appointment: {e}",
+            exc_info=True,
+            extra={
+                'conseiller_id': conseiller.id,
+                'client_id': client.id,
+                'date_time': date_time.isoformat(),
+            }
+        )
+        raise AppointmentError(f"Failed to create appointment: {e}")
 
 
 def get_appointments_for_calendar(conseiller, year=None, month=None):
@@ -73,7 +119,8 @@ def get_appointments_for_calendar(conseiller, year=None, month=None):
     if year and month:
         try:
             current_date = datetime(int(year), int(month), 1).date()
-        except (ValueError, TypeError):
+        except (ValueError, TypeError) as e:
+            log_error(f"Invalid date parameters: year={year}, month={month}", exc_info=True)
             current_date = datetime.now().date().replace(day=1)
     else:
         current_date = datetime.now().date().replace(day=1)
