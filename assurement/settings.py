@@ -29,6 +29,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.admindocs.middleware.XViewMiddleware',  # Required for admin docs
@@ -92,10 +93,19 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LANGUAGE_CODE = 'en-US'
-TIME_ZONE = 'UTC'
+LANGUAGE_CODE = 'fr-FR'
+TIME_ZONE = 'Europe/Paris'
 USE_I18N = True
 USE_TZ = True
+
+LANGUAGES = [
+    ('fr', 'French'),
+    ('en', 'English'),
+]
+
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale'),
+]
 
 STATIC_URL = 'static/'
 LOGIN_REDIRECT_URL = '/predict'

@@ -44,9 +44,19 @@ class PredictView(UserProfileMixin, FormView):
     
     def get_initial(self):
         return get_profile_initial_data(self.request.user.profile)
+
+    def calculate_bmi(self, weight, height):
+        return weight / (height ** 2)
     
     def form_valid(self, form):
         form_data = form.cleaned_data
+        height = form_data['height']
+        weight = form_data['weight']
+        bmi = self.calculate_bmi(weight, height)
+        form_data['bmi'] = bmi
+        del form_data['weight']
+        del form_data['height']
+    
         try:
             predicted_amount = calculate_insurance_premium(form_data)
             

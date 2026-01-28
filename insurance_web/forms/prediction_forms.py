@@ -23,20 +23,31 @@ class PredictionForm(forms.Form):
         })
     )
     
-    bmi = forms.DecimalField(
-        label="BMI (Body Mass Index)",
+
+    height = forms.DecimalField(
+        label="Height (in meters)",
         required=True,
-        max_digits=5,
+        min_value=1.0,
+        max_value=2.5,
         decimal_places=2,
-        min_value=10.0,
-        max_value=50.0,
         widget=forms.NumberInput(attrs={
             'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors',
-            'placeholder': 'e.g. 22.5',
-            'step': '0.1'
+            'placeholder': 'e.g. 1.75'
         })
     )
-    
+
+    weight = forms.DecimalField(
+        label="Weight (in kilograms)",
+        required=True,
+        min_value=40.0,
+        max_value=150.0,
+        decimal_places=2,
+        widget=forms.NumberInput(attrs={
+            'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors',
+            'placeholder': 'e.g. 70.0'
+        })
+    )
+
     children = forms.IntegerField(
         label="Number of Children",
         required=True,
