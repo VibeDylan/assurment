@@ -15,43 +15,7 @@ Ce document décrit tous les tests nécessaires pour l'application Assurement, o
 
 ## 🧪 Tests Unitaires
 
-### 2. Tests des Formulaires (`insurance_web/tests/test_forms.py`)
 
-#### CustomUserCreationForm
-```python
-# Tests à créer :
-
-1. test_form_valid_data()
-   - Soumettre un formulaire avec des données valides
-   - Vérifier que form.is_valid() retourne True
-   - Vérifier que l'utilisateur est créé
-
-2. test_form_email_validation()
-   - Tester email invalide (pas de @)
-   - Tester email déjà existant
-   - Tester email valide
-
-3. test_form_password_validation()
-   - Tester mot de passe < 8 caractères (doit échouer)
-   - Tester mots de passe qui ne correspondent pas
-   - Tester mot de passe valide
-
-4. test_form_username_generation()
-   - Vérifier que username est généré depuis email
-   - Vérifier unicité du username (ajout de compteur si nécessaire)
-   - Tester avec email déjà utilisé
-
-5. test_form_required_fields()
-   - Tester que first_name est requis
-   - Tester que last_name est requis
-   - Tester que email est requis
-   - Tester que password1 et password2 sont requis
-
-6. test_form_save_method()
-   - Vérifier que save() crée un User
-   - Vérifier que save() crée un Profile avec role='user' par défaut
-   - Vérifier que les données sont correctement sauvegardées
-```
 
 #### PredictionForm
 ```python
