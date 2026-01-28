@@ -1,16 +1,17 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}Liste des Clients - Assurement{% endblock %}
+{% block title %}{% trans "Liste des Clients" %} - Assurement{% endblock %}
 
 {% block content %}
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
     <div class="mb-10 flex items-center justify-between">
         <div>
-            <h1 class="text-4xl font-bold text-gray-900 mb-2">Mes Clients</h1>
-            <p class="text-lg text-gray-600">Gérez vos clients et leurs prédictions</p>
+            <h1 class="text-4xl font-bold text-gray-900 mb-2">{% trans "Mes Clients" %}</h1>
+            <p class="text-lg text-gray-600">{% trans "Gérez vos clients et leurs prédictions" %}</p>
         </div>
         <a href="{% url 'insurance_web:conseiller_dashboard' %}" class="btn-secondary px-6 py-3 inline-flex items-center">
-            Retour au Tableau de bord
+            {% trans "Retour au Tableau de bord" %}
         </a>
     </div>
 
@@ -19,9 +20,9 @@
             <div class="mb-10">
                 <div class="flex items-center mb-6">
                 <div class="w-1 h-8 bg-gray-900 rounded-full mr-3"></div>
-                <h2 class="text-xl font-semibold text-gray-900">Clients avec Rendez-vous</h2>
+                <h2 class="text-xl font-semibold text-gray-900">{% trans "Clients avec Rendez-vous" %}</h2>
                     <span class="ml-4 inline-flex items-center px-3 py-1 rounded text-xs font-medium bg-gray-200 text-gray-700">
-                        {{ clients|length }} client{{ clients|length|pluralize }}
+                        {% blocktrans with count=clients|length %}{{ count }} client{{ count|pluralize }}{% endblocktrans %}
                     </span>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -50,7 +51,7 @@
                                             <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                                             </svg>
-                                            {{ client.profile.age }} ans
+                                            {% blocktrans with age=client.profile.age %}{{ age }} ans{% endblocktrans %}
                                         </div>
                                     {% endif %}
                                     {% if client.profile.region %}
@@ -66,7 +67,7 @@
                             {% endif %}
 
                             <a href="{% url 'insurance_web:conseiller_predict_client' client.id %}" class="block w-full btn-primary text-center py-3 text-sm">
-                                Faire une Prédiction
+                                {% trans "Faire une Prédiction" %}
                             </a>
                         </div>
                     {% endfor %}
@@ -78,9 +79,9 @@
             <div>
                 <div class="flex items-center mb-6">
                     <div class="w-1 h-8 bg-gray-300 rounded-full mr-3"></div>
-                    <h2 class="text-2xl font-bold text-gray-900">Tous les Utilisateurs</h2>
+                    <h2 class="text-2xl font-bold text-gray-900">{% trans "Tous les Utilisateurs" %}</h2>
                     <span class="ml-4 inline-flex items-center px-3 py-1 rounded text-xs font-medium bg-gray-200 text-gray-700">
-                        {{ all_users|length }} utilisateur{{ all_users|length|pluralize }}
+                        {% blocktrans with count=all_users|length %}{{ count }} utilisateur{{ count|pluralize }}{% endblocktrans %}
                     </span>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -109,7 +110,7 @@
                                             <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                                             </svg>
-                                            {{ user.profile.age }} ans
+                                            {% blocktrans with age=user.profile.age %}{{ age }} ans{% endblocktrans %}
                                         </div>
                                     {% endif %}
                                     {% if user.profile.region %}
@@ -125,7 +126,7 @@
                             {% endif %}
 
                             <a href="{% url 'insurance_web:conseiller_predict_client' user.id %}" class="block w-full btn-primary text-center py-3 text-sm">
-                                Faire une Prédiction
+                                {% trans "Faire une Prédiction" %}
                             </a>
                         </div>
                     {% endfor %}
@@ -139,10 +140,10 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                 </svg>
             </div>
-            <h3 class="text-2xl font-bold text-gray-900 mb-2">Aucun Client</h3>
-            <p class="text-gray-600 mb-8">Aucun utilisateur disponible.</p>
+            <h3 class="text-2xl font-bold text-gray-900 mb-2">{% trans "Aucun Client" %}</h3>
+            <p class="text-gray-600 mb-8">{% trans "Aucun utilisateur disponible." %}</p>
             <a href="{% url 'insurance_web:conseiller_predict' %}" class="btn-primary px-8 py-3 inline-flex items-center">
-                Faire une Prédiction
+                {% trans "Faire une Prédiction" %}
             </a>
         </div>
     {% endif %}

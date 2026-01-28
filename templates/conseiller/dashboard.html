@@ -1,19 +1,20 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}Tableau de bord Conseiller - Assurement{% endblock %}
+{% block title %}{% trans "Tableau de bord Conseiller" %} - Assurement{% endblock %}
 
 {% block content %}
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="mb-8">
-        <h1 class="text-3xl font-semibold text-gray-900 mb-2">Tableau de bord Conseiller</h1>
-        <p class="text-base text-gray-600">Bon retour, {{ user.get_full_name|default:user.email }}</p>
+        <h1 class="text-3xl font-semibold text-gray-900 mb-2">{% trans "Tableau de bord Conseiller" %}</h1>
+        <p class="text-base text-gray-600">{% trans "Bon retour," %} {{ user.get_full_name|default:user.email }}</p>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <div class="stat-card">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-xs font-medium text-gray-500 mb-2 uppercase tracking-wider">Total Rendez-vous</p>
+                    <p class="text-xs font-medium text-gray-500 mb-2 uppercase tracking-wider">{% trans "Total Rendez-vous" %}</p>
                     <p class="text-3xl font-semibold text-gray-900">{{ total_appointments }}</p>
                 </div>
                 <div class="w-14 h-14 bg-gray-100 rounded flex items-center justify-center">
@@ -27,7 +28,7 @@
         <div class="stat-card">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-xs font-medium text-gray-500 mb-2 uppercase tracking-wider">À Venir</p>
+                    <p class="text-xs font-medium text-gray-500 mb-2 uppercase tracking-wider">{% trans "À Venir" %}</p>
                     <p class="text-3xl font-semibold text-gray-900">{{ upcoming_appointments }}</p>
                 </div>
                 <div class="w-14 h-14 bg-gray-100 rounded flex items-center justify-center">
@@ -41,9 +42,9 @@
         <div class="stat-card">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-xs font-medium text-gray-500 mb-2 uppercase tracking-wider">Actions Rapides</p>
+                    <p class="text-xs font-medium text-gray-500 mb-2 uppercase tracking-wider">{% trans "Actions Rapides" %}</p>
                     <a href="{% url 'insurance_web:conseiller_predict' %}" class="text-sm font-medium text-gray-900 hover:underline inline-flex items-center">
-                        Nouvelle Prédiction
+                        {% trans "Nouvelle Prédiction" %}
                     </a>
                 </div>
                 <div class="w-14 h-14 bg-gray-100 rounded flex items-center justify-center">
@@ -58,9 +59,9 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div class="card p-6">
             <div class="flex items-center justify-between mb-4">
-                <h2 class="text-lg font-semibold text-gray-900">Rendez-vous à Venir</h2>
+                <h2 class="text-lg font-semibold text-gray-900">{% trans "Rendez-vous à Venir" %}</h2>
                 <a href="{% url 'insurance_web:conseiller_calendar' %}" class="text-sm font-medium text-gray-700 hover:underline inline-flex items-center">
-                    Voir Tout
+                    {% trans "Voir Tout" %}
                 </a>
             </div>
             {% if next_appointments %}
@@ -93,24 +94,24 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                         </svg>
                     </div>
-                    <p class="text-gray-500">Aucun rendez-vous à venir</p>
+                    <p class="text-gray-500">{% trans "Aucun rendez-vous à venir" %}</p>
                 </div>
             {% endif %}
         </div>
 
         <div class="card p-6">
             <div class="flex items-center justify-between mb-4">
-                <h2 class="text-lg font-semibold text-gray-900">Navigation Rapide</h2>
+                <h2 class="text-lg font-semibold text-gray-900">{% trans "Navigation Rapide" %}</h2>
             </div>
             <div class="space-y-3">
                 <a href="{% url 'insurance_web:conseiller_predict' %}" class="block w-full btn-primary text-center py-3">
-                    Faire une Prédiction
+                    {% trans "Faire une Prédiction" %}
                 </a>
                 <a href="{% url 'insurance_web:conseiller_calendar' %}" class="block w-full btn-secondary text-center py-3">
-                    Voir le Calendrier
+                    {% trans "Voir le Calendrier" %}
                 </a>
                 <a href="{% url 'insurance_web:conseiller_clients' %}" class="block w-full btn-secondary text-center py-3">
-                    Gérer les Clients
+                    {% trans "Gérer les Clients" %}
                 </a>
             </div>
         </div>

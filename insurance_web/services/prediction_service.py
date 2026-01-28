@@ -4,6 +4,7 @@ from django.conf import settings
 import pandas as pd 
 from django.db import transaction
 
+from django.utils.translation import gettext as _
 from ..models import Prediction
 from ..utils.logging import log_error, log_prediction, log_critical
 from ..exceptions import (
@@ -23,14 +24,14 @@ def _load_model():
     if _model is None:
         try:
             if not os.path.exists(MODEL_PATH):
-                raise ModelNotFoundError(f"Model file not found at {MODEL_PATH}")
+                raise ModelNotFoundError(_("Model file not found at %(path)s") % {'path': MODEL_PATH})
             _model = joblib.load(MODEL_PATH)
         except FileNotFoundError:
-            log_critical(f"Model file not found at {MODEL_PATH}")
-            raise ModelNotFoundError(f"Model file not found at {MODEL_PATH}")
+            log_critical(_("Model file not found at %(path)s") % {'path': MODEL_PATH})
+            raise ModelNotFoundError(_("Model file not found at %(path)s") % {'path': MODEL_PATH})
         except Exception as e:
-            log_critical(f"Error loading model: {e}", exc_info=True)
-            raise PredictionError(f"Failed to load prediction model: {e}")
+            log_critical(_("Error loading model: %(error)s") % {'error': e}, exc_info=True)
+            raise PredictionError(_("Failed to load prediction model: %(error)s") % {'error': e})
     return _model
 
 
@@ -40,19 +41,19 @@ def _validate_prediction_data(form_data):
     missing_fields = [field for field in required_fields if field not in form_data]
     
     if missing_fields:
-        raise InvalidPredictionDataError(f"Missing required fields: {missing_fields}")
+        raise InvalidPredictionDataError(_("Missing required fields: %(fields)s") % {'fields': missing_fields})
     
     if not (18 <= form_data['age'] <= 100):
-        raise InvalidPredictionDataError("Age must be between 18 and 100")
+        raise InvalidPredictionDataError(_("Age must be between 18 and 100"))
     
     if not (10.0 <= float(form_data['bmi']) <= 50.0):
-        raise InvalidPredictionDataError("BMI must be between 10.0 and 50.0")
+        raise InvalidPredictionDataError(_("BMI must be between 10.0 and 50.0"))
     
     if form_data['sex'] not in ['male', 'female']:
-        raise InvalidPredictionDataError("Sex must be 'male' or 'female'")
+        raise InvalidPredictionDataError(_("Sex must be 'male' or 'female'"))
     
     if form_data['smoker'] not in ['yes', 'no']:
-        raise InvalidPredictionDataError("Smoker must be 'yes' or 'no'")
+        raise InvalidPredictionDataError(_("Smoker must be 'yes' or 'no'"))
 
 
 def calculate_insurance_premium(form_data):
@@ -88,10 +89,10 @@ def calculate_insurance_premium(form_data):
     except (InvalidPredictionDataError, ModelNotFoundError):
         raise
     except Exception as e:
-        log_error(f"Error calculating insurance premium: {e}", exc_info=True, extra={
+        log_error(_("Error calculating insurance premium: %(error)s") % {'error': e}, exc_info=True, extra={
             'form_data': form_data
         })
-        raise PredictionError(f"Failed to calculate insurance premium: {e}")
+        raise PredictionError(_("Failed to calculate insurance premium: %(error)s") % {'error': e})
 
 
 @transaction.atomic
@@ -112,7 +113,7 @@ def create_prediction(user, created_by, form_data, predicted_amount):
         PredictionError: Si une erreur survient lors de la création
     """
     if not user or not hasattr(user, 'profile'):
-        raise PredictionError("User must have a profile")
+        raise PredictionError(_("User must have a profile"))
     
     try:
         prediction = Prediction.objects.create(
@@ -133,8 +134,8 @@ def create_prediction(user, created_by, form_data, predicted_amount):
         return prediction
     except Exception as e:
         log_error(
-            f"Error creating prediction for user {user.id}: {e}",
+            _("Error creating prediction for user %(id)s: %(error)s") % {'id': user.id, 'error': e},
             exc_info=True,
             extra={'user_id': user.id, 'created_by_id': created_by.id}
         )
-        raise PredictionError(f"Failed to create prediction: {e}")
+        raise PredictionError(_("Failed to create prediction: %(error)s") % {'error': e})

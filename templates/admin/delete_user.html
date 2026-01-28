@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}Supprimer l'Utilisateur - Assurement{% endblock %}
+{% block title %}{% trans "Supprimer l'Utilisateur" %} - Assurement{% endblock %}
 
 {% block content %}
 <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -9,10 +10,10 @@
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
             </svg>
-            Retour à la Gestion des Utilisateurs
+            {% trans "Retour à la Gestion des Utilisateurs" %}
         </a>
-        <h1 class="text-4xl font-bold text-gray-900 mb-2">Supprimer l'Utilisateur</h1>
-        <p class="text-lg text-gray-600">Cette action est irréversible</p>
+        <h1 class="text-4xl font-bold text-gray-900 mb-2">{% trans "Supprimer l'Utilisateur" %}</h1>
+        <p class="text-lg text-gray-600">{% trans "Cette action est irréversible" %}</p>
     </div>
 
     <div class="card p-10 border border-red-200">
@@ -24,23 +25,22 @@
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-xl font-bold text-red-900 mb-3">Avertissement : Action Irréversible</h3>
+                    <h3 class="text-xl font-bold text-red-900 mb-3">{% trans "Avertissement : Action Irréversible" %}</h3>
                     <p class="text-sm text-red-800 font-medium mb-3">
-                        Vous êtes sur le point de supprimer définitivement le compte de cet utilisateur. 
-                        Cette action supprimera toutes les données associées, notamment :
+                        {% trans "Vous êtes sur le point de supprimer définitivement le compte de cet utilisateur. Cette action supprimera toutes les données associées, notamment :" %}
                     </p>
                     <ul class="list-disc list-inside text-sm text-red-800 space-y-1 font-medium">
-                        <li>Profil utilisateur</li>
-                        <li>Tous les rendez-vous associés</li>
-                        <li>Toutes les prédictions associées</li>
-                        <li>Toutes les autres données liées</li>
+                        <li>{% trans "Profil utilisateur" %}</li>
+                        <li>{% trans "Tous les rendez-vous associés" %}</li>
+                        <li>{% trans "Toutes les prédictions associées" %}</li>
+                        <li>{% trans "Toutes les autres données liées" %}</li>
                     </ul>
                 </div>
             </div>
         </div>
 
         <div class="mb-8 p-6 bg-gray-50 rounded-lg border border-gray-200">
-            <p class="text-sm font-semibold text-gray-500 mb-4 uppercase tracking-wider">Utilisateur à Supprimer</p>
+            <p class="text-sm font-semibold text-gray-500 mb-4 uppercase tracking-wider">{% trans "Utilisateur à Supprimer" %}</p>
             <div class="flex items-center">
                 <div class="w-16 h-16 bg-red-100 rounded-lg flex items-center justify-center mr-4">
                     <span class="text-red-600 font-bold text-xl">
@@ -55,15 +55,15 @@
                     <div class="mt-3">
                         {% if target_user.profile.role == 'admin' %}
                             <span class="inline-flex items-center px-3 py-1 rounded text-xs font-medium bg-gray-200 text-gray-700">
-                                Administrateur
+                                {% trans "Administrateur" %}
                             </span>
                         {% elif target_user.profile.role == 'conseiller' %}
                             <span class="inline-flex items-center px-3 py-1 rounded text-xs font-medium bg-gray-200 text-gray-700">
-                                Conseiller
+                                {% trans "Conseiller" %}
                             </span>
                         {% else %}
                             <span class="inline-flex items-center px-3 py-1 rounded text-xs font-medium bg-gray-200 text-gray-700">
-                                Utilisateur
+                                {% trans "Utilisateur" %}
                             </span>
                         {% endif %}
                     </div>
@@ -93,10 +93,10 @@
             
             <div class="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200">
                 <a href="{% url 'insurance_web:admin_user_management' %}" class="btn-secondary px-8 py-3">
-                    Annuler
+                    {% trans "Annuler" %}
                 </a>
-                <button type="submit" class="px-8 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded" onclick="return confirm('Êtes-vous ABSOLUMENT SÛR de vouloir supprimer définitivement ce compte ? Cette action ne peut pas être annulée.');">
-                    Supprimer Définitivement
+                <button type="submit" class="px-8 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded" onclick="return confirm('{% trans "Êtes-vous ABSOLUMENT SÛR de vouloir supprimer définitivement ce compte ? Cette action ne peut pas être annulée." %}');">
+                    {% trans "Supprimer Définitivement" %}
                 </button>
             </div>
         </form>

@@ -1,3 +1,4 @@
+from django.utils.translation import gettext as _
 from django.utils import timezone
 from django.db import transaction
 from datetime import datetime, timedelta
@@ -37,7 +38,7 @@ def get_available_slots(conseiller, selected_date, existing_appointments):
                 available_slots.append(current_slot)
             current_slot += timedelta(minutes=30)
     except ValueError as e:
-        log_error(f"Error getting available slots: {e}")
+        log_error(_("Error getting available slots: %(error)s") % {'error': e})
         return available_slots
     
     return available_slots
@@ -59,7 +60,7 @@ def check_appointment_conflict(conseiller, date_time, duration_minutes):
         AppointmentConflictError: Si le créneau est dans le passé
     """
     if date_time <= timezone.now():
-        raise AppointmentConflictError("You cannot book a time slot in the past.")
+        raise AppointmentConflictError(_("You cannot book a time slot in the past."))
     
     conflicting_appointments = Appointment.objects.filter(
         conseiller=conseiller,
@@ -68,7 +69,7 @@ def check_appointment_conflict(conseiller, date_time, duration_minutes):
     )
     
     if conflicting_appointments.exists():
-        return True, "This time slot is no longer available. Please choose another one."
+        return True, _("This time slot is no longer available. Please choose another one.")
     
     return False, None
 
@@ -103,7 +104,7 @@ def create_appointment(conseiller, client, date_time, duration_minutes, notes=''
         return appointment
     except Exception as e:
         log_error(
-            f"Error creating appointment: {e}",
+            _("Error creating appointment: %(error)s") % {'error': e},
             exc_info=True,
             extra={
                 'conseiller_id': conseiller.id,
@@ -111,7 +112,7 @@ def create_appointment(conseiller, client, date_time, duration_minutes, notes=''
                 'date_time': date_time.isoformat(),
             }
         )
-        raise AppointmentError(f"Failed to create appointment: {e}")
+        raise AppointmentError(_("Failed to create appointment: %(error)s") % {'error': e})
 
 
 def get_appointments_for_calendar(conseiller, year=None, month=None):

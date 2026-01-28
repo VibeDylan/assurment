@@ -1,56 +1,57 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.utils.translation import gettext_lazy as _
 
 
 class CustomUserCreationForm(UserCreationForm):
     first_name = forms.CharField(
-        label="First Name",
+        label=_("First Name"),
         max_length=150,
         required=True,
         widget=forms.TextInput(attrs={
             'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors',
-            'placeholder': 'Enter your first name',
+            'placeholder': _('Enter your first name'),
             'autocomplete': 'first-name'
         })
     )
     last_name = forms.CharField(
-        label="Last Name",
+        label=_("Last Name"),
         max_length=150,
         required=True,
         widget=forms.TextInput(attrs={
             'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors',
-            'placeholder': 'Enter your last name',
+            'placeholder': _('Enter your last name'),
             'autocomplete': 'last-name'
         })
     )
 
     email = forms.EmailField(
-        label="Email",
+        label=_("Email"),
         required=True,
         widget=forms.EmailInput(attrs={
             'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors',
-            'placeholder': 'Enter your email',
+            'placeholder': _('Enter your email'),
             'autocomplete': 'email'
         })
     )
     
     password1 = forms.CharField(
-        label="Password",
+        label=_("Password"),
         required=True,
         widget=forms.PasswordInput(attrs={
             'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors',
-            'placeholder': 'Create a password',
+            'placeholder': _('Create a password'),
             'autocomplete': 'new-password'
         })
     )
     
     password2 = forms.CharField(
-        label="Confirm Password",
+        label=_("Confirm Password"),
         required=True,
         widget=forms.PasswordInput(attrs={
             'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors',
-            'placeholder': 'Confirm your password',
+            'placeholder': _('Confirm your password'),
             'autocomplete': 'new-password'
         })
     )
@@ -69,20 +70,20 @@ class CustomUserCreationForm(UserCreationForm):
     def clean_password1(self):
         password1 = self.cleaned_data.get("password1")
         if len(password1) < 8:
-            raise forms.ValidationError("Password must contain at least 8 characters.")
+            raise forms.ValidationError(_("Password must contain at least 8 characters."))
         return password1
     
     def clean_password2(self):
         password1 = self.cleaned_data.get("password1")
         password2 = self.cleaned_data.get("password2")
         if password1 and password2 and password1 != password2:
-            raise forms.ValidationError("The two passwords do not match.")
+            raise forms.ValidationError(_("The two passwords do not match."))
         return password2
     
     def clean_email(self):
         email = self.cleaned_data.get("email")
         if User.objects.filter(email=email).exists():
-            raise forms.ValidationError("A user with this email already exists.")
+            raise forms.ValidationError(_("A user with this email already exists."))
         return email
     
     def save(self, commit=True):

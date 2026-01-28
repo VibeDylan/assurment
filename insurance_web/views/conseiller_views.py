@@ -2,6 +2,7 @@ from django.views.generic import TemplateView, FormView
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.utils import timezone
+from django.utils.translation import gettext as _
 from datetime import datetime, timedelta
 from calendar import monthrange
 
@@ -83,15 +84,15 @@ class ConseillerPredictView(ConseillerRequiredMixin, UserProfileMixin, FormView)
                 predicted_amount=predicted_amount
             )
             
-            messages.success(self.request, f'Estimated premium: {predicted_amount:.2f} € per year')
+            messages.success(self.request, _('Estimated premium: %(amount).2f € per year') % {'amount': predicted_amount})
         except InvalidPredictionDataError as e:
-            messages.error(self.request, f'Invalid data: {str(e)}')
+            messages.error(self.request, _('Invalid data: %(error)s') % {'error': str(e)})
             return self.form_invalid(form)
         except ModelNotFoundError:
-            messages.error(self.request, 'Prediction service is temporarily unavailable. Please try again later.')
+            messages.error(self.request, _('Prediction service is temporarily unavailable. Please try again later.'))
             return self.form_invalid(form)
         except PredictionError as e:
-            messages.error(self.request, f'An error occurred: {str(e)}')
+            messages.error(self.request, _('An error occurred: %(error)s') % {'error': str(e)})
             return self.form_invalid(form)
         
         return self.form_invalid(form)
@@ -158,8 +159,8 @@ class ConseillerCalendarView(ConseillerRequiredMixin, UserProfileMixin, Template
         else:
             next_month = current_date.replace(month=current_date.month + 1)
         
-        month_names = ['', 'January', 'February', 'March', 'April', 'May', 'June',
-                       'July', 'August', 'September', 'October', 'November', 'December']
+        month_names = ['', _('January'), _('February'), _('March'), _('April'), _('May'), _('June'),
+                       _('July'), _('August'), _('September'), _('October'), _('November'), _('December')]
         
         all_appointments = []
         for appointments_list in appointments_by_date.values():

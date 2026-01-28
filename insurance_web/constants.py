@@ -1,22 +1,24 @@
+from django.utils.translation import gettext_lazy as _
+
 SEX_CHOICES = [
-    ('male', 'Male'),
-    ('female', 'Female'),
+    ('male', _('Male')),
+    ('female', _('Female')),
 ]
 
 SMOKER_CHOICES = [
-    ('yes', 'Yes'),
-    ('no', 'No'),
+    ('yes', _('Yes')),
+    ('no', _('No')),
 ]
 
 REGION_CHOICES = [
-    ('northwest', 'Northwest'),
-    ('northeast', 'Northeast'),
-    ('southwest', 'Southwest'),
-    ('southeast', 'Southeast'),
+    ('northwest', _('Northwest')),
+    ('northeast', _('Northeast')),
+    ('southwest', _('Southwest')),
+    ('southeast', _('Southeast')),
 ]
 
 ROLE_CHOICES = [
-    ('user', 'User'),
-    ('conseiller', 'Advisor'),
-    ('admin', 'Administrator'),
+    ('user', _('User')),
+    ('conseiller', _('Advisor')),
+    ('admin', _('Administrator')),
 ]

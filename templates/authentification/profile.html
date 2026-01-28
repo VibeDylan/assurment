@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}Mon Profil - Assurement{% endblock %}
+{% block title %}{% trans "Mon Profil" %} - Assurement{% endblock %}
 
 {% block content %}
 <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -11,7 +12,7 @@
             </div>
             <div class="flex-1">
                 <h1 class="text-2xl font-semibold text-gray-900 mb-2">{{ user.get_full_name|default:user.email }}</h1>
-                <p class="text-gray-600">{{ user.email|default:"Email non fourni" }}</p>
+                <p class="text-gray-600">{{ user.email|default:_("Email non fourni") }}</p>
                 {% if user.profile %}
                     <span class="inline-flex items-center px-3 py-1 mt-3 rounded text-xs font-medium bg-gray-200 text-gray-700">
                         {{ user.profile.get_role_display }}
@@ -30,8 +31,8 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-xs font-medium text-gray-500 mb-1 uppercase tracking-wider">Nom Complet</p>
-                    <p class="text-lg font-semibold text-gray-900">{{ user.get_full_name|default:"Non fourni" }}</p>
+                    <p class="text-xs font-medium text-gray-500 mb-1 uppercase tracking-wider">{% trans "Nom Complet" %}</p>
+                    <p class="text-lg font-semibold text-gray-900">{{ user.get_full_name|default:_("Non fourni") }}</p>
                 </div>
             </div>
         </div>
@@ -44,8 +45,8 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-xs font-medium text-gray-500 mb-1 uppercase tracking-wider">Email</p>
-                    <p class="text-lg font-semibold text-gray-900">{{ user.email|default:"Non fourni" }}</p>
+                    <p class="text-xs font-medium text-gray-500 mb-1 uppercase tracking-wider">{% trans "Email" %}</p>
+                    <p class="text-lg font-semibold text-gray-900">{{ user.email|default:_("Non fourni") }}</p>
                 </div>
             </div>
         </div>
@@ -59,7 +60,7 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-gray-500 mb-1 uppercase tracking-wider">Membre Depuis</p>
+                    <p class="text-sm font-medium text-gray-500 mb-1 uppercase tracking-wider">{% trans "Membre Depuis" %}</p>
                     <p class="text-xl font-semibold text-gray-900">{{ user.profile.created_at|date:"d F Y" }}</p>
                 </div>
             </div>
@@ -70,10 +71,10 @@
     {% if predictions %}
     <div class="card p-8 mb-8">
         <div class="flex items-center justify-between mb-6">
-            <h2 class="text-xl font-semibold text-gray-900">Historique des Prédictions</h2>
+            <h2 class="text-xl font-semibold text-gray-900">{% trans "Historique des Prédictions" %}</h2>
             {% if predictions.paginator.count > 0 %}
             <span class="inline-flex items-center px-3 py-1 rounded text-sm font-medium bg-gray-200 text-gray-700">
-                {{ predictions.paginator.count }} prédiction{{ predictions.paginator.count|pluralize }}
+                {% blocktrans with count=predictions.paginator.count %}{{ count }} prédiction{{ count|pluralize }}{% endblocktrans %}
             </span>
             {% endif %}
         </div>
@@ -90,18 +91,18 @@
                         <div class="flex-1">
                             <div class="flex items-center justify-between mb-2">
                                 <div>
-                                    <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Montant Prédit</p>
+                                    <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">{% trans "Montant Prédit" %}</p>
                                     <p class="text-3xl font-semibold text-gray-900 mt-1">{{ prediction.predicted_amount }} €</p>
                                 </div>
                                 <div class="text-right">
-                                    <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Date</p>
+                                    <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">{% trans "Date" %}</p>
                                     <p class="text-lg font-semibold text-gray-900 mt-1">{{ prediction.created_at|date:"d M Y" }}</p>
                                     <p class="text-xs text-gray-500 mt-1">{{ prediction.created_at|date:"H:i" }}</p>
                                 </div>
                             </div>
                             {% if prediction.created_by != prediction.user %}
                             <p class="text-xs text-gray-500 mt-3">
-                                Créé par : <span class="font-medium">{{ prediction.created_by.get_full_name|default:prediction.created_by.email }}</span>
+                                {% trans "Créé par :" %} <span class="font-medium">{{ prediction.created_by.get_full_name|default:prediction.created_by.email }}</span>
                             </p>
                             {% endif %}
                         </div>
@@ -115,33 +116,33 @@
         <div class="mt-8 flex items-center justify-between border-t border-gray-200 pt-6">
             <div class="flex flex-1 justify-between sm:hidden">
                 {% if predictions.has_previous %}
-                <a href="?page={{ predictions.previous_page_number }}" class="relative inline-flex items-center rounded border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Précédent</a>
+                <a href="?page={{ predictions.previous_page_number }}" class="relative inline-flex items-center rounded border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">{% trans "Précédent" %}</a>
                 {% else %}
-                <span class="relative inline-flex items-center rounded border border-gray-300 bg-gray-50 px-4 py-2 text-sm font-medium text-gray-400 cursor-not-allowed">Précédent</span>
+                <span class="relative inline-flex items-center rounded border border-gray-300 bg-gray-50 px-4 py-2 text-sm font-medium text-gray-400 cursor-not-allowed">{% trans "Précédent" %}</span>
                 {% endif %}
                 {% if predictions.has_next %}
-                <a href="?page={{ predictions.next_page_number }}" class="relative ml-3 inline-flex items-center rounded border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Suivant</a>
+                <a href="?page={{ predictions.next_page_number }}" class="relative ml-3 inline-flex items-center rounded border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">{% trans "Suivant" %}</a>
                 {% else %}
-                <span class="relative ml-3 inline-flex items-center rounded border border-gray-300 bg-gray-50 px-4 py-2 text-sm font-medium text-gray-400 cursor-not-allowed">Suivant</span>
+                <span class="relative ml-3 inline-flex items-center rounded border border-gray-300 bg-gray-50 px-4 py-2 text-sm font-medium text-gray-400 cursor-not-allowed">{% trans "Suivant" %}</span>
                 {% endif %}
             </div>
             <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
                 <div>
                     <p class="text-sm font-medium text-gray-700">
-                        Affichage de <span class="font-semibold">{{ predictions.start_index }}</span> à <span class="font-semibold">{{ predictions.end_index }}</span> sur <span class="font-semibold">{{ predictions.paginator.count }}</span> résultats
+                        {% blocktrans with start=predictions.start_index end=predictions.end_index count=predictions.paginator.count %}Affichage de <span class="font-semibold">{{ start }}</span> à <span class="font-semibold">{{ end }}</span> sur <span class="font-semibold">{{ count }}</span> résultats{% endblocktrans %}
                     </p>
                 </div>
                 <div>
                     <nav class="isolate inline-flex -space-x-px" aria-label="Pagination">
                         {% if predictions.has_previous %}
                         <a href="?page=1" class="relative inline-flex items-center rounded-l border border-gray-300 bg-white px-3 py-2 text-gray-400 hover:bg-gray-50">
-                            <span class="sr-only">Premier</span>
+                            <span class="sr-only">{% trans "Premier" %}</span>
                             <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M15.79 14.77a.75.75 0 01-1.06.02l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 111.04 1.08L11.832 10l3.938 3.71a.75.75 0 01.02 1.06zm-6 0a.75.75 0 01-1.06.02l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 111.04 1.08L5.832 10l3.938 3.71a.75.75 0 01.02 1.06z" clip-rule="evenodd" />
                             </svg>
                         </a>
                         <a href="?page={{ predictions.previous_page_number }}" class="relative inline-flex items-center border border-gray-300 bg-white px-3 py-2 text-gray-400 hover:bg-gray-50">
-                            <span class="sr-only">Précédent</span>
+                            <span class="sr-only">{% trans "Précédent" %}</span>
                             <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
                             </svg>
@@ -158,13 +159,13 @@
                         
                         {% if predictions.has_next %}
                         <a href="?page={{ predictions.next_page_number }}" class="relative inline-flex items-center border border-gray-300 bg-white px-3 py-2 text-gray-400 hover:bg-gray-50">
-                            <span class="sr-only">Suivant</span>
+                            <span class="sr-only">{% trans "Suivant" %}</span>
                             <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
                             </svg>
                         </a>
                         <a href="?page={{ predictions.paginator.num_pages }}" class="relative inline-flex items-center rounded-r border border-gray-300 bg-white px-3 py-2 text-gray-400 hover:bg-gray-50">
-                            <span class="sr-only">Dernier</span>
+                            <span class="sr-only">{% trans "Dernier" %}</span>
                             <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M10.21 14.77a.75.75 0 01.02-1.06L14.168 10 10.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02zm-6 0a.75.75 0 01.02-1.06L8.168 10 4.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
                             </svg>
@@ -183,10 +184,10 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
             </svg>
         </div>
-        <h2 class="text-2xl font-semibold text-gray-900 mb-4">Aucune Prédiction</h2>
-        <p class="text-gray-600 mb-6">Faites votre première prédiction pour la voir ici.</p>
+        <h2 class="text-2xl font-semibold text-gray-900 mb-4">{% trans "Aucune Prédiction" %}</h2>
+        <p class="text-gray-600 mb-6">{% trans "Faites votre première prédiction pour la voir ici." %}</p>
         <a href="{% url 'insurance_web:predict' %}" class="inline-flex items-center btn-primary px-8 py-3">
-            Faire Ma Première Prédiction
+            {% trans "Faire Ma Première Prédiction" %}
         </a>
     </div>
     {% endif %}

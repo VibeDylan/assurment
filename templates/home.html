@@ -1,31 +1,32 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}Assurement - Prédiction de Primes d'Assurance par IA{% endblock %}
+{% block title %}{% trans "Assurement - Prédiction de Primes d'Assurance par IA" %}{% endblock %}
 
 {% block content %}
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
     <div class="text-center max-w-4xl mx-auto mb-16">
         <h1 class="text-4xl sm:text-5xl lg:text-6xl font-semibold text-gray-900 mb-6 leading-tight">
-            Estimez votre prime d'assurance
+            {% trans "Estimez votre prime d'assurance" %}
         </h1>
         
         <p class="text-lg sm:text-xl text-gray-600 mb-10 leading-relaxed max-w-2xl mx-auto">
-            Calculez une estimation de votre prime d'assurance en quelques clics
+            {% trans "Calculez une estimation de votre prime d'assurance en quelques clics" %}
         </p>
 
         {% if user.is_authenticated %}
             <div class="flex justify-center">
                 <a href="{% url 'insurance_web:predict' %}" class="btn-primary px-8 py-3 text-base">
-                    Calculer ma prime
+                    {% trans "Calculer ma prime" %}
                 </a>
             </div>
         {% else %}
             <div class="flex flex-col sm:flex-row gap-3 justify-center">
                 <a href="{% url 'insurance_web:signup' %}" class="btn-primary px-8 py-3 text-base">
-                    Créer un compte
+                    {% trans "Créer un compte" %}
                 </a>
                 <a href="{% url 'insurance_web:login' %}" class="btn-secondary px-8 py-3 text-base">
-                    Se connecter
+                    {% trans "Se connecter" %}
                 </a>
             </div>
         {% endif %}
@@ -38,9 +39,9 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
                 </svg>
             </div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-2">Estimation automatique</h3>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">{% trans "Estimation automatique" %}</h3>
             <p class="text-sm text-gray-600 leading-relaxed">
-                Un modèle de prédiction analyse vos informations pour estimer votre prime d'assurance
+                {% trans "Un modèle de prédiction analyse vos informations pour estimer votre prime d'assurance" %}
             </p>
         </div>
 
@@ -50,9 +51,9 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
                 </svg>
             </div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-2">Sécurisé</h3>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">{% trans "Sécurisé" %}</h3>
             <p class="text-sm text-gray-600 leading-relaxed">
-                Vos données sont protégées et utilisées uniquement pour le calcul de votre estimation
+                {% trans "Vos données sont protégées et utilisées uniquement pour le calcul de votre estimation" %}
             </p>
         </div>
 
@@ -62,40 +63,40 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                 </svg>
             </div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-2">Rapide</h3>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">{% trans "Rapide" %}</h3>
             <p class="text-sm text-gray-600 leading-relaxed">
-                Recevez votre estimation en quelques secondes après avoir rempli le formulaire
+                {% trans "Recevez votre estimation en quelques secondes après avoir rempli le formulaire" %}
             </p>
         </div>
     </div>
 
     <div class="card p-10 mb-16">
-        <h2 class="text-xl font-semibold text-gray-900 mb-8 text-center">Comment ça fonctionne</h2>
+        <h2 class="text-xl font-semibold text-gray-900 mb-8 text-center">{% trans "Comment ça fonctionne" %}</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div class="text-center">
                 <div class="inline-flex items-center justify-center w-12 h-12 bg-gray-900 rounded-full text-white font-semibold text-lg mb-4">1</div>
-                <h4 class="text-base font-semibold text-gray-900 mb-2">Créer un compte</h4>
-                <p class="text-sm text-gray-600">Inscrivez-vous avec votre email</p>
+                <h4 class="text-base font-semibold text-gray-900 mb-2">{% trans "Créer un compte" %}</h4>
+                <p class="text-sm text-gray-600">{% trans "Inscrivez-vous avec votre email" %}</p>
             </div>
             <div class="text-center">
                 <div class="inline-flex items-center justify-center w-12 h-12 bg-gray-900 rounded-full text-white font-semibold text-lg mb-4">2</div>
-                <h4 class="text-base font-semibold text-gray-900 mb-2">Entrer les informations</h4>
-                <p class="text-sm text-gray-600">Fournissez vos informations personnelles et métriques de santé</p>
+                <h4 class="text-base font-semibold text-gray-900 mb-2">{% trans "Entrer les informations" %}</h4>
+                <p class="text-sm text-gray-600">{% trans "Fournissez vos informations personnelles et métriques de santé" %}</p>
             </div>
             <div class="text-center">
                 <div class="inline-flex items-center justify-center w-12 h-12 bg-gray-900 rounded-full text-white font-semibold text-lg mb-4">3</div>
-                <h4 class="text-base font-semibold text-gray-900 mb-2">Obtenir l'estimation</h4>
-                <p class="text-sm text-gray-600">Recevez une estimation de votre prime d'assurance</p>
+                <h4 class="text-base font-semibold text-gray-900 mb-2">{% trans "Obtenir l'estimation" %}</h4>
+                <p class="text-sm text-gray-600">{% trans "Recevez une estimation de votre prime d'assurance" %}</p>
             </div>
         </div>
     </div>
 
     {% if not user.is_authenticated %}
     <div class="card p-10 bg-gray-50 text-center">
-        <h2 class="text-xl font-semibold mb-3 text-gray-900">Prêt à commencer ?</h2>
-        <p class="mb-6 text-gray-600">Créez un compte pour obtenir votre estimation</p>
+        <h2 class="text-xl font-semibold mb-3 text-gray-900">{% trans "Prêt à commencer ?" %}</h2>
+        <p class="mb-6 text-gray-600">{% trans "Créez un compte pour obtenir votre estimation" %}</p>
         <a href="{% url 'insurance_web:signup' %}" class="inline-flex items-center btn-primary px-8 py-3 text-base">
-            Créer un compte
+            {% trans "Créer un compte" %}
         </a>
     </div>
     {% endif %}

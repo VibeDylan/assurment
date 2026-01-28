@@ -3,6 +3,7 @@ from django.shortcuts import redirect, get_object_or_404
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.core.exceptions import PermissionDenied
+from django.utils.translation import gettext as _
 
 from ..models import User, Appointment, Prediction
 from ..forms import AdminUserManagementForm, AdminUserRoleForm
@@ -19,8 +20,10 @@ class AdminDashboardView(AdminRequiredMixin, UserProfileMixin, FormView):
         user = form.save()  
         messages.success(
             self.request,
-            f'User {user.get_full_name() or user.email} created successfully '
-            f'with role {user.profile.get_role_display()}.'
+            _('User %(name)s created successfully with role %(role)s.') % {
+                'name': user.get_full_name() or user.email,
+                'role': user.profile.get_role_display()
+            }
         )
         return super().form_valid(form)
     
@@ -66,8 +69,10 @@ class AdminChangeUserRoleView(AdminRequiredMixin, UserProfileMixin, FormView):
         self.target_user.profile.save()
         messages.success(
             self.request,
-            f'The role of {self.target_user.get_full_name() or self.target_user.email} '
-            f'has been changed to {self.target_user.profile.get_role_display()}.'
+            _('The role of %(name)s has been changed to %(role)s.') % {
+                'name': self.target_user.get_full_name() or self.target_user.email,
+                'role': self.target_user.profile.get_role_display()
+            }
         )
         return super().form_valid(form)
     
@@ -92,8 +97,14 @@ class AdminToggleUserStatusView(AdminRequiredMixin, UserProfileMixin, TemplateVi
         user.is_active = not user.is_active
         user.save()
         
-        status = "activated" if user.is_active else "deactivated"
-        messages.success(request, f'The account of {user.get_full_name() or user.email} has been {status}.')
+        status = _("activated") if user.is_active else _("deactivated")
+        messages.success(
+            request, 
+            _('The account of %(name)s has been %(status)s.') % {
+                'name': user.get_full_name() or user.email,
+                'status': status
+            }
+        )
         return redirect(self.success_url)
 
 
@@ -114,7 +125,12 @@ class AdminDeleteUserView(AdminRequiredMixin, UserProfileMixin, TemplateView):
             user_email = self.target_user.email
             user_name = self.target_user.get_full_name() or user_email
             self.target_user.delete()
-            messages.success(request, f'The account of {user_name} has been permanently deleted.')
+            messages.success(
+                request, 
+                _('The account of %(name)s has been permanently deleted.') % {
+                    'name': user_name
+                }
+            )
             return redirect(self.success_url)
         
         return super().dispatch(request, *args, **kwargs)

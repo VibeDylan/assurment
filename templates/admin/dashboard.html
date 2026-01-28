@@ -1,19 +1,20 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}Tableau de bord Admin - Assurement{% endblock %}
+{% block title %}{% trans "Tableau de bord Admin" %} - Assurement{% endblock %}
 
 {% block content %}
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
     <div class="mb-10">
-        <h1 class="text-3xl font-semibold text-gray-900 mb-2">Tableau de bord Admin</h1>
-        <p class="text-base text-gray-600">Vue d'ensemble du système et gestion des utilisateurs</p>
+        <h1 class="text-3xl font-semibold text-gray-900 mb-2">{% trans "Tableau de bord Admin" %}</h1>
+        <p class="text-base text-gray-600">{% trans "Vue d'ensemble du système et gestion des utilisateurs" %}</p>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
         <div class="stat-card">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-xs font-medium text-gray-500 mb-2 uppercase tracking-wider">Total Utilisateurs</p>
+                    <p class="text-xs font-medium text-gray-500 mb-2 uppercase tracking-wider">{% trans "Total Utilisateurs" %}</p>
                     <p class="text-3xl font-semibold text-gray-900">{{ total_users }}</p>
                 </div>
                 <div class="w-14 h-14 bg-gray-100 rounded flex items-center justify-center">
@@ -27,7 +28,7 @@
         <div class="stat-card">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-xs font-medium text-gray-500 mb-2 uppercase tracking-wider">Conseillers</p>
+                    <p class="text-xs font-medium text-gray-500 mb-2 uppercase tracking-wider">{% trans "Conseillers" %}</p>
                     <p class="text-3xl font-semibold text-gray-900">{{ total_conseillers }}</p>
                 </div>
                 <div class="w-14 h-14 bg-gray-100 rounded flex items-center justify-center">
@@ -41,7 +42,7 @@
         <div class="stat-card">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-xs font-medium text-gray-500 mb-2 uppercase tracking-wider">Rendez-vous</p>
+                    <p class="text-xs font-medium text-gray-500 mb-2 uppercase tracking-wider">{% trans "Rendez-vous" %}</p>
                     <p class="text-3xl font-semibold text-gray-900">{{ total_appointments }}</p>
                 </div>
                 <div class="w-14 h-14 bg-gray-100 rounded flex items-center justify-center">
@@ -55,7 +56,7 @@
         <div class="stat-card">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-xs font-medium text-gray-500 mb-2 uppercase tracking-wider">Prédictions</p>
+                    <p class="text-xs font-medium text-gray-500 mb-2 uppercase tracking-wider">{% trans "Prédictions" %}</p>
                     <p class="text-3xl font-semibold text-gray-900">{{ total_predictions }}</p>
                 </div>
                 <div class="w-14 h-14 bg-gray-100 rounded flex items-center justify-center">
@@ -70,7 +71,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div class="card p-8">
             <div class="flex items-center justify-between mb-6">
-                <h2 class="text-xl font-semibold text-gray-900">Créer un Nouvel Utilisateur</h2>
+                <h2 class="text-xl font-semibold text-gray-900">{% trans "Créer un Nouvel Utilisateur" %}</h2>
             </div>
             
             {% if messages %}
@@ -149,24 +150,24 @@
                 </div>
                 
                 <button type="submit" class="w-full btn-primary py-3">
-                    Créer l'Utilisateur
+                    {% trans "Créer l'Utilisateur" %}
                 </button>
             </form>
         </div>
 
         <div class="card p-8">
             <div class="flex items-center justify-between mb-6">
-                <h2 class="text-xl font-semibold text-gray-900">Actions Rapides</h2>
+                <h2 class="text-xl font-semibold text-gray-900">{% trans "Actions Rapides" %}</h2>
             </div>
             <div class="space-y-3">
                 <a href="{% url 'insurance_web:admin_user_management' %}" class="block w-full btn-primary text-center py-3">
-                    Gérer les Utilisateurs
+                    {% trans "Gérer les Utilisateurs" %}
                 </a>
                 <a href="{% url 'insurance_web:conseiller_dashboard' %}" class="block w-full btn-secondary text-center py-3">
-                    Voir le Tableau de bord Conseiller
+                    {% trans "Voir le Tableau de bord Conseiller" %}
                 </a>
                 <a href="{% url 'insurance_web:home' %}" class="block w-full btn-secondary text-center py-3">
-                    Aller à l'Accueil
+                    {% trans "Aller à l'Accueil" %}
                 </a>
             </div>
         </div>

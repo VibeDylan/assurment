@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}Prendre un Rendez-vous - Assurement{% endblock %}
+{% block title %}{% trans "Prendre un Rendez-vous" %} - Assurement{% endblock %}
 
 {% block content %}
 <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -9,9 +10,9 @@
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
             </svg>
-            Retour aux Disponibilités
+            {% trans "Retour aux Disponibilités" %}
         </a>
-        <h1 class="text-3xl font-bold text-gray-900 mb-2">Prendre un Rendez-vous</h1>
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">{% trans "Prendre un Rendez-vous" %}</h1>
         <div class="flex items-center space-x-3">
             <div class="w-12 h-12 bg-gray-900 rounded flex items-center justify-center">
                 <span class="text-white font-semibold text-lg">{{ conseiller.get_full_name|default:conseiller.email|first|upper }}</span>
@@ -19,7 +20,7 @@
             <p class="text-lg text-gray-600 font-medium">{{ conseiller.get_full_name|default:conseiller.email }}</p>
         </div>
     </div>
-
+    
     {% if messages %}
         {% for message in messages %}
             <div class="mb-6 p-5 rounded {% if message.tags == 'success' %}bg-green-50 border border-green-200 text-green-800{% else %}bg-red-50 border border-red-200 text-red-800{% endif %}">
@@ -66,7 +67,7 @@
                 {% if form.duration_minutes.errors %}
                     <p class="mt-2 text-sm text-red-600 font-medium">{{ form.duration_minutes.errors.0 }}</p>
                 {% endif %}
-                <p class="mt-2 text-sm text-gray-500 font-medium">Durée recommandée : 60 minutes</p>
+                <p class="mt-2 text-sm text-gray-500 font-medium">{% trans "Durée recommandée : 60 minutes" %}</p>
             </div>
 
             <div>
@@ -81,10 +82,10 @@
 
             <div class="pt-6 border-t border-gray-200 flex gap-4">
                 <button type="submit" class="btn-primary px-10 py-4 flex-1">
-                    Confirmer le Rendez-vous
+                    {% trans "Confirmer le Rendez-vous" %}
                 </button>
                 <a href="{% url 'insurance_web:conseiller_availability' conseiller.id %}" class="btn-secondary px-8 py-4 inline-flex items-center">
-                    Annuler
+                    {% trans "Annuler" %}
                 </a>
             </div>
         </form>

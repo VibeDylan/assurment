@@ -1,16 +1,17 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}Calendrier - Assurement{% endblock %}
+{% block title %}{% trans "Calendrier" %} - Assurement{% endblock %}
 
 {% block content %}
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="mb-8 flex items-center justify-between">
         <div>
-            <h1 class="text-3xl font-bold text-gray-900 mb-2">Calendrier des Rendez-vous</h1>
-            <p class="text-base text-gray-600">Gérez vos rendez-vous avec les clients</p>
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">{% trans "Calendrier des Rendez-vous" %}</h1>
+            <p class="text-base text-gray-600">{% trans "Gérez vos rendez-vous avec les clients" %}</p>
         </div>
         <a href="{% url 'insurance_web:conseiller_dashboard' %}" class="btn-secondary px-6 py-3 inline-flex items-center">
-            Retour au Tableau de bord
+            {% trans "Retour au Tableau de bord" %}
         </a>
     </div>
 
@@ -20,7 +21,7 @@
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                 </svg>
-                Mois Précédent
+                {% trans "Mois Précédent" %}
             </a>
             
             <div class="text-center">
@@ -28,7 +29,7 @@
             </div>
             
             <a href="?year={{ next_month.year }}&month={{ next_month.month }}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50 rounded font-semibold border border-gray-200 text-sm">
-                Mois Suivant
+                {% trans "Mois Suivant" %}
                 <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                 </svg>
@@ -36,13 +37,13 @@
         </div>
 
         <div class="grid grid-cols-7 gap-3">
-            <div class="text-center py-3 text-sm font-bold text-gray-600 uppercase tracking-wider">Lun</div>
-            <div class="text-center py-3 text-sm font-bold text-gray-600 uppercase tracking-wider">Mar</div>
-            <div class="text-center py-3 text-sm font-bold text-gray-600 uppercase tracking-wider">Mer</div>
-            <div class="text-center py-3 text-sm font-bold text-gray-600 uppercase tracking-wider">Jeu</div>
-            <div class="text-center py-3 text-sm font-bold text-gray-600 uppercase tracking-wider">Ven</div>
-            <div class="text-center py-3 text-sm font-bold text-gray-600 uppercase tracking-wider">Sam</div>
-            <div class="text-center py-3 text-sm font-bold text-gray-600 uppercase tracking-wider">Dim</div>
+            <div class="text-center py-3 text-sm font-bold text-gray-600 uppercase tracking-wider">{% trans "Lun" %}</div>
+            <div class="text-center py-3 text-sm font-bold text-gray-600 uppercase tracking-wider">{% trans "Mar" %}</div>
+            <div class="text-center py-3 text-sm font-bold text-gray-600 uppercase tracking-wider">{% trans "Mer" %}</div>
+            <div class="text-center py-3 text-sm font-bold text-gray-600 uppercase tracking-wider">{% trans "Jeu" %}</div>
+            <div class="text-center py-3 text-sm font-bold text-gray-600 uppercase tracking-wider">{% trans "Ven" %}</div>
+            <div class="text-center py-3 text-sm font-bold text-gray-600 uppercase tracking-wider">{% trans "Sam" %}</div>
+            <div class="text-center py-3 text-sm font-bold text-gray-600 uppercase tracking-wider">{% trans "Dim" %}</div>
 
             {% for day_data in calendar_days %}
                 <div class="min-h-[140px] border border-gray-200 rounded p-3 {% if not day_data.is_current_month %}bg-gray-50 opacity-50{% elif day_data.date == today %}bg-gray-50 border-gray-300{% else %}bg-white{% endif %}">
@@ -64,7 +65,7 @@
                         {% endfor %}
                         {% if day_data.appointments|length > 2 %}
                             <div class="text-xs text-gray-500 font-bold px-1">
-                                +{{ day_data.appointments|length|add:"-2" }} autre{{ day_data.appointments|length|add:"-2"|pluralize }}
+                                {% blocktrans with count=day_data.appointments|length|add:"-2" %}+{{ count }} autre{{ count|pluralize }}{% endblocktrans %}
                             </div>
                         {% endif %}
                     </div>
@@ -75,7 +76,7 @@
 
     <div class="card overflow-hidden">
         <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-            <h3 class="text-xl font-bold text-gray-900">Tous les Rendez-vous pour {{ month_name }} {{ year }}</h3>
+            <h3 class="text-xl font-bold text-gray-900">{% blocktrans with name=month_name y=year %}Tous les Rendez-vous pour {{ name }} {{ y }}{% endblocktrans %}</h3>
         </div>
         
         {% if all_appointments %}
@@ -119,8 +120,8 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                     </svg>
                 </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-2">Aucun Rendez-vous</h3>
-                <p class="text-sm text-gray-600">Vous n'avez aucun rendez-vous programmé pour ce mois.</p>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">{% trans "Aucun Rendez-vous" %}</h3>
+                <p class="text-sm text-gray-600">{% trans "Vous n'avez aucun rendez-vous programmé pour ce mois." %}</p>
             </div>
         {% endif %}
     </div>

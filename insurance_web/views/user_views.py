@@ -2,6 +2,7 @@ from django.views.generic import TemplateView, CreateView, FormView, ListView
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib import messages
 from django.utils import timezone
+from django.utils.translation import gettext as _, gettext_lazy as _lazy
 from datetime import datetime
 
 from ..models import User, Appointment, Prediction
@@ -67,15 +68,15 @@ class PredictView(UserProfileMixin, FormView):
                 predicted_amount=predicted_amount
             )
             
-            messages.success(self.request, f'Your estimated insurance premium is {predicted_amount:.2f} € per year.')
+            messages.success(self.request, _('Your estimated insurance premium is %(amount).2f € per year.') % {'amount': predicted_amount})
         except InvalidPredictionDataError as e:
-            messages.error(self.request, f'Invalid data: {str(e)}')
+            messages.error(self.request, _('Invalid data: %(error)s') % {'error': str(e)})
             return self.form_invalid(form)
         except ModelNotFoundError:
-            messages.error(self.request, 'Prediction service is temporarily unavailable. Please try again later.')
+            messages.error(self.request, _('Prediction service is temporarily unavailable. Please try again later.'))
             return self.form_invalid(form)
         except PredictionError as e:
-            messages.error(self.request, f'An error occurred while processing your prediction: {str(e)}')
+            messages.error(self.request, _('An error occurred while processing your prediction: %(error)s') % {'error': str(e)})
             return self.form_invalid(form)
         
         return self.form_invalid(form)
@@ -175,14 +176,16 @@ class CreateAppointmentView(UserProfileMixin, CreateView):
             
             messages.success(
                 self.request,
-                f'Appointment confirmed with {self.conseiller.get_full_name() or self.conseiller.email} '
-                f'on {date_time.strftime("%B %d, %Y at %H:%M")}.'
+                _('Appointment confirmed with %(name)s on %(date)s.') % {
+                    'name': self.conseiller.get_full_name() or self.conseiller.email,
+                    'date': date_time.strftime("%B %d, %Y at %H:%M")
+                }
             )
         except AppointmentConflictError as e:
             messages.error(self.request, str(e))
             return self.form_invalid(form)
         except AppointmentError as e:
-            messages.error(self.request, f'An error occurred while creating the appointment: {str(e)}')
+            messages.error(self.request, _('An error occurred while creating the appointment: %(error)s') % {'error': str(e)})
             return self.form_invalid(form)
         
         return redirect('insurance_web:my_appointments')

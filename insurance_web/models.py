@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils.translation import gettext_lazy as _
 from .constants import SEX_CHOICES, SMOKER_CHOICES, REGION_CHOICES, ROLE_CHOICES
 
 class Profile(models.Model):
@@ -11,35 +12,35 @@ class Profile(models.Model):
     role = models.CharField(
         max_length=20, 
         choices=ROLE_CHOICES, 
-        default='user',
-        verbose_name="Role"
+        default=ROLE_CHOICES[0][0],
+        verbose_name=_("Role")
     )
     
-    age = models.IntegerField(null=True, blank=True, verbose_name="Age")
-    sex = models.CharField(max_length=10, choices=SEX_CHOICES, null=True, blank=True, verbose_name="Gender")
-    bmi = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, verbose_name="BMI (Body Mass Index)")
-    children = models.IntegerField(default=0, verbose_name="Number of Children")
-    smoker = models.CharField(max_length=3, choices=SMOKER_CHOICES, null=True, blank=True, verbose_name="Smoker")
-    region = models.CharField(max_length=20, choices=REGION_CHOICES, null=True, blank=True, verbose_name="Region")
+    age = models.IntegerField(null=True, blank=True, verbose_name=_("Age"))
+    sex = models.CharField(max_length=10, choices=SEX_CHOICES, null=True, blank=True, verbose_name=_("Gender"))
+    bmi = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, verbose_name=_("BMI (Body Mass Index)"))
+    children = models.IntegerField(default=0, verbose_name=_("Number of Children"))
+    smoker = models.CharField(max_length=3, choices=SMOKER_CHOICES, null=True, blank=True, verbose_name=_("Smoker"))
+    region = models.CharField(max_length=20, choices=REGION_CHOICES, null=True, blank=True, verbose_name=_("Region"))
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
     class Meta:
-        verbose_name = "Profile"
-        verbose_name_plural = "Profiles"
+        verbose_name = _("Profile")
+        verbose_name_plural = _("Profiles")
     
     def __str__(self):
-        return f"Profile of {self.user.get_full_name() or self.user.email}"
+        return _("Profile of %(name)s") % {'name': self.user.get_full_name() or self.user.email}
     
     def is_user(self):
-        return self.role == 'user'
+        return self.role == ROLE_CHOICES[0][0]
     
     def is_conseiller(self):
-        return self.role == 'conseiller'
+        return self.role == ROLE_CHOICES[1][0]
     
     def is_admin(self):
-        return self.role == 'admin'
+        return self.role == ROLE_CHOICES[2][0]
     
     def can_make_prediction_for_others(self):
         return self.is_conseiller() or self.is_admin()
@@ -67,47 +68,54 @@ class Appointment(models.Model):
         User, 
         on_delete=models.CASCADE, 
         related_name='appointments_as_conseiller',
-        verbose_name="Advisor"
+        verbose_name=_("Advisor")
     )
     client = models.ForeignKey(
         User, 
         on_delete=models.CASCADE, 
         related_name='appointments_as_client',
-        verbose_name="Client"
+        verbose_name=_("Client")
     )
-    date_time = models.DateTimeField(verbose_name="Date and Time")
-    duration_minutes = models.IntegerField(default=60, verbose_name="Duration (minutes)")
-    notes = models.TextField(blank=True, verbose_name="Notes")
+    date_time = models.DateTimeField(verbose_name=_("Date and Time"))
+    duration_minutes = models.IntegerField(default=60, verbose_name=_("Duration (minutes)"))
+    notes = models.TextField(blank=True, verbose_name=_("Notes"))
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
     class Meta:
-        verbose_name = "Appointment"
-        verbose_name_plural = "Appointments"
+        verbose_name = _("Appointment")
+        verbose_name_plural = _("Appointments")
         ordering = ['date_time']
     
     def __str__(self):
         conseiller_name = self.conseiller.get_full_name() or self.conseiller.email
         client_name = self.client.get_full_name() or self.client.email
-        return f"Appointment {conseiller_name} - {client_name} - {self.date_time.strftime('%m/%d/%Y %H:%M')}"
+        return _("Appointment %(conseiller)s - %(client)s - %(date)s") % {
+            'conseiller': conseiller_name,
+            'client': client_name,
+            'date': self.date_time.strftime('%m/%d/%Y %H:%M')
+        }
 
 class Prediction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='predictions')
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='predictions_created_by')
     predicted_amount = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
-    age = models.IntegerField(null=True, blank=True, verbose_name="Age")
-    sex = models.CharField(max_length=10, choices=SEX_CHOICES, null=True, blank=True, verbose_name="Gender")
-    bmi = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, verbose_name="BMI (Body Mass Index)")
-    children = models.IntegerField(default=0, verbose_name="Number of Children")
-    smoker = models.CharField(max_length=3, choices=SMOKER_CHOICES, null=True, blank=True, verbose_name="Smoker")
-    region = models.CharField(max_length=20, choices=REGION_CHOICES, null=True, blank=True, verbose_name="Region")
+    age = models.IntegerField(null=True, blank=True, verbose_name=_("Age"))
+    sex = models.CharField(max_length=10, choices=SEX_CHOICES, null=True, blank=True, verbose_name=_("Gender"))
+    bmi = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, verbose_name=_("BMI (Body Mass Index)"))
+    children = models.IntegerField(default=0, verbose_name=_("Number of Children"))
+    smoker = models.CharField(max_length=3, choices=SMOKER_CHOICES, null=True, blank=True, verbose_name=_("Smoker"))
+    region = models.CharField(max_length=20, choices=REGION_CHOICES, null=True, blank=True, verbose_name=_("Region"))
 
     class Meta: 
-        verbose_name = "Prediction"
-        verbose_name_plural = "Predictions"
+        verbose_name = _("Prediction")
+        verbose_name_plural = _("Predictions")
         ordering = ['-created_at']
 
     def __str__(self):
         user_name = self.user.get_full_name() or self.user.email
-        return f"Prediction for {user_name} - {self.predicted_amount} €"
+        return _("Prediction for %(user)s - %(amount)s €") % {
+            'user': user_name,
+            'amount': self.predicted_amount
+        }

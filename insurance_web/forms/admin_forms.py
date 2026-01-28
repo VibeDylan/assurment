@@ -1,55 +1,56 @@
 from django import forms
 from django.contrib.auth.models import User
+from django.utils.translation import gettext_lazy as _
 from ..constants import ROLE_CHOICES
 
 
 class AdminUserManagementForm(forms.Form):
     first_name = forms.CharField(
-        label="First Name",
+        label=_("First Name"),
         max_length=150,
         required=True,
         widget=forms.TextInput(attrs={
             'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors',
-            'placeholder': 'Enter first name',
+            'placeholder': _('Enter first name'),
             'autocomplete': 'given-name'
         })
     )
     
     last_name = forms.CharField(
-        label="Last Name",
+        label=_("Last Name"),
         max_length=150,
         required=True,
         widget=forms.TextInput(attrs={
             'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors',
-            'placeholder': 'Enter last name',
+            'placeholder': _('Enter last name'),
             'autocomplete': 'family-name'
         })
     )
     
     email = forms.EmailField(
-        label="Email",
+        label=_("Email"),
         required=True,
         widget=forms.EmailInput(attrs={
             'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors',
-            'placeholder': 'Enter email address',
+            'placeholder': _('Enter email address'),
             'autocomplete': 'email'
         })
     )
     
     password = forms.CharField(
-        label="Password",
+        label=_("Password"),
         required=True,
         widget=forms.PasswordInput(attrs={
             'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors',
-            'placeholder': 'Enter password',
+            'placeholder': _('Enter password'),
             'autocomplete': 'new-password'
         }),
         min_length=8,
-        help_text="Password must be at least 8 characters long."
+        help_text=_("Password must be at least 8 characters long.")
     )
     
     role = forms.ChoiceField(
-        label="Role",
+        label=_("Role"),
         choices=ROLE_CHOICES,
         required=True,
         widget=forms.Select(attrs={
@@ -60,7 +61,7 @@ class AdminUserManagementForm(forms.Form):
     def clean_email(self):
         email = self.cleaned_data.get('email')
         if User.objects.filter(email=email).exists():
-            raise forms.ValidationError("A user with this email already exists.")
+            raise forms.ValidationError(_("A user with this email already exists."))
         return email
     
     def save(self):
@@ -93,7 +94,7 @@ class AdminUserManagementForm(forms.Form):
 
 class AdminUserRoleForm(forms.Form):
     role = forms.ChoiceField(
-        label="Role",
+        label=_("Role"),
         choices=ROLE_CHOICES,
         required=True,
         widget=forms.Select(attrs={

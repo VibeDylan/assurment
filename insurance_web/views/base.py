@@ -3,6 +3,7 @@ from django.contrib.auth.views import LogoutView as DjangoLogoutView
 from django.contrib.auth import login
 from django.contrib import messages
 from django.urls import reverse_lazy
+from django.utils.translation import gettext as _
 
 from ..forms import CustomUserCreationForm
 
@@ -19,7 +20,7 @@ class SignupView(CreateView):
     def form_valid(self, form):
         response = super().form_valid(form)
         login(self.request, self.object)
-        messages.success(self.request, f'Welcome {self.object.get_full_name() or self.object.email}!')
+        messages.success(self.request, _('Welcome %(name)s!') % {'name': self.object.get_full_name() or self.object.email})
         return response
 
 

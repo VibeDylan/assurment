@@ -1,9 +1,10 @@
+{% load i18n %}
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Assurement - Prédiction de Primes d'Assurance{% endblock %}</title>
+    <title>{% block title %}{% trans "Assurement - Prédiction de Primes d'Assurance" %}{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -248,76 +249,76 @@
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                             </svg>
-                            Tableau de bord
+                            {% trans "Tableau de bord" %}
                         </a>
                         
                         <a href="{% url 'insurance_web:predict' %}" class="nav-link {% if request.resolver_match.url_name == 'predict' %}active{% endif %}">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                             </svg>
-                            Prédire une prime
+                            {% trans "Prédire une prime" %}
                         </a>
                         
                         {% if not user.profile.is_conseiller %}
                             <a href="{% url 'insurance_web:conseillers_list' %}" class="nav-link {% if request.resolver_match.url_name == 'conseillers_list' %}active{% endif %}">
                                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                                 </svg>
-                                Prendre rendez-vous
+                                {% trans "Prendre rendez-vous" %}
                             </a>
                             
                             <a href="{% url 'insurance_web:my_appointments' %}" class="nav-link {% if request.resolver_match.url_name == 'my_appointments' %}active{% endif %}">
                                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                 </svg>
-                                Mes rendez-vous
+                                {% trans "Mes rendez-vous" %}
                             </a>
                         {% endif %}
 
                         {% if user.profile.is_conseiller or user.profile.is_admin %}
                             <div class="pt-4 mt-4 border-t border-gray-200">
-                                <p class="px-3 py-2 text-xs font-medium text-gray-400 uppercase tracking-wider">Conseiller</p>
+                                <p class="px-3 py-2 text-xs font-medium text-gray-400 uppercase tracking-wider">{% trans "Conseiller" %}</p>
                                 <a href="{% url 'insurance_web:conseiller_dashboard' %}" class="nav-link {% if 'conseiller' in request.resolver_match.url_name and request.resolver_match.url_name == 'conseiller_dashboard' %}active{% endif %}">
                                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                                     </svg>
-                                    Tableau de bord
+                                    {% trans "Tableau de bord" %}
                                 </a>
                                 <a href="{% url 'insurance_web:conseiller_predict' %}" class="nav-link {% if request.resolver_match.url_name == 'conseiller_predict' or request.resolver_match.url_name == 'conseiller_predict_client' %}active{% endif %}">
                                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                                     </svg>
-                                    Prédire pour un client
+                                    {% trans "Prédire pour un client" %}
                                 </a>
                                 <a href="{% url 'insurance_web:conseiller_calendar' %}" class="nav-link {% if request.resolver_match.url_name == 'conseiller_calendar' %}active{% endif %}">
                                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                     </svg>
-                                    Calendrier
+                                    {% trans "Calendrier" %}
                                 </a>
                                 <a href="{% url 'insurance_web:conseiller_clients' %}" class="nav-link {% if request.resolver_match.url_name == 'conseiller_clients' %}active{% endif %}">
                                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
                                     </svg>
-                                    Clients
+                                    {% trans "Clients" %}
                                 </a>
                             </div>
                         {% endif %}
 
                         {% if user.profile.is_admin %}
                             <div class="pt-4 mt-4 border-t border-gray-200">
-                                <p class="px-3 py-2 text-xs font-medium text-gray-400 uppercase tracking-wider">Administration</p>
+                                <p class="px-3 py-2 text-xs font-medium text-gray-400 uppercase tracking-wider">{% trans "Administration" %}</p>
                                 <a href="{% url 'insurance_web:admin_dashboard' %}" class="nav-link {% if 'admin' in request.resolver_match.url_name and request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
                                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                                     </svg>
-                                    Tableau de bord administration
+                                    {% trans "Tableau de bord administration" %}
                                 </a>
                                 <a href="{% url 'insurance_web:admin_user_management' %}" class="nav-link {% if request.resolver_match.url_name == 'admin_user_management' %}active{% endif %}">
                                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
                                     </svg>
-                                    Gestion des utilisateurs
+                                    {% trans "Gestion des utilisateurs" %}
                                 </a>
                             </div>
                         {% endif %}
@@ -326,14 +327,14 @@
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                             </svg>
-                            Mon profil
+                            {% trans "Mon profil" %}
                         </a>
                     </div>
                 </nav>
 
                 <div class="p-4 border-t border-gray-200">
                     <div class="mb-3 px-3 py-2 bg-gray-50 rounded border border-gray-200">
-                        <p class="text-xs font-medium text-gray-500 mb-1">Connecté en tant que :</p>
+                        <p class="text-xs font-medium text-gray-500 mb-1">{% trans "Connecté en tant que :" %}</p>
                         <p class="text-sm font-medium text-gray-900 truncate">{{ user.get_full_name|default:user.email }}</p>
                         {% if user.profile %}
                             <span class="inline-flex items-center px-2 py-0.5 mt-2 text-xs font-medium rounded bg-gray-200 text-gray-700">
@@ -341,13 +342,31 @@
                             </span>
                         {% endif %}
                     </div>
+                    
+                    <!-- Language Switcher -->
+                    <div class="mb-4 px-3">
+                        <form action="{% url 'set_language' %}" method="post" class="flex items-center">
+                            {% csrf_token %}
+                            <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                            <select name="language" onchange="this.form.submit()" class="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5">
+                                {% get_current_language as LANGUAGE_CODE %}
+                                {% get_available_languages as LANGUAGES %}
+                                {% for lang in LANGUAGES %}
+                                    <option value="{{ lang.0 }}" {% if lang.0 == LANGUAGE_CODE %}selected{% endif %}>
+                                        {{ lang.1 }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </form>
+                    </div>
+
                     <form method="post" action="{% url 'insurance_web:logout' %}">
                         {% csrf_token %}
                         <button type="submit" class="w-full flex items-center justify-center px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded transition-all">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                             </svg>
-                            Se déconnecter
+                            {% trans "Se déconnecter" %}
                         </button>
                     </form>
                 </div>
@@ -370,7 +389,7 @@
                 <footer class="bg-white border-t border-gray-200 py-4 px-6 mt-auto">
                     <div class="max-w-7xl mx-auto">
                         <p class="text-center text-xs text-gray-500">
-                            © 2026 Assurement. Tous droits réservés.
+                            {% blocktrans %}© 2026 Assurement. Tous droits réservés.{% endblocktrans %}
                         </p>
                     </div>
                 </footer>
@@ -392,11 +411,26 @@
                             </a>
                         </div>
                         <div class="flex items-center space-x-4">
+                            <!-- Language Switcher -->
+                            <form action="{% url 'set_language' %}" method="post" class="flex items-center mr-2">
+                                {% csrf_token %}
+                                <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                                <select name="language" onchange="this.form.submit()" class="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-1">
+                                    {% get_current_language as LANGUAGE_CODE %}
+                                    {% get_available_languages as LANGUAGES %}
+                                    {% for lang in LANGUAGES %}
+                                        <option value="{{ lang.0 }}" {% if lang.0 == LANGUAGE_CODE %}selected{% endif %}>
+                                            {{ lang.1|slice:":2"|upper }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </form>
+                            
                             <a href="{% url 'insurance_web:login' %}" class="text-gray-700 hover:text-gray-900 px-3 py-1.5 text-sm font-medium transition-colors">
-                                Connexion
+                                {% trans "Connexion" %}
                             </a>
                             <a href="{% url 'insurance_web:signup' %}" class="btn-primary">
-                                Commencer
+                                {% trans "Commencer" %}
                             </a>
                         </div>
                     </div>
@@ -418,35 +452,35 @@
                                 </div>
                                 <span class="text-lg font-semibold text-gray-900">Assurement</span>
                             </div>
-                            <p class="text-gray-600 text-sm">Plateforme de prédiction de primes d'assurance.</p>
+                            <p class="text-gray-600 text-sm">{% trans "Plateforme de prédiction de primes d'assurance." %}</p>
                         </div>
                         <div>
-                            <h3 class="font-medium mb-4 text-gray-900">Produit</h3>
+                            <h3 class="font-medium mb-4 text-gray-900">{% trans "Produit" %}</h3>
                             <ul class="space-y-2 text-sm text-gray-600">
-                                <li><a href="#" class="hover:text-gray-900 transition-colors">Fonctionnalités</a></li>
-                                <li><a href="#" class="hover:text-gray-900 transition-colors">Tarification</a></li>
-                                <li><a href="#" class="hover:text-gray-900 transition-colors">Documentation</a></li>
+                                <li><a href="#" class="hover:text-gray-900 transition-colors">{% trans "Fonctionnalités" %}</a></li>
+                                <li><a href="#" class="hover:text-gray-900 transition-colors">{% trans "Tarification" %}</a></li>
+                                <li><a href="#" class="hover:text-gray-900 transition-colors">{% trans "Documentation" %}</a></li>
                             </ul>
                         </div>
                         <div>
-                            <h3 class="font-medium mb-4 text-gray-900">Entreprise</h3>
+                            <h3 class="font-medium mb-4 text-gray-900">{% trans "Entreprise" %}</h3>
                             <ul class="space-y-2 text-sm text-gray-600">
-                                <li><a href="#" class="hover:text-gray-900 transition-colors">À propos</a></li>
-                                <li><a href="#" class="hover:text-gray-900 transition-colors">Blog</a></li>
-                                <li><a href="#" class="hover:text-gray-900 transition-colors">Contact</a></li>
+                                <li><a href="#" class="hover:text-gray-900 transition-colors">{% trans "À propos" %}</a></li>
+                                <li><a href="#" class="hover:text-gray-900 transition-colors">{% trans "Blog" %}</a></li>
+                                <li><a href="#" class="hover:text-gray-900 transition-colors">{% trans "Contact" %}</a></li>
                             </ul>
                         </div>
                         <div>
-                            <h3 class="font-medium mb-4 text-gray-900">Légal</h3>
+                            <h3 class="font-medium mb-4 text-gray-900">{% trans "Légal" %}</h3>
                             <ul class="space-y-2 text-sm text-gray-600">
-                                <li><a href="#" class="hover:text-gray-900 transition-colors">Confidentialité</a></li>
-                                <li><a href="#" class="hover:text-gray-900 transition-colors">Conditions</a></li>
-                                <li><a href="#" class="hover:text-gray-900 transition-colors">Sécurité</a></li>
+                                <li><a href="#" class="hover:text-gray-900 transition-colors">{% trans "Confidentialité" %}</a></li>
+                                <li><a href="#" class="hover:text-gray-900 transition-colors">{% trans "Conditions" %}</a></li>
+                                <li><a href="#" class="hover:text-gray-900 transition-colors">{% trans "Sécurité" %}</a></li>
                             </ul>
                         </div>
                     </div>
                     <div class="border-t border-gray-200 pt-6 text-center text-sm text-gray-500">
-                        © 2026 Assurement. Tous droits réservés.
+                        {% blocktrans %}© 2026 Assurement. Tous droits réservés.{% endblocktrans %}
                     </div>
                 </div>
             </footer>

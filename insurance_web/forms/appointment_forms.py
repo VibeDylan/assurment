@@ -1,9 +1,10 @@
 from django import forms
+from django.utils.translation import gettext_lazy as _
 
 
 class AppointmentForm(forms.Form):
     date_time = forms.DateTimeField(
-        label="Date and Time",
+        label=_("Date and Time"),
         required=True,
         widget=forms.DateTimeInput(attrs={
             'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors',
@@ -11,7 +12,7 @@ class AppointmentForm(forms.Form):
         })
     )
     duration_minutes = forms.IntegerField(
-        label="Duration (minutes)",
+        label=_("Duration (minutes)"),
         required=True,
         min_value=15,
         max_value=240,
@@ -22,11 +23,11 @@ class AppointmentForm(forms.Form):
         })
     )
     notes = forms.CharField(
-        label="Notes (optional)",
+        label=_("Notes (optional)"),
         required=False,
         widget=forms.Textarea(attrs={
             'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors',
             'rows': 4,
-            'placeholder': 'Additional information...'
+            'placeholder': _('Additional information...')
         })
     )
