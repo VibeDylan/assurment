@@ -21,15 +21,6 @@ Ce document décrit tous les tests nécessaires pour l'application Assurement, o
 ```python
 # Tests à créer :
 
-1. test_appointment_creation()
-   - Créer un rendez-vous avec tous les champs requis
-   - Vérifier les relations ForeignKey avec User (conseiller et client)
-   - Vérifier les valeurs par défaut (duration_minutes=60)
-
-2. test_appointment_str_method()
-   - Vérifier le format de __str__
-   - Tester avec différents formats de noms
-
 3. test_appointment_ordering()
    - Vérifier que ordering = ['date_time'] fonctionne
    - Tester avec plusieurs rendez-vous
