@@ -21,15 +21,6 @@ Ce document décrit tous les tests nécessaires pour l'application Assurement, o
 ```python
 # Tests à créer :
 
-1. test_profile_creation()
-   - Vérifier qu'un Profile est créé automatiquement lors de la création d'un User
-   - Vérifier les valeurs par défaut (role='user')
-   - Vérifier les relations OneToOne avec User
-
-2. test_profile_str_method()
-   - Vérifier que __str__ retourne le bon format
-   - Tester avec user sans nom complet (utilise email)
-
 3. test_profile_role_methods()
    - test_is_user() : vérifier retour True pour role='user'
    - test_is_conseiller() : vérifier retour True pour role='conseiller'

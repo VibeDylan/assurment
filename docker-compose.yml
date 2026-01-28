@@ -34,5 +34,25 @@ services:
       - SECRET_KEY=your-secret-key-here
       - DEBUG=True
 
+  test:
+    build: .
+    volumes:
+      - .:/app
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - DB_NAME=assurment
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_HOST=db
+      - DB_PORT=5432
+      - SECRET_KEY=test-secret-key
+      - DEBUG=True
+      - DJANGO_TESTING=1
+    command: pytest insurance_web/tests/ -v
+    profiles:
+      - test
+
 volumes:
   postgres_data:
