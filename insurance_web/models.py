@@ -55,17 +55,12 @@ class Profile(models.Model):
         return f"Profile of {self.user.get_full_name() or self.user.email}"
     
     def is_user(self):
-        """Vérifie si l'utilisateur a le rôle 'user' dans l'application"""
         return self.role == 'user'
     
     def is_conseiller(self):
-        """Vérifie si l'utilisateur a le rôle 'conseiller' (conseiller) dans l'application"""
         return self.role == 'conseiller'
     
     def is_admin(self):
-        """Vérifie si l'utilisateur a le rôle 'admin' dans l'application.
-        Note: Ceci est distinct du rôle admin de Django (is_staff/is_superuser).
-        C'est un rôle spécifique à l'application Assurement."""
         return self.role == 'admin'
     
     def can_make_prediction_for_others(self):

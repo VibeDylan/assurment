@@ -89,11 +89,9 @@ class CustomUserCreationForm(UserCreationForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         email = self.cleaned_data.get("email")
-        # Generate username from email (part before @)
         base_username = email.split('@')[0]
         username = base_username
         counter = 1
-        # Ensure username is unique
         while User.objects.filter(username=username).exists():
             username = f"{base_username}{counter}"
             counter += 1

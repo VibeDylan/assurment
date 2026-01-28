@@ -17,7 +17,6 @@ def admin_dashboard(request):
     else:
         form = AdminUserManagementForm()
     
-    # Statistics
     total_users = User.objects.count()
     total_conseillers = User.objects.filter(profile__role='conseiller').count()
     total_appointments = Appointment.objects.count()
@@ -67,7 +66,6 @@ def admin_change_user_role(request, user_id):
 
 @admin_required
 def admin_toggle_user_status(request, user_id):
-    """Active ou désactive un utilisateur"""
     user = get_object_or_404(User, id=user_id)
     
     if request.user.id == user.id:
@@ -84,7 +82,6 @@ def admin_toggle_user_status(request, user_id):
 
 @admin_required
 def admin_delete_user(request, user_id):
-    """Affiche la page de confirmation pour supprimer un utilisateur"""
     user = get_object_or_404(User, id=user_id)
     
     if request.user.id == user.id:
@@ -94,7 +91,7 @@ def admin_delete_user(request, user_id):
     if request.method == 'POST':
         user_email = user.email
         user_name = user.get_full_name() or user_email
-        user.delete()  # This will also delete the Profile thanks to CASCADE
+        user.delete()
         messages.success(request, f'The account of {user_name} has been permanently deleted.')
         return redirect('insurance_web:admin_user_management')
     

@@ -1,10 +1,6 @@
 from django.contrib import admin
 from .models import Profile, Appointment
 
-# Note: L'accès à Django admin nécessite is_staff=True ou is_superuser=True sur le User.
-# Ceci est distinct du rôle 'admin' dans Profile.role qui est utilisé pour les permissions
-# de l'application Assurement (gestion des utilisateurs, etc.).
-
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):

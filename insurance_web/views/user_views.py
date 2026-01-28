@@ -30,7 +30,7 @@ def signup(request):
 @login_required
 def profile(request):
     predictions_list = Prediction.objects.filter(user=request.user).order_by('-created_at')
-    paginator = Paginator(predictions_list, 10)  
+    paginator = Paginator(predictions_list, 10)
     page_number = request.GET.get('page')
     predictions = paginator.get_page(page_number)
     return render(request, 'authentification/profile.html', {'user': request.user, 'predictions': predictions})

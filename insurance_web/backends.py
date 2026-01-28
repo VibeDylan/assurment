@@ -4,12 +4,8 @@ from django.db.models import Q
 
 
 class EmailBackend(ModelBackend):
-    """
-    Authenticate using email instead of username.
-    """
     def authenticate(self, request, username=None, password=None, **kwargs):
         try:
-            # Try to find user by email
             user = User.objects.get(Q(email=username) | Q(username=username))
         except User.DoesNotExist:
             return None

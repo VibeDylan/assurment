@@ -7,11 +7,6 @@ from insurance_web.models import Profile
 class TestProfileModel:
 
     def test_profile_creation(self):
-        """
-        Test 1: Vérifier qu'un Profile est créé automatiquement lors de la création d'un User
-        - Vérifier les valeurs par défaut (role='user')
-        - Vérifier les relations OneToOne avec User
-        """
         user = User.objects.create_user(
             username='testuser',
             email='test@example.com',

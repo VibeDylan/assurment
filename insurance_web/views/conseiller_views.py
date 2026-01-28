@@ -12,7 +12,6 @@ from ..prediction_service import calculate_insurance_premium
 @conseiller_required
 def conseiller_dashboard(request):
     conseiller = request.user
-    # If admin, show all appointments; if conseiller, only their appointments
     if request.user.profile.is_admin():
         total_appointments = Appointment.objects.count()
         upcoming_appointments = Appointment.objects.filter(
@@ -112,7 +111,6 @@ def conseiller_calendar(request):
     last_day_num = monthrange(current_date.year, current_date.month)[1]
     last_day = current_date.replace(day=last_day_num)
     
-    # If admin, show all appointments; if conseiller, only their appointments
     if request.user.profile.is_admin():
         appointments = Appointment.objects.filter(
             date_time__date__gte=first_day,
@@ -186,7 +184,6 @@ def conseiller_calendar(request):
 @conseiller_required
 def conseiller_clients_list(request):
     conseiller = request.user
-    # If admin, show all appointments; if conseiller, only their appointments
     if request.user.profile.is_admin():
         clients_with_appointments = User.objects.filter(
             appointments_as_client__isnull=False

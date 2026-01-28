@@ -1,13 +1,20 @@
 import pytest
 from django.contrib.auth.models import User
-from insurance_web.forms import CustomUserCreationForm, PredictionForm
+from django.utils import timezone
+from datetime import timedelta
+from insurance_web.forms import (
+    CustomUserCreationForm, 
+    PredictionForm, 
+    AppointmentForm,
+    AdminUserManagementForm,
+    AdminUserRoleForm
+)
 from insurance_web.models import Profile
 
 
 @pytest.mark.django_db
 class TestCustomUserCreationForm:
     def test_form_valid_data(self):
-        """Test que le formulaire accepte des données valides et crée un utilisateur"""
         form_data = {
             'first_name': 'John',
             'last_name': 'Doe',
@@ -31,7 +38,6 @@ class TestCustomUserCreationForm:
         assert saved_user.check_password('securepass123'), "Le mot de passe devrait être correct"
 
     def test_form_email_validation(self):
-        """Test la validation de l'email"""
         form_data_invalid = {
             'first_name': 'John',
             'last_name': 'Doe',
@@ -72,7 +78,6 @@ class TestCustomUserCreationForm:
         assert form.is_valid(), f"Le formulaire devrait être valide avec un email valide. Erreurs: {form.errors}"
 
     def test_form_password_validation(self):
-        """Test la validation des mots de passe"""
         form_data_short = {
             'first_name': 'John',
             'last_name': 'Doe',
@@ -110,7 +115,6 @@ class TestCustomUserCreationForm:
         assert form.is_valid(), f"Le formulaire devrait être valide avec un mot de passe valide. Erreurs: {form.errors}"
 
     def test_form_username_generation(self):
-        """Test la génération automatique du username depuis l'email"""
         form_data = {
             'first_name': 'John',
             'last_name': 'Doe',
@@ -154,7 +158,6 @@ class TestCustomUserCreationForm:
             f"Le username devrait être 'john.doe2', mais est '{user3.username}'"
 
     def test_form_required_fields(self):
-        """Test que les champs requis sont bien validés"""
         form_data = {
             'last_name': 'Doe',
             'email': 'john@example.com',
@@ -206,7 +209,6 @@ class TestCustomUserCreationForm:
         assert 'password2' in form.errors, "Il devrait y avoir une erreur sur le champ password2"
 
     def test_form_save_method(self):
-        """Test que la méthode save() crée correctement un User et un Profile"""
         form_data = {
             'first_name': 'John',
             'last_name': 'Doe',
@@ -243,7 +245,6 @@ class TestCustomUserCreationForm:
 @pytest.mark.django_db
 class TestPredictionForm:
     def test_form_valid_data(self):
-        """Test que le formulaire accepte des données valides"""
         form_data = {
             'age': 30,
             'sex': 'male',
@@ -264,7 +265,6 @@ class TestPredictionForm:
         assert form.cleaned_data['region'] == 'northwest', "La région devrait être correcte"
 
     def test_form_age_validation(self):
-        """Test la validation de l'âge"""
         form_data_invalid_low = {
             'age': 17,
             'sex': 'male',
@@ -323,7 +323,6 @@ class TestPredictionForm:
         assert form.is_valid(), f"Le formulaire devrait être valide avec age entre 18 et 100. Erreurs: {form.errors}"
 
     def test_form_bmi_validation(self):
-        """Test la validation du BMI"""
         form_data_invalid_low = {
             'age': 30,
             'sex': 'male',
@@ -382,7 +381,6 @@ class TestPredictionForm:
         assert form.is_valid(), f"Le formulaire devrait être valide avec BMI entre 10.0 et 50.0. Erreurs: {form.errors}"
 
     def test_form_children_validation(self):
-        """Test la validation du nombre d'enfants"""
         form_data_invalid_low = {
             'age': 30,
             'sex': 'male',
@@ -441,7 +439,6 @@ class TestPredictionForm:
         assert form.is_valid(), f"Le formulaire devrait être valide avec children entre 0 et 10. Erreurs: {form.errors}"
 
     def test_form_choice_fields(self):
-        """Test la validation des champs de choix (sex, smoker, region)"""
         form_data_valid_male = {
             'age': 30,
             'sex': 'male',
@@ -535,3 +532,210 @@ class TestPredictionForm:
         form = PredictionForm(data=form_data_invalid_region)
         assert not form.is_valid(), "Le formulaire devrait être invalide avec region invalide"
         assert 'region' in form.errors, "Il devrait y avoir une erreur sur le champ region"
+
+
+@pytest.mark.django_db
+class TestAppointmentForm:
+    def test_form_valid_data(self):
+        future_date = timezone.now() + timedelta(days=1)
+        form_data = {
+            'date_time': future_date.strftime('%Y-%m-%dT%H:%M'),
+            'duration_minutes': 60,
+            'notes': 'Test appointment'
+        }
+        form = AppointmentForm(data=form_data)
+        
+        assert form.is_valid(), f"Le formulaire devrait être valide. Erreurs: {form.errors}"
+        assert form.cleaned_data['duration_minutes'] == 60, "La durée devrait être correcte"
+        assert form.cleaned_data['notes'] == 'Test appointment', "Les notes devraient être correctes"
+
+    def test_form_date_time_validation(self):
+        past_date = timezone.now() - timedelta(days=1)
+        form_data_past = {
+            'date_time': past_date.strftime('%Y-%m-%dT%H:%M'),
+            'duration_minutes': 60
+        }
+        form = AppointmentForm(data=form_data_past)
+        
+        future_date = timezone.now() + timedelta(days=1)
+        form_data_future = {
+            'date_time': future_date.strftime('%Y-%m-%dT%H:%M'),
+            'duration_minutes': 60
+        }
+        form = AppointmentForm(data=form_data_future)
+        assert form.is_valid(), f"Le formulaire devrait être valide avec une date future. Erreurs: {form.errors}"
+
+    def test_form_duration_validation(self):
+        future_date = timezone.now() + timedelta(days=1)
+        
+        form_data_invalid_low = {
+            'date_time': future_date.strftime('%Y-%m-%dT%H:%M'),
+            'duration_minutes': 14
+        }
+        form = AppointmentForm(data=form_data_invalid_low)
+        assert not form.is_valid(), "Le formulaire devrait être invalide avec duration < 15"
+        assert 'duration_minutes' in form.errors, "Il devrait y avoir une erreur sur le champ duration_minutes"
+        
+        form_data_invalid_high = {
+            'date_time': future_date.strftime('%Y-%m-%dT%H:%M'),
+            'duration_minutes': 241
+        }
+        form = AppointmentForm(data=form_data_invalid_high)
+        assert not form.is_valid(), "Le formulaire devrait être invalide avec duration > 240"
+        assert 'duration_minutes' in form.errors, "Il devrait y avoir une erreur sur le champ duration_minutes"
+        
+        form_data_valid_min = {
+            'date_time': future_date.strftime('%Y-%m-%dT%H:%M'),
+            'duration_minutes': 15
+        }
+        form = AppointmentForm(data=form_data_valid_min)
+        assert form.is_valid(), f"Le formulaire devrait être valide avec duration = 15. Erreurs: {form.errors}"
+        
+        form_data_valid_max = {
+            'date_time': future_date.strftime('%Y-%m-%dT%H:%M'),
+            'duration_minutes': 240
+        }
+        form = AppointmentForm(data=form_data_valid_max)
+        assert form.is_valid(), f"Le formulaire devrait être valide avec duration = 240. Erreurs: {form.errors}"
+        
+        form_data_valid = {
+            'date_time': future_date.strftime('%Y-%m-%dT%H:%M'),
+            'duration_minutes': 60
+        }
+        form = AppointmentForm(data=form_data_valid)
+        assert form.is_valid(), f"Le formulaire devrait être valide avec duration entre 15 et 240. Erreurs: {form.errors}"
+
+    def test_form_notes_optional(self):
+        future_date = timezone.now() + timedelta(days=1)
+        
+        form_data_no_notes = {
+            'date_time': future_date.strftime('%Y-%m-%dT%H:%M'),
+            'duration_minutes': 60,
+            'notes': ''
+        }
+        form = AppointmentForm(data=form_data_no_notes)
+        assert form.is_valid(), f"Le formulaire devrait être valide sans notes. Erreurs: {form.errors}"
+        
+        form_data_no_field = {
+            'date_time': future_date.strftime('%Y-%m-%dT%H:%M'),
+            'duration_minutes': 60
+        }
+        form = AppointmentForm(data=form_data_no_field)
+        assert form.is_valid(), f"Le formulaire devrait être valide sans le champ notes. Erreurs: {form.errors}"
+        
+        form_data_with_notes = {
+            'date_time': future_date.strftime('%Y-%m-%dT%H:%M'),
+            'duration_minutes': 60,
+            'notes': 'Important meeting'
+        }
+        form = AppointmentForm(data=form_data_with_notes)
+        assert form.is_valid(), f"Le formulaire devrait être valide avec notes. Erreurs: {form.errors}"
+        assert form.cleaned_data['notes'] == 'Important meeting', "Les notes devraient être sauvegardées"
+
+
+@pytest.mark.django_db
+class TestAdminUserManagementForm:
+    def test_form_valid_data(self):
+        form_data = {
+            'first_name': 'Admin',
+            'last_name': 'User',
+            'email': 'admin.user@example.com',
+            'password': 'securepass123',
+            'role': 'admin'
+        }
+        form = AdminUserManagementForm(data=form_data)
+        
+        assert form.is_valid(), f"Le formulaire devrait être valide. Erreurs: {form.errors}"
+        
+        user = form.save()
+        assert User.objects.filter(email='admin.user@example.com').exists(), \
+            "L'utilisateur devrait être créé"
+        assert user.profile.role == 'admin', \
+            f"Le rôle devrait être 'admin', mais est '{user.profile.role}'"
+        assert user.first_name == 'Admin', "Le prénom devrait être correct"
+        assert user.last_name == 'User', "Le nom devrait être correct"
+
+    def test_form_email_uniqueness(self):
+        User.objects.create_user(
+            username='existing',
+            email='existing@example.com',
+            password='testpass123'
+        )
+        
+        form_data = {
+            'first_name': 'New',
+            'last_name': 'User',
+            'email': 'existing@example.com',
+            'password': 'securepass123',
+            'role': 'user'
+        }
+        form = AdminUserManagementForm(data=form_data)
+        assert not form.is_valid(), "Le formulaire devrait être invalide avec un email existant"
+        assert 'email' in form.errors, "Il devrait y avoir une erreur sur le champ email"
+        assert 'already exists' in str(form.errors['email']).lower(), \
+            "L'erreur devrait mentionner que l'email existe déjà"
+
+    def test_form_role_assignment(self):
+        roles = ['user', 'conseiller', 'admin']
+        
+        for role in roles:
+            form_data = {
+                'first_name': 'Test',
+                'last_name': 'User',
+                'email': f'test.{role}@example.com',
+                'password': 'securepass123',
+                'role': role
+            }
+            form = AdminUserManagementForm(data=form_data)
+            assert form.is_valid(), \
+                f"Le formulaire devrait être valide avec role='{role}'. Erreurs: {form.errors}"
+            
+            user = form.save()
+            assert user.profile.role == role, \
+                f"Le rôle devrait être '{role}', mais est '{user.profile.role}'"
+
+    def test_form_password_validation(self):
+        form_data_short = {
+            'first_name': 'Test',
+            'last_name': 'User',
+            'email': 'test@example.com',
+            'password': 'short',
+            'role': 'user'
+        }
+        form = AdminUserManagementForm(data=form_data_short)
+        assert not form.is_valid(), "Le formulaire devrait être invalide avec password < 8 caractères"
+        assert 'password' in form.errors, "Il devrait y avoir une erreur sur le champ password"
+        
+        form_data_valid = {
+            'first_name': 'Test',
+            'last_name': 'User',
+            'email': 'test@example.com',
+            'password': 'securepass123',
+            'role': 'user'
+        }
+        form = AdminUserManagementForm(data=form_data_valid)
+        assert form.is_valid(), f"Le formulaire devrait être valide avec password >= 8 caractères. Erreurs: {form.errors}"
+
+
+@pytest.mark.django_db
+class TestAdminUserRoleForm:
+    def test_form_valid_role(self):
+        valid_roles = ['user', 'conseiller', 'admin']
+        
+        for role in valid_roles:
+            form_data = {
+                'role': role
+            }
+            form = AdminUserRoleForm(data=form_data)
+            assert form.is_valid(), \
+                f"Le formulaire devrait être valide avec role='{role}'. Erreurs: {form.errors}"
+            assert form.cleaned_data['role'] == role, \
+                f"Le rôle nettoyé devrait être '{role}'"
+
+    def test_form_invalid_role(self):
+        form_data = {
+            'role': 'invalid_role'
+        }
+        form = AdminUserRoleForm(data=form_data)
+        assert not form.is_valid(), "Le formulaire devrait être invalide avec un rôle invalide"
+        assert 'role' in form.errors, "Il devrait y avoir une erreur sur le champ role"
