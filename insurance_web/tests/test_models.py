@@ -71,4 +71,9 @@ class TestProfileModel:
             last_name='User'
         )
         
+        assert not user.profile.can_make_prediction_for_others(), "L'utilisateur devrait pouvoir faire des prédictions pour d'autres utilisateurs"
+        assert not user.profile.can_view_calendar(), "L'utilisateur devrait pouvoir voir le calendrier"
+        assert not user.profile.can_view_all_profiles(), "L'utilisateur devrait pouvoir voir tous les profils"
+
+        print("✅ Test réussi : Méthodes de permission fonctionnent correctement pour l'utilisateur normal")
         
