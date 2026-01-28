@@ -1,129 +1,146 @@
 {% extends 'base.html' %}
 
-{% block title %}Premium Prediction - Assurement{% endblock %}
+{% block title %}Prédiction de Prime - Assurement{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="text-center mb-10">
-        <h1 class="text-3xl sm:text-4xl font-semibold text-slate-900 mb-4 tracking-tight">
-            Estimate Your Insurance Premium
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="text-center mb-8 fade-in">
+        <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">
+            Estimez Votre <span class="bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent">Prime</span>
         </h1>
-        <p class="text-lg text-slate-600">
-            Fill out the form below to get a personalized estimate
+        <p class="text-lg text-gray-600">
+            Fournissez vos informations pour obtenir une estimation de prime alimentée par l'IA
         </p>
     </div>
 
     {% if messages %}
         {% for message in messages %}
-            <div class="mb-6 p-4 rounded-lg {% if message.tags == 'success' %}bg-emerald-50 border border-emerald-200 text-emerald-800{% else %}bg-red-50 border border-red-200 text-red-800{% endif %}">
-                {{ message }}
+            <div class="mb-6 p-5 rounded-xl {% if message.tags == 'success' %}bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 text-green-800{% else %}bg-red-50 border-2 border-red-200 text-red-800{% endif %} fade-in">
+                <div class="flex items-center">
+                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        {% if message.tags == 'success' %}
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        {% else %}
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        {% endif %}
+                    </svg>
+                    <p class="font-semibold">{{ message }}</p>
+                </div>
             </div>
         {% endfor %}
     {% endif %}
 
     {% if predicted_amount %}
-        <div class="mb-8 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-8 shadow-sm">
+        <div class="mb-8 card-modern p-8 bg-gradient-to-br from-primary-50 via-accent-50 to-primary-100/50 border-2 border-primary-200 fade-in">
             <div class="text-center">
-                <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-full mb-4">
+                <div class="inline-flex items-center justify-center w-16 h-16 gradient-primary rounded-full mb-4 shadow-xl">
                     <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                 </div>
-                <h2 class="text-2xl font-semibold text-slate-900 mb-2">Your Estimated Premium</h2>
-                <p class="text-4xl font-bold text-blue-600 mb-2">{{ predicted_amount|floatformat:2 }} €</p>
-                <p class="text-slate-600">per year</p>
-                <p class="text-sm text-slate-500 mt-4">
-                    This estimate is based on the information you provided and may vary according to the final conditions of your contract.
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Votre Prime Estimée</h2>
+                <p class="text-4xl font-bold bg-gradient-to-r from-primary-600 via-accent-600 to-primary-700 bg-clip-text text-transparent mb-1">{{ predicted_amount|floatformat:2 }} €</p>
+                <p class="text-lg text-gray-600 font-medium">par an</p>
+                <p class="text-sm text-gray-500 mt-6 max-w-2xl mx-auto">
+                    Cette estimation est basée sur les informations fournies et peut varier selon les conditions finales du contrat.
                 </p>
             </div>
         </div>
     {% endif %}
 
-    <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-8">
+    <div class="card-modern p-8 fade-in">
         <form method="post" class="space-y-6">
             {% csrf_token %}
             
             <div>
-                <h3 class="text-lg font-semibold text-slate-900 mb-4 pb-2 border-b border-gray-200">
-                    Personal Information
+                <h3 class="text-lg font-bold text-gray-900 mb-4 pb-2 border-b-2 border-gray-200">
+                    Informations Personnelles
                 </h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label for="{{ form.age.id_for_label }}" class="block text-sm font-medium text-slate-700 mb-2">
+                        <label for="{{ form.age.id_for_label }}" class="block text-sm font-semibold text-gray-700 mb-2">
                             {{ form.age.label }}
                         </label>
                         {{ form.age }}
                         {% if form.age.errors %}
-                            <p class="mt-1 text-sm text-red-600">{{ form.age.errors.0 }}</p>
+                            <p class="mt-2 text-sm text-red-600 font-medium">{{ form.age.errors.0 }}</p>
                         {% endif %}
                     </div>
                     
                     <div>
-                        <label for="{{ form.sex.id_for_label }}" class="block text-sm font-medium text-slate-700 mb-2">
+                        <label for="{{ form.sex.id_for_label }}" class="block text-sm font-semibold text-gray-700 mb-2">
                             {{ form.sex.label }}
                         </label>
                         {{ form.sex }}
                         {% if form.sex.errors %}
-                            <p class="mt-1 text-sm text-red-600">{{ form.sex.errors.0 }}</p>
+                            <p class="mt-2 text-sm text-red-600 font-medium">{{ form.sex.errors.0 }}</p>
                         {% endif %}
                     </div>
                     
                     <div>
-                        <label for="{{ form.bmi.id_for_label }}" class="block text-sm font-medium text-slate-700 mb-2">
+                        <label for="{{ form.bmi.id_for_label }}" class="block text-sm font-semibold text-gray-700 mb-2">
                             {{ form.bmi.label }}
-                            <span class="text-xs text-slate-500 font-normal">(Weight in kg / (Height in m)²)</span>
+                            <span class="text-xs text-gray-500 font-normal">(Poids en kg / (Taille en m)²)</span>
                         </label>
                         {{ form.bmi }}
                         {% if form.bmi.errors %}
-                            <p class="mt-1 text-sm text-red-600">{{ form.bmi.errors.0 }}</p>
+                            <p class="mt-2 text-sm text-red-600 font-medium">{{ form.bmi.errors.0 }}</p>
                         {% endif %}
                     </div>
                     
                     <div>
-                        <label for="{{ form.children.id_for_label }}" class="block text-sm font-medium text-slate-700 mb-2">
+                        <label for="{{ form.children.id_for_label }}" class="block text-sm font-semibold text-gray-700 mb-2">
                             {{ form.children.label }}
                         </label>
                         {{ form.children }}
                         {% if form.children.errors %}
-                            <p class="mt-1 text-sm text-red-600">{{ form.children.errors.0 }}</p>
+                            <p class="mt-2 text-sm text-red-600 font-medium">{{ form.children.errors.0 }}</p>
                         {% endif %}
                     </div>
                     
                     <div>
-                        <label for="{{ form.smoker.id_for_label }}" class="block text-sm font-medium text-slate-700 mb-2">
+                        <label for="{{ form.smoker.id_for_label }}" class="block text-sm font-semibold text-gray-700 mb-2">
                             {{ form.smoker.label }}
                         </label>
                         {{ form.smoker }}
                         {% if form.smoker.errors %}
-                            <p class="mt-1 text-sm text-red-600">{{ form.smoker.errors.0 }}</p>
+                            <p class="mt-2 text-sm text-red-600 font-medium">{{ form.smoker.errors.0 }}</p>
                         {% endif %}
                     </div>
                     
                     <div>
-                        <label for="{{ form.region.id_for_label }}" class="block text-sm font-medium text-slate-700 mb-2">
+                        <label for="{{ form.region.id_for_label }}" class="block text-sm font-semibold text-gray-700 mb-2">
                             {{ form.region.label }}
                         </label>
                         {{ form.region }}
                         {% if form.region.errors %}
-                            <p class="mt-1 text-sm text-red-600">{{ form.region.errors.0 }}</p>
+                            <p class="mt-2 text-sm text-red-600 font-medium">{{ form.region.errors.0 }}</p>
                         {% endif %}
                     </div>
                 </div>
             </div>
 
-            <div class="pt-4">
-                <button type="submit" class="w-full md:w-auto px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm hover:shadow transition-all">
-                    Calculate My Premium
+            <div class="pt-4 border-t border-gray-200">
+                <button type="submit" class="btn-primary rounded-xl px-8 py-3 w-full md:w-auto">
+                    Calculer la Prime
+                    <svg class="inline-block ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                    </svg>
                 </button>
             </div>
         </form>
     </div>
 
-    <div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <p class="text-sm text-blue-800">
-            <strong>Note:</strong> This estimate is indicative and does not constitute a contractual offer. 
-            The final amount of your premium may vary according to the specific conditions of your contract and the checks carried out by the insurer.
-        </p>
+    <div class="mt-6 card-modern p-5 bg-gradient-to-r from-primary-50 to-accent-50 border-2 border-primary-200 fade-in">
+        <div class="flex items-start">
+            <svg class="w-6 h-6 text-primary-600 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <p class="text-sm text-gray-700">
+                <strong class="font-bold">Note :</strong> Cette estimation est indicative et ne constitue pas une offre contractuelle. 
+                Le montant final de la prime peut varier selon les conditions spécifiques du contrat et la vérification de l'assureur.
+            </p>
+        </div>
     </div>
 </div>
 {% endblock %}
