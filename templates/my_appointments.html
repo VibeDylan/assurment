@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
 
-{% block title %}Mes Rendez-vous - Assurement{% endblock %}
+{% block title %}Mes rendez-vous - Assurement{% endblock %}
 
 {% block content %}
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="mb-8 flex items-center justify-between">
         <div>
-            <h1 class="text-3xl font-bold text-gray-900 mb-2">Mes Rendez-vous</h1>
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">Mes rendez-vous</h1>
             <p class="text-base text-gray-600">Gérez vos rendez-vous avec les conseillers</p>
         </div>
         <a href="{% url 'insurance_web:conseillers_list' %}" class="btn-primary px-8 py-3 inline-flex items-center">
-            Prendre un Rendez-vous
+            Prendre un rendez-vous
         </a>
     </div>
 
@@ -18,7 +18,7 @@
         <div class="mb-8">
             <div class="flex items-center mb-4">
                 <div class="w-1 h-6 bg-gray-900 rounded-full mr-3"></div>
-                <h2 class="text-xl font-semibold text-gray-900">Rendez-vous à Venir</h2>
+                <h2 class="text-xl font-semibold text-gray-900">Rendez-vous à venir</h2>
                 <span class="ml-4 inline-flex items-center px-3 py-1 rounded text-xs font-medium bg-gray-200 text-gray-700">
                     {{ upcoming_appointments|length }} à venir
                 </span>
@@ -83,7 +83,7 @@
         <div>
             <div class="flex items-center mb-6">
                 <div class="w-1 h-8 bg-gray-300 rounded-full mr-3"></div>
-                <h2 class="text-xl font-semibold text-gray-900">Rendez-vous Passés</h2>
+                <h2 class="text-xl font-semibold text-gray-900">Rendez-vous passés</h2>
                 <span class="ml-4 inline-flex items-center px-3 py-1 rounded text-xs font-medium bg-gray-200 text-gray-700">
                     {{ past_appointments|length }} passé{{ past_appointments|length|pluralize }}
                 </span>
@@ -151,10 +151,10 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                 </svg>
             </div>
-            <h3 class="text-2xl font-bold text-gray-900 mb-2">Aucun Rendez-vous</h3>
+            <h3 class="text-2xl font-bold text-gray-900 mb-2">Aucun rendez-vous</h3>
             <p class="text-gray-600 mb-8">Vous n'avez aucun rendez-vous programmé.</p>
             <a href="{% url 'insurance_web:conseillers_list' %}" class="btn-primary px-8 py-3 inline-flex items-center">
-                Prendre Votre Premier Rendez-vous
+                Prendre votre premier rendez-vous
             </a>
         </div>
     {% endif %}

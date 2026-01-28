@@ -17,7 +17,7 @@ class TestPredictionModel:
         )
         created_by_user = User.objects.create_user(
             username='creator',
-            email='creator@example.com',
+            email='creator@example.com', 
             password='testpass123',
             first_name='Creator',
             last_name='User'

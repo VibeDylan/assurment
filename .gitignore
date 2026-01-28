@@ -41,6 +41,11 @@ db.sqlite3-journal
 *.pot
 *.pyc
 
+# Logs
+logs/*.log
+logs/*.log.*
+!logs/.gitkeep
+
 # Environment variables
 .env
 .env.local
