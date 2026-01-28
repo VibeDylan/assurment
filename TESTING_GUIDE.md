@@ -15,45 +15,6 @@ Ce document décrit tous les tests nécessaires pour l'application Assurement, o
 
 ## 🧪 Tests Unitaires
 
-### 1. Tests des Modèles (`insurance_web/tests/test_models.py`)
-
-#### Appointment Model
-```python
-# Tests à créer :
-
-3. test_appointment_ordering()
-   - Vérifier que ordering = ['date_time'] fonctionne
-   - Tester avec plusieurs rendez-vous
-
-4. test_appointment_cascade_deletion()
-   - Vérifier que si un User (conseiller) est supprimé, ses rendez-vous sont supprimés
-   - Vérifier que si un User (client) est supprimé, ses rendez-vous sont supprimés
-
-5. test_appointment_date_time_validation()
-   - Tester que date_time est requis
-   - Tester que duration_minutes est un entier positif
-```
-
-#### Prediction Model
-```python
-# Tests à créer :
-
-1. test_prediction_creation()
-   - Créer une prédiction avec tous les champs
-   - Vérifier les relations ForeignKey (user et created_by)
-   - Vérifier que predicted_amount est un Decimal
-
-2. test_prediction_str_method()
-   - Vérifier le format de __str__
-
-3. test_prediction_ordering()
-   - Vérifier ordering = ['-created_at'] (plus récent en premier)
-
-4. test_prediction_cascade_deletion()
-   - Vérifier suppression en cascade si user est supprimé
-   - Vérifier suppression en cascade si created_by est supprimé
-```
-
 ### 2. Tests des Formulaires (`insurance_web/tests/test_forms.py`)
 
 #### CustomUserCreationForm
