@@ -67,8 +67,8 @@ class TestPerformance:
             "Seulement 10 prédictions devraient être chargées"
     
     def test_model_caching(self):
-        from insurance_web import prediction_service
-        from insurance_web.prediction_service import _load_model
+        from insurance_web.services import prediction_service
+        from insurance_web.services.prediction_service import _load_model
         
         original_model = prediction_service._model
         

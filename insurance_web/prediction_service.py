@@ -1,30 +1,19 @@
-import joblib
-import os
-from django.conf import settings
-import pandas as pd
+"""
+Alias pour maintenir la compatibilité avec les imports existants.
+Ce fichier redirige vers le nouveau module services.
+"""
+from .services.prediction_service import (
+    calculate_insurance_premium,
+    create_prediction,
+    _load_model,
+    MODEL_PATH,
+    _model
+)
 
-
-MODEL_PATH = os.path.join(settings.BASE_DIR, 'model', 'gb_pipeline.joblib')
-_model = None
-
-
-def _load_model():
-    global _model
-    if _model is None:
-        _model = joblib.load(MODEL_PATH)
-    return _model
-
-
-def calculate_insurance_premium(form_data):
-    model = _load_model()
-    data = {
-        'age': [form_data['age']],
-        'sex': [form_data['sex']],
-        'bmi': [float(form_data['bmi'])],
-        'children': [form_data['children']],
-        'smoker': [form_data['smoker']],
-        'region': [form_data['region']]
-    }
-    df = pd.DataFrame(data)
-    prediction = model.predict(df)[0]
-    return round(float(prediction), 2)
+__all__ = [
+    'calculate_insurance_premium',
+    'create_prediction',
+    '_load_model',
+    'MODEL_PATH',
+    '_model',
+]
