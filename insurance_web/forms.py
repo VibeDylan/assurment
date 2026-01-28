@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Profile
+from .constants import SEX_CHOICES, SMOKER_CHOICES, REGION_CHOICES, ROLE_CHOICES
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -116,7 +117,7 @@ class PredictionForm(forms.Form):
     
     sex = forms.ChoiceField(
         label="Gender",
-        choices=Profile.SEX_CHOICES,
+        choices=SEX_CHOICES,
         required=True,
         widget=forms.Select(attrs={
             'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors'
@@ -150,7 +151,7 @@ class PredictionForm(forms.Form):
     
     smoker = forms.ChoiceField(
         label="Smoker",
-        choices=Profile.SMOKER_CHOICES,
+        choices=SMOKER_CHOICES,
         required=True,
         widget=forms.Select(attrs={
             'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors'
@@ -159,7 +160,7 @@ class PredictionForm(forms.Form):
     
     region = forms.ChoiceField(
         label="Region",
-        choices=Profile.REGION_CHOICES,
+        choices=REGION_CHOICES,
         required=True,
         widget=forms.Select(attrs={
             'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors'
@@ -245,7 +246,7 @@ class AdminUserManagementForm(forms.Form):
     
     role = forms.ChoiceField(
         label="Role",
-        choices=Profile.ROLE_CHOICES,
+        choices=ROLE_CHOICES,
         required=True,
         widget=forms.Select(attrs={
             'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors'
@@ -289,7 +290,7 @@ class AdminUserManagementForm(forms.Form):
 class AdminUserRoleForm(forms.Form):
     role = forms.ChoiceField(
         label="Role",
-        choices=Profile.ROLE_CHOICES,
+        choices=ROLE_CHOICES,
         required=True,
         widget=forms.Select(attrs={
             'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors'

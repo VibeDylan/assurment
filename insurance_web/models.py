@@ -2,32 +2,10 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
+from .constants import SEX_CHOICES, SMOKER_CHOICES, REGION_CHOICES, ROLE_CHOICES
 
 class Profile(models.Model):
-    SEX_CHOICES = [
-        ('male', 'Male'),
-        ('female', 'Female'),
-    ]
-    
-    SMOKER_CHOICES = [
-        ('yes', 'Yes'),
-        ('no', 'No'),
-    ]
-    
-    REGION_CHOICES = [
-        ('northwest', 'Northwest'),
-        ('northeast', 'Northeast'),
-        ('southwest', 'Southwest'),
-        ('southeast', 'Southeast'),
-    ]
-    
-    ROLE_CHOICES = [
-        ('user', 'User'),
-        ('conseiller', 'Advisor'),
-        ('admin', 'Administrator'),
-    ]
-    
+
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     
     role = models.CharField(
@@ -119,11 +97,11 @@ class Prediction(models.Model):
     predicted_amount = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
     age = models.IntegerField(null=True, blank=True, verbose_name="Age")
-    sex = models.CharField(max_length=10, choices=Profile.SEX_CHOICES, null=True, blank=True, verbose_name="Gender")
+    sex = models.CharField(max_length=10, choices=SEX_CHOICES, null=True, blank=True, verbose_name="Gender")
     bmi = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, verbose_name="BMI (Body Mass Index)")
     children = models.IntegerField(default=0, verbose_name="Number of Children")
-    smoker = models.CharField(max_length=3, choices=Profile.SMOKER_CHOICES, null=True, blank=True, verbose_name="Smoker")
-    region = models.CharField(max_length=20, choices=Profile.REGION_CHOICES, null=True, blank=True, verbose_name="Region")
+    smoker = models.CharField(max_length=3, choices=SMOKER_CHOICES, null=True, blank=True, verbose_name="Smoker")
+    region = models.CharField(max_length=20, choices=REGION_CHOICES, null=True, blank=True, verbose_name="Region")
 
     class Meta: 
         verbose_name = "Prediction"
