@@ -14,10 +14,6 @@ def get_logger(name: Optional[str] = None) -> logging.Logger:
     
     Returns:
         logging.Logger: Logger configuré
-    
-    Example:
-        >>> logger = get_logger(__name__)
-        >>> logger.info("Message d'information")
     """
     if name:
         return logging.getLogger(f'insurance_web.{name}')
