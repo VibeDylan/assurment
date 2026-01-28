@@ -4,7 +4,7 @@ from django.db import transaction
 from datetime import datetime, timedelta
 from calendar import monthrange
 
-from ..models import Appointment, User
+from ..models import Appointment
 from ..utils.logging import log_error, log_appointment
 from ..exceptions import AppointmentError, AppointmentConflictError
 
