@@ -21,12 +21,6 @@ Ce document décrit tous les tests nécessaires pour l'application Assurement, o
 ```python
 # Tests à créer :
 
-3. test_profile_role_methods()
-   - test_is_user() : vérifier retour True pour role='user'
-   - test_is_conseiller() : vérifier retour True pour role='conseiller'
-   - test_is_admin() : vérifier retour True pour role='admin'
-   - Vérifier retour False pour les autres rôles
-
 4. test_profile_permission_methods()
    - test_can_make_prediction_for_others() : True pour conseiller et admin
    - test_can_view_calendar() : True pour conseiller et admin

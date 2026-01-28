@@ -56,5 +56,19 @@ class TestProfileModel:
             first_name='Test',
             last_name='User'
         )
+
+        assert user.profile.is_user(), "Le profil devrait être un utilisateur"
+        assert not user.profile.is_conseiller(), "Le profil ne devrait pas être un conseiller"
+        assert not user.profile.is_admin(), "Le profil ne devrait pas être un administrateur"
+        print("✅ Test réussi : Méthodes de rôle fonctionnent correctement")
+
+    def test_profile_permission_methods(self):
+        user = User.objects.create_user(
+            username='testuser',
+            email='test@example.com',
+            password='testpass123',
+            first_name='Test',
+            last_name='User'
+        )
         
         
