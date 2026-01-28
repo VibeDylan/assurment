@@ -63,6 +63,53 @@ class TestProfileModel:
         print("✅ Test réussi : Méthodes de rôle fonctionnent correctement")
 
     def test_profile_permission_methods(self):
+        user_normal = User.objects.create_user(
+            username='normaluser',
+            email='normal@example.com',
+            password='testpass123',
+            first_name='Normal',
+            last_name='User'
+        )
+        
+        assert user_normal.profile.role == 'user', "Le rôle par défaut devrait être 'user'"
+        
+        assert not user_normal.profile.can_make_prediction_for_others(), "Un user normal ne devrait PAS pouvoir faire des prédictions pour d'autres"
+        assert not user_normal.profile.can_view_calendar(), "Un user normal ne devrait PAS pouvoir voir le calendrier"
+        assert not user_normal.profile.can_view_all_profiles(), "Un user normal ne devrait PAS pouvoir voir tous les profils"
+        
+        user_conseiller = User.objects.create_user(
+            username='conseilleruser',
+            email='conseiller@example.com',
+            password='testpass123',
+            first_name='Conseiller',
+            last_name='User'
+        )
+        user_conseiller.profile.role = 'conseiller'
+        user_conseiller.profile.save()
+        
+        assert user_conseiller.profile.role == 'conseiller', "Le rôle devrait être 'conseiller'"
+        
+        assert user_conseiller.profile.can_make_prediction_for_others(), "Un conseiller DEVRAIT pouvoir faire des prédictions pour d'autres"
+        assert user_conseiller.profile.can_view_calendar(), "Un conseiller DEVRAIT pouvoir voir le calendrier"
+        assert user_conseiller.profile.can_view_all_profiles(), "Un conseiller DEVRAIT pouvoir voir tous les profils"
+        
+        user_admin = User.objects.create_user(
+            username='adminuser',
+            email='admin@example.com',
+            password='testpass123',
+            first_name='Admin',
+            last_name='User'
+        )
+        user_admin.profile.role = 'admin'
+        user_admin.profile.save()
+        
+        assert user_admin.profile.role == 'admin', "Le rôle devrait être 'admin'"
+        
+        assert user_admin.profile.can_make_prediction_for_others(), "Un admin DEVRAIT pouvoir faire des prédictions pour d'autres"
+        assert user_admin.profile.can_view_calendar(), "Un admin DEVRAIT pouvoir voir le calendrier"
+        assert user_admin.profile.can_view_all_profiles(), "Un admin DEVRAIT pouvoir voir tous les profils"
+                
+    def test_profile_field_constraints(self):
         user = User.objects.create_user(
             username='testuser',
             email='test@example.com',
@@ -70,10 +117,6 @@ class TestProfileModel:
             first_name='Test',
             last_name='User'
         )
-        
-        assert not user.profile.can_make_prediction_for_others(), "L'utilisateur devrait pouvoir faire des prédictions pour d'autres utilisateurs"
-        assert not user.profile.can_view_calendar(), "L'utilisateur devrait pouvoir voir le calendrier"
-        assert not user.profile.can_view_all_profiles(), "L'utilisateur devrait pouvoir voir tous les profils"
-
-        print("✅ Test réussi : Méthodes de permission fonctionnent correctement pour l'utilisateur normal")
-        
+        assert user.profile.age is None, "L'âge devrait être None"
+        assert user.profile.sex is None, "Le sexe devrait être None"
+        assert user.profile.bmi is None, "Le BMI devrait être None"

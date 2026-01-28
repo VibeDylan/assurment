@@ -17,28 +17,6 @@ Ce document décrit tous les tests nécessaires pour l'application Assurement, o
 
 ### 1. Tests des Modèles (`insurance_web/tests/test_models.py`)
 
-#### Profile Model
-```python
-# Tests à créer :
-
-4. test_profile_permission_methods()
-   - test_can_make_prediction_for_others() : True pour conseiller et admin
-   - test_can_view_calendar() : True pour conseiller et admin
-   - test_can_view_all_profiles() : True pour conseiller et admin
-   - False pour user normal
-
-5. test_profile_choices_validation()
-   - Tester que les choix SEX_CHOICES sont valides
-   - Tester que les choix SMOKER_CHOICES sont valides
-   - Tester que les choix REGION_CHOICES sont valides
-   - Tester que les choix ROLE_CHOICES sont valides
-
-6. test_profile_field_constraints()
-   - Tester max_length pour les champs CharField
-   - Tester max_digits et decimal_places pour BMI
-   - Tester null=True et blank=True pour les champs optionnels
-```
-
 #### Appointment Model
 ```python
 # Tests à créer :
