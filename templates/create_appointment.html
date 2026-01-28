@@ -4,8 +4,8 @@
 
 {% block content %}
 <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="mb-6 fade-in">
-        <a href="{% url 'insurance_web:conseiller_availability' conseiller.id %}" class="text-primary-600 hover:text-primary-700 mb-3 inline-flex items-center font-semibold transition-colors text-sm">
+    <div class="mb-6">
+        <a href="{% url 'insurance_web:conseiller_availability' conseiller.id %}" class="text-gray-700 hover:text-gray-900 mb-3 inline-flex items-center font-medium text-sm">
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
             </svg>
@@ -13,8 +13,8 @@
         </a>
         <h1 class="text-3xl font-bold text-gray-900 mb-2">Prendre un Rendez-vous</h1>
         <div class="flex items-center space-x-3">
-            <div class="w-12 h-12 gradient-primary rounded-xl flex items-center justify-center shadow-lg">
-                <span class="text-white font-bold text-lg">{{ conseiller.get_full_name|default:conseiller.email|first|upper }}</span>
+            <div class="w-12 h-12 bg-gray-900 rounded flex items-center justify-center">
+                <span class="text-white font-semibold text-lg">{{ conseiller.get_full_name|default:conseiller.email|first|upper }}</span>
             </div>
             <p class="text-lg text-gray-600 font-medium">{{ conseiller.get_full_name|default:conseiller.email }}</p>
         </div>
@@ -22,7 +22,7 @@
 
     {% if messages %}
         {% for message in messages %}
-            <div class="mb-6 p-5 rounded-xl {% if message.tags == 'success' %}bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 text-green-800{% else %}bg-red-50 border-2 border-red-200 text-red-800{% endif %} fade-in">
+            <div class="mb-6 p-5 rounded {% if message.tags == 'success' %}bg-green-50 border border-green-200 text-green-800{% else %}bg-red-50 border border-red-200 text-red-800{% endif %}">
                 <div class="flex items-center">
                     <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         {% if message.tags == 'success' %}
@@ -37,7 +37,7 @@
         {% endfor %}
     {% endif %}
 
-    <div class="card-modern p-8 fade-in">
+    <div class="card p-8">
         <form method="post" class="space-y-5">
             {% csrf_token %}
             
@@ -79,14 +79,11 @@
                 {% endif %}
             </div>
 
-            <div class="pt-6 border-t-2 border-gray-200 flex gap-4">
-                <button type="submit" class="btn-primary rounded-xl px-10 py-4 flex-1">
+            <div class="pt-6 border-t border-gray-200 flex gap-4">
+                <button type="submit" class="btn-primary px-10 py-4 flex-1">
                     Confirmer le Rendez-vous
-                    <svg class="inline-block ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
                 </button>
-                <a href="{% url 'insurance_web:conseiller_availability' conseiller.id %}" class="btn-secondary rounded-xl px-8 py-4 inline-flex items-center">
+                <a href="{% url 'insurance_web:conseiller_availability' conseiller.id %}" class="btn-secondary px-8 py-4 inline-flex items-center">
                     Annuler
                 </a>
             </div>

@@ -4,9 +4,9 @@
 
 {% block content %}
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="text-center mb-12 fade-in">
+    <div class="text-center mb-12">
         <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
-            Choisissez Votre <span class="bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent">Conseiller</span>
+            Choisissez Votre Conseiller
         </h1>
         <p class="text-xl text-gray-600">
             Sélectionnez un conseiller pour prendre rendez-vous
@@ -16,10 +16,10 @@
     {% if conseillers %}
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {% for conseiller in conseillers %}
-                <div class="card-modern p-8 fade-in hover:scale-105 transition-transform">
+                <div class="card p-8">
                     <div class="flex items-center mb-6">
-                        <div class="w-20 h-20 gradient-primary rounded-2xl flex items-center justify-center mr-4 shadow-lg">
-                            <span class="text-white font-bold text-2xl">
+                        <div class="w-20 h-20 bg-gray-900 rounded flex items-center justify-center mr-4">
+                            <span class="text-white font-semibold text-2xl">
                                 {{ conseiller.get_full_name|default:conseiller.email|first|upper }}
                             </span>
                         </div>
@@ -32,22 +32,19 @@
                     </div>
 
                     <div class="mb-6">
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-primary-100 text-primary-700">
+                        <span class="inline-flex items-center px-3 py-1 rounded text-xs font-medium bg-gray-200 text-gray-700">
                             Conseiller en Assurance
                         </span>
                     </div>
 
-                    <a href="{% url 'insurance_web:conseiller_availability' conseiller.id %}" class="block w-full btn-primary rounded-xl text-center py-3">
+                    <a href="{% url 'insurance_web:conseiller_availability' conseiller.id %}" class="block w-full btn-primary text-center py-3">
                         Voir les Disponibilités
-                        <svg class="inline-block ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-                        </svg>
                     </a>
                 </div>
             {% endfor %}
         </div>
     {% else %}
-        <div class="card-modern p-16 text-center fade-in">
+        <div class="card p-16 text-center">
             <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
                 <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>

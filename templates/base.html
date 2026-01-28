@@ -11,37 +11,20 @@
                 extend: {
                     colors: {
                         primary: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            200: '#bae6fd',
-                            300: '#7dd3fc',
-                            400: '#38bdf8',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            700: '#0369a1',
-                            800: '#075985',
-                            900: '#0c4a6e',
-                        },
-                        accent: {
-                            50: '#faf5ff',
-                            100: '#f3e8ff',
-                            200: '#e9d5ff',
-                            300: '#d8b4fe',
-                            400: '#c084fc',
-                            500: '#a855f7',
-                            600: '#9333ea',
-                            700: '#7e22ce',
-                            800: '#6b21a8',
-                            900: '#581c87',
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a',
                         }
                     },
                     fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif'],
-                    },
-                    boxShadow: {
-                        'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)',
-                        'medium': '0 4px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-                        'large': '0 10px 40px -10px rgba(0, 0, 0, 0.15)',
+                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
                     }
                 }
             }
@@ -49,7 +32,7 @@
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <style>
         * {
@@ -57,124 +40,75 @@
         }
         
         body {
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
+            background: #ffffff;
             min-height: 100vh;
+            color: #1e293b;
         }
         
-        .glass {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        .gradient-primary {
-            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 50%, #0369a1 100%);
-        }
-        
-        .gradient-accent {
-            background: linear-gradient(135deg, #a855f7 0%, #9333ea 50%, #7e22ce 100%);
-        }
-        
-        .gradient-success {
-            background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
-        }
-        
-        .gradient-warm {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
-        }
-        
-        .card-modern {
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid rgba(226, 232, 240, 0.8);
-        }
-        
-        .card-modern:hover {
-            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.15);
-            transform: translateY(-2px);
+        .card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+            background: #1e293b;
             color: white;
-            font-weight: 600;
-            padding: 0.625rem 1.25rem;
-            border-radius: 10px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 14px 0 rgba(14, 165, 233, 0.25);
+            font-weight: 500;
+            padding: 0.625rem 1.5rem;
+            border-radius: 4px;
+            transition: all 0.2s;
             border: none;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
             font-size: 0.875rem;
+            cursor: pointer;
         }
         
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px 0 rgba(14, 165, 233, 0.35);
-            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
-        }
-        
-        .btn-primary:active {
-            transform: translateY(0);
+            background: #0f172a;
         }
         
         .btn-secondary {
             background: white;
             color: #475569;
-            font-weight: 600;
-            padding: 0.625rem 1.25rem;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-            border: 2px solid #e2e8f0;
+            font-weight: 500;
+            padding: 0.625rem 1.5rem;
+            border-radius: 4px;
+            transition: all 0.2s;
+            border: 1px solid #e2e8f0;
             font-size: 0.875rem;
+            cursor: pointer;
         }
         
         .btn-secondary:hover {
             border-color: #cbd5e1;
-            box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
-            transform: translateY(-1px);
+            background: #f8fafc;
         }
         
         .nav-link {
-            position: relative;
             display: flex;
             align-items: center;
-            padding: 0.625rem 0.875rem;
-            margin: 0.25rem 0;
-            border-radius: 10px;
+            padding: 0.5rem 0.75rem;
+            margin: 0.125rem 0;
+            border-radius: 4px;
             color: #64748b;
-            font-weight: 500;
+            font-weight: 400;
             font-size: 0.875rem;
-            transition: all 0.2s ease;
+            transition: all 0.2s;
         }
         
         .nav-link:hover {
-            background: rgba(14, 165, 233, 0.08);
-            color: #0284c7;
+            background: #f8fafc;
+            color: #1e293b;
         }
         
         .nav-link.active {
-            background: linear-gradient(135deg, rgba(14, 165, 233, 0.12) 0%, rgba(2, 132, 199, 0.08) 100%);
-            color: #0284c7;
-            font-weight: 600;
-        }
-        
-        .nav-link.active::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 4px;
-            height: 60%;
-            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
-            border-radius: 0 4px 4px 0;
+            background: #f1f5f9;
+            color: #1e293b;
+            font-weight: 500;
         }
         
         input[type="text"],
@@ -187,103 +121,60 @@
         select,
         textarea {
             width: 100%;
-            padding: 0.625rem 0.875rem;
+            padding: 0.625rem 0.75rem;
             font-size: 0.875rem;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
             background-color: white;
             color: #1e293b;
-            transition: all 0.2s ease;
-            font-weight: 500;
+            transition: border-color 0.2s;
         }
         
         input:focus,
         select:focus,
         textarea:focus {
             outline: none;
-            border-color: #0ea5e9;
-            box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1);
-            background-color: #fafafa;
+            border-color: #94a3b8;
         }
         
         input::placeholder,
         textarea::placeholder {
             color: #94a3b8;
-            font-weight: 400;
         }
         
         .sidebar {
-            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-            border-right: 1px solid rgba(226, 232, 240, 0.8);
-            box-shadow: 4px 0 20px -5px rgba(0, 0, 0, 0.05);
+            background: #ffffff;
+            border-right: 1px solid #e2e8f0;
         }
         
         .stat-card {
-            background: white;
-            border-radius: 16px;
-            padding: 1.25rem;
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 2px 15px -3px rgba(0, 0, 0, 0.07);
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.15);
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            padding: 1.5rem;
         }
         
         .badge {
             display: inline-flex;
             align-items: center;
-            padding: 0.375rem 0.875rem;
-            border-radius: 9999px;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
             font-size: 0.75rem;
-            font-weight: 600;
-            letter-spacing: 0.025em;
-        }
-        
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateX(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-        
-        .fade-in {
-            animation: fadeIn 0.5s ease-out;
-        }
-        
-        .slide-in {
-            animation: slideIn 0.4s ease-out;
+            font-weight: 500;
         }
         
         ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
         }
         
         ::-webkit-scrollbar-track {
-            background: #f1f5f9;
+            background: #f8fafc;
         }
         
         ::-webkit-scrollbar-thumb {
             background: #cbd5e1;
-            border-radius: 4px;
+            border-radius: 3px;
         }
         
         ::-webkit-scrollbar-thumb:hover {
@@ -295,18 +186,18 @@
         }
         
         .table-modern thead {
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            background: #f8fafc;
         }
         
         .table-modern th {
             padding: 0.75rem 1rem;
             text-align: left;
             font-size: 0.75rem;
-            font-weight: 700;
+            font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            color: #475569;
-            border-bottom: 2px solid #e2e8f0;
+            color: #64748b;
+            border-bottom: 1px solid #e2e8f0;
         }
         
         .table-modern td {
@@ -316,11 +207,11 @@
         }
         
         .table-modern tbody tr {
-            transition: all 0.2s ease;
+            transition: background-color 0.15s;
         }
         
         .table-modern tbody tr:hover {
-            background: rgba(14, 165, 233, 0.04);
+            background: #f8fafc;
         }
         
         @media (max-width: 1024px) {
@@ -340,17 +231,14 @@
     {% if user.is_authenticated %}
         <div class="flex flex-1" x-data="{ sidebarOpen: false }">
             <aside class="sidebar w-64 flex flex-col min-h-screen fixed left-0 top-0 z-50 lg:translate-x-0" :class="{ 'translate-x-0': sidebarOpen, '-translate-x-full': !sidebarOpen }">
-                <div class="p-5 border-b border-gray-200/80">
-                    <a href="{% url 'insurance_web:home' %}" class="flex items-center space-x-2 group">
-                        <div class="w-10 h-10 gradient-primary rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all group-hover:scale-105">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="p-6 border-b border-gray-200">
+                    <a href="{% url 'insurance_web:home' %}" class="flex items-center space-x-3">
+                        <div class="w-8 h-8 bg-gray-900 rounded flex items-center justify-center">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                             </svg>
                         </div>
-                        <div>
-                            <span class="text-xl font-bold bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent">Assurement</span>
-                            <p class="text-xs text-gray-500 font-medium">Plateforme d'Assurance</p>
-                        </div>
+                        <span class="text-lg font-semibold text-gray-900">Assurement</span>
                     </a>
                 </div>
 
@@ -387,8 +275,8 @@
                         {% endif %}
 
                         {% if user.profile.is_conseiller or user.profile.is_admin %}
-                            <div class="pt-4 mt-4 border-t border-gray-200/80">
-                                <p class="px-4 py-2 text-xs font-bold text-gray-400 uppercase tracking-wider">Conseiller</p>
+                            <div class="pt-4 mt-4 border-t border-gray-200">
+                                <p class="px-3 py-2 text-xs font-medium text-gray-400 uppercase tracking-wider">Conseiller</p>
                                 <a href="{% url 'insurance_web:conseiller_dashboard' %}" class="nav-link {% if 'conseiller' in request.resolver_match.url_name and request.resolver_match.url_name == 'conseiller_dashboard' %}active{% endif %}">
                                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
@@ -417,8 +305,8 @@
                         {% endif %}
 
                         {% if user.profile.is_admin %}
-                            <div class="pt-4 mt-4 border-t border-gray-200/80">
-                                <p class="px-4 py-2 text-xs font-bold text-gray-400 uppercase tracking-wider">Administration</p>
+                            <div class="pt-4 mt-4 border-t border-gray-200">
+                                <p class="px-3 py-2 text-xs font-medium text-gray-400 uppercase tracking-wider">Administration</p>
                                 <a href="{% url 'insurance_web:admin_dashboard' %}" class="nav-link {% if 'admin' in request.resolver_match.url_name and request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
                                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
@@ -443,19 +331,19 @@
                     </div>
                 </nav>
 
-                <div class="p-3 border-t border-gray-200/80">
-                    <div class="mb-2 px-3 py-2 bg-gradient-to-r from-primary-50 to-primary-100/50 rounded-xl border border-primary-200/50">
-                        <p class="text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wider">Connecté en tant que</p>
-                        <p class="text-sm font-bold text-gray-900 truncate">{{ user.get_full_name|default:user.email }}</p>
+                <div class="p-4 border-t border-gray-200">
+                    <div class="mb-3 px-3 py-2 bg-gray-50 rounded border border-gray-200">
+                        <p class="text-xs font-medium text-gray-500 mb-1">Connecté en tant que</p>
+                        <p class="text-sm font-medium text-gray-900 truncate">{{ user.get_full_name|default:user.email }}</p>
                         {% if user.profile %}
-                            <span class="inline-flex items-center px-2 py-1 mt-2 text-xs font-semibold rounded-lg {% if user.profile.role == 'admin' %}bg-accent-100 text-accent-700{% elif user.profile.role == 'conseiller' %}bg-primary-100 text-primary-700{% else %}bg-gray-100 text-gray-700{% endif %}">
+                            <span class="inline-flex items-center px-2 py-0.5 mt-2 text-xs font-medium rounded bg-gray-200 text-gray-700">
                                 {{ user.profile.get_role_display }}
                             </span>
                         {% endif %}
                     </div>
                     <form method="post" action="{% url 'insurance_web:logout' %}">
                         {% csrf_token %}
-                        <button type="submit" class="w-full flex items-center justify-center px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-xl transition-all">
+                        <button type="submit" class="w-full flex items-center justify-center px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded transition-all">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                             </svg>
@@ -467,20 +355,19 @@
 
             <div class="flex-1 ml-0 lg:ml-64 flex flex-col min-h-screen">
                 <div class="lg:hidden fixed top-4 left-4 z-50">
-                    <button @click="sidebarOpen = !sidebarOpen" class="p-2 rounded-xl bg-white shadow-lg border border-gray-200">
+                    <button @click="sidebarOpen = !sidebarOpen" class="p-2 rounded bg-white shadow-sm border border-gray-200">
                         <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                         </svg>
                     </button>
                 </div>
                 
-                <div x-show="sidebarOpen" @click="sidebarOpen = false" x-transition:enter="transition-opacity ease-linear duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition-opacity ease-linear duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 bg-gray-600 bg-opacity-75 z-40 lg:hidden" style="display: none;"></div>
+                <div x-show="sidebarOpen" @click="sidebarOpen = false" x-transition:enter="transition-opacity ease-linear duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition-opacity ease-linear duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 bg-gray-900 bg-opacity-50 z-40 lg:hidden" style="display: none;"></div>
 
                 <main class="flex-1 pt-16 lg:pt-0 pb-4">
-                    {% block content %}{% endblock %}
                 </main>
 
-                <footer class="bg-white/80 backdrop-blur-sm border-t border-gray-200/80 py-4 px-6 mt-auto">
+                <footer class="bg-white border-t border-gray-200 py-4 px-6 mt-auto">
                     <div class="max-w-7xl mx-auto">
                         <p class="text-center text-xs text-gray-500">
                             © 2026 Assurement. Tous droits réservés.
@@ -491,27 +378,24 @@
         </div>
     {% else %}
         <div class="flex flex-col flex-1 min-h-screen">
-            <nav class="bg-white/80 backdrop-blur-sm border-b border-gray-200/80 shadow-sm sticky top-0 z-50">
+            <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between items-center h-16">
                         <div class="flex items-center">
-                            <a href="{% url 'insurance_web:home' %}" class="flex items-center space-x-2 group">
-                                <div class="w-10 h-10 gradient-primary rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all group-hover:scale-105">
-                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <a href="{% url 'insurance_web:home' %}" class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-gray-900 rounded flex items-center justify-center">
+                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                                     </svg>
                                 </div>
-                                <div>
-                                    <span class="text-xl font-bold bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent">Assurement</span>
-                                    <p class="text-xs text-gray-500 font-medium">Plateforme d'Assurance</p>
-                                </div>
+                                <span class="text-lg font-semibold text-gray-900">Assurement</span>
                             </a>
                         </div>
                         <div class="flex items-center space-x-4">
-                            <a href="{% url 'insurance_web:login' %}" class="text-gray-700 hover:text-gray-900 px-3 py-1.5 text-sm font-semibold transition-colors">
+                            <a href="{% url 'insurance_web:login' %}" class="text-gray-700 hover:text-gray-900 px-3 py-1.5 text-sm font-medium transition-colors">
                                 Connexion
                             </a>
-                            <a href="{% url 'insurance_web:signup' %}" class="btn-primary rounded-xl">
+                            <a href="{% url 'insurance_web:signup' %}" class="btn-primary">
                                 Commencer
                             </a>
                         </div>
@@ -522,52 +406,67 @@
             <main class="flex-1 pb-4">
             </main>
 
-            <footer class="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-white mt-auto">
+            <footer class="bg-white border-t border-gray-200 mt-auto">
                 <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
                         <div>
                             <div class="flex items-center space-x-2 mb-3">
-                                <div class="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center">
+                                <div class="w-8 h-8 bg-gray-900 rounded flex items-center justify-center">
                                     <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                                     </svg>
                                 </div>
-                                <span class="text-lg font-bold">Assurement</span>
+                                <span class="text-lg font-semibold text-gray-900">Assurement</span>
                             </div>
-                            <p class="text-gray-400 text-sm leading-relaxed">Plateforme de prédiction de primes d'assurance alimentée par l'IA.</p>
+                            <p class="text-gray-600 text-sm">Plateforme de prédiction de primes d'assurance.</p>
                         </div>
                         <div>
-                            <h3 class="font-semibold mb-4 text-white">Produit</h3>
-                            <ul class="space-y-2 text-sm text-gray-400">
-                                <li><a href="#" class="hover:text-white transition-colors">Fonctionnalités</a></li>
-                                <li><a href="#" class="hover:text-white transition-colors">Tarification</a></li>
-                                <li><a href="#" class="hover:text-white transition-colors">Documentation</a></li>
+                            <h3 class="font-medium mb-4 text-gray-900">Produit</h3>
+                            <ul class="space-y-2 text-sm text-gray-600">
+                                <li><a href="#" class="hover:text-gray-900 transition-colors">Fonctionnalités</a></li>
+                                <li><a href="#" class="hover:text-gray-900 transition-colors">Tarification</a></li>
+                                <li><a href="#" class="hover:text-gray-900 transition-colors">Documentation</a></li>
                             </ul>
                         </div>
                         <div>
-                            <h3 class="font-semibold mb-4 text-white">Entreprise</h3>
-                            <ul class="space-y-2 text-sm text-gray-400">
-                                <li><a href="#" class="hover:text-white transition-colors">À propos</a></li>
-                                <li><a href="#" class="hover:text-white transition-colors">Blog</a></li>
-                                <li><a href="#" class="hover:text-white transition-colors">Contact</a></li>
+                            <h3 class="font-medium mb-4 text-gray-900">Entreprise</h3>
+                            <ul class="space-y-2 text-sm text-gray-600">
+                                <li><a href="#" class="hover:text-gray-900 transition-colors">À propos</a></li>
+                                <li><a href="#" class="hover:text-gray-900 transition-colors">Blog</a></li>
+                                <li><a href="#" class="hover:text-gray-900 transition-colors">Contact</a></li>
                             </ul>
                         </div>
                         <div>
-                            <h3 class="font-semibold mb-4 text-white">Légal</h3>
-                            <ul class="space-y-2 text-sm text-gray-400">
-                                <li><a href="#" class="hover:text-white transition-colors">Confidentialité</a></li>
-                                <li><a href="#" class="hover:text-white transition-colors">Conditions</a></li>
-                                <li><a href="#" class="hover:text-white transition-colors">Sécurité</a></li>
+                            <h3 class="font-medium mb-4 text-gray-900">Légal</h3>
+                            <ul class="space-y-2 text-sm text-gray-600">
+                                <li><a href="#" class="hover:text-gray-900 transition-colors">Confidentialité</a></li>
+                                <li><a href="#" class="hover:text-gray-900 transition-colors">Conditions</a></li>
+                                <li><a href="#" class="hover:text-gray-900 transition-colors">Sécurité</a></li>
                             </ul>
                         </div>
                     </div>
-                    <div class="border-t border-gray-700 pt-6 text-center text-sm text-gray-400">
+                    <div class="border-t border-gray-200 pt-6 text-center text-sm text-gray-500">
                         © 2026 Assurement. Tous droits réservés.
                     </div>
                 </div>
             </footer>
         </div>
     {% endif %}
+
+    <div id="content-placeholder" style="display: none;">
+        {% block content %}{% endblock %}
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const contentPlaceholder = document.getElementById('content-placeholder');
+            const mainElements = document.querySelectorAll('main');
+            if (contentPlaceholder && mainElements.length > 0) {
+                const mainElement = mainElements[0];
+                mainElement.innerHTML = contentPlaceholder.innerHTML;
+                contentPlaceholder.remove();
+            }
+        });
+    </script>
 
     {% block extra_js %}{% endblock %}
 </body>
