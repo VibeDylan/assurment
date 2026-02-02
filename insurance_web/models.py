@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
-from .constants import SEX_CHOICES, SMOKER_CHOICES, REGION_CHOICES, ROLE_CHOICES, APPOINTMENT_STATUS_CHOICES
+from .constants import SEX_CHOICES, SMOKER_CHOICES, REGION_CHOICES, ROLE_CHOICES, APPOINTMENT_STATUS_CHOICES, NOTIFICATION_TYPE_CHOICES
 
 class Profile(models.Model):
 
@@ -121,3 +121,13 @@ class Prediction(models.Model):
             'user': user_name,
             'amount': self.predicted_amount
         }
+
+
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
+    appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE, related_name='notifications')
+    type = models.CharField(max_length=20, choices=NOTIFICATION_TYPE_CHOICES, verbose_name=_("Type"))
+    message = models.TextField(verbose_name=_("Message"))
+    read = models.BooleanField(default=False, verbose_name=_("Read"))
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

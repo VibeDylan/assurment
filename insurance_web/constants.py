@@ -28,3 +28,11 @@ APPOINTMENT_STATUS_CHOICES = [
     ('confirmed', _('Confirmed')),
     ('cancelled', _('Cancelled')),
 ]
+
+NOTIFICATION_TYPE_CHOICES = [
+    ('appointment_confirmation', _('Appointment Confirmation')),
+    ('appointment_reminder', _('Appointment Reminder')),
+    ('appointment_cancelled', _('Appointment Cancelled')),
+    ('appointment_rescheduled', _('Appointment Rescheduled')),
+    ('appointment_moved', _('Appointment Moved')),
+]
