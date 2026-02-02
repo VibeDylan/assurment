@@ -125,9 +125,29 @@ class Prediction(models.Model):
 
 class Notification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
-    appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE, related_name='notifications')
+    appointment = models.ForeignKey(
+        Appointment, 
+        on_delete=models.CASCADE, 
+        related_name='notifications',
+        null=True, 
+        blank=True
+    )
     type = models.CharField(max_length=20, choices=NOTIFICATION_TYPE_CHOICES, verbose_name=_("Type"))
     message = models.TextField(verbose_name=_("Message"))
     read = models.BooleanField(default=False, verbose_name=_("Read"))
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("Notification")
+        verbose_name_plural = _("Notifications")
+        ordering = ['-created_at']
+
+    def __str__(self):
+        user_name = self.user.get_full_name() or self.user.email
+        if self.appointment:
+            return _("Notification for %(user)s - %(appointment)s") % {
+                'user': user_name,
+                'appointment': self.appointment.date_time.strftime('%m/%d/%Y %H:%M')
+            }
+        return _("Notification for %(user)s") % {'user': user_name}

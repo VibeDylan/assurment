@@ -35,4 +35,7 @@ NOTIFICATION_TYPE_CHOICES = [
     ('appointment_cancelled', _('Appointment Cancelled')),
     ('appointment_rescheduled', _('Appointment Rescheduled')),
     ('appointment_moved', _('Appointment Moved')),
+    ('appointment_request', _('Appointment Request')),
+    ('appointment_accepted', _('Appointment Accepted')),
+    ('appointment_rejected', _('Appointment Rejected')),
 ]
