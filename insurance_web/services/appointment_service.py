@@ -5,8 +5,9 @@ from datetime import datetime, timedelta
 from calendar import monthrange
 
 from ..models import Appointment
-from ..utils.logging import log_error, log_appointment
+from ..utils.logging import log_error, log_appointment, log_warning
 from ..exceptions import AppointmentError, AppointmentConflictError
+from .notification_service import create_appointment_request_notification
 
 
 def get_available_slots(conseiller, selected_date, existing_appointments):
@@ -101,6 +102,17 @@ def create_appointment(conseiller, client, date_time, duration_minutes, notes=''
             notes=notes
         )
         log_appointment(appointment, 'created')
+    
+        try:
+            create_appointment_request_notification(appointment)
+        except Exception as notification_error:
+            log_warning(
+                _("Failed to create notification for appointment: %(error)s") % {'error': notification_error},
+                extra={
+                    'appointment_id': appointment.id,
+                    'conseiller_id': conseiller.id,
+                }
+            )
         return appointment
     except Exception as e:
         log_error(
