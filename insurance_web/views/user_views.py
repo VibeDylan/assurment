@@ -59,11 +59,15 @@ class ProfileView(UserProfileMixin, TemplateView):
             user.save()
             
             profile = user.profile
-            profile_fields = ['age', 'sex', 'bmi', 'children', 'smoker', 'region', 'additional_info']
+            profile_fields = ['age', 'sex', 'height', 'weight', 'children', 'smoker', 'region', 'additional_info']
             for field in profile_fields:
                 if field in form.cleaned_data:
                     value = form.cleaned_data[field]
                     setattr(profile, field, value)
+            # Calculer le BMI si taille et poids sont renseignés
+            if profile.height and profile.weight and profile.height > 0:
+                from decimal import Decimal
+                profile.bmi = Decimal(str(float(profile.weight) / (float(profile.height) ** 2))).quantize(Decimal('0.01'))
             profile.save()
             
             messages.success(self.request, _('Votre profil à été mis à jour avec succès.'))
@@ -84,7 +88,8 @@ class EditProfileView(UserProfileMixin, FormView):
         return {
             'age': profile.age,
             'sex': profile.sex,
-            'bmi': profile.bmi,
+            'height': getattr(profile, 'height', None),
+            'weight': getattr(profile, 'weight', None),
             'children': profile.children,
             'smoker': profile.smoker,
             'region': profile.region,
@@ -93,9 +98,15 @@ class EditProfileView(UserProfileMixin, FormView):
     
     def form_valid(self, form):
         """Sauvegarde les données du formulaire dans le profil"""
+        from decimal import Decimal
         profile = self.request.user.profile
-        for field in form.cleaned_data:
-            setattr(profile, field, form.cleaned_data[field])
+        profile_field_names = ['age', 'sex', 'height', 'weight', 'children', 'smoker', 'region', 'additional_info']
+        for field in profile_field_names:
+            if field in form.cleaned_data:
+                setattr(profile, field, form.cleaned_data[field])
+        # Recalculer le BMI si taille et poids sont renseignés
+        if profile.height and profile.weight and profile.height > 0:
+            profile.bmi = Decimal(str(float(profile.weight) / (float(profile.height) ** 2))).quantize(Decimal('0.01'))
         profile.save()
         messages.success(self.request, _('Votre profil à été mis à jour avec succès.'))
         return redirect('insurance_web:profile')

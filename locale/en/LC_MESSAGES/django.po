@@ -1100,7 +1100,7 @@ msgid "Aucun utilisateur disponible."
 msgstr "No users available."
 
 #: templates/conseiller/dashboard.html:4 templates/conseiller/dashboard.html:9
-msgid "Tableau de bord Conseiller"
+msgid "Tableau de bord conseiller"
 msgstr "Advisor Dashboard"
 
 #: templates/conseiller/dashboard.html:10

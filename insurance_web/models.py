@@ -18,6 +18,8 @@ class Profile(models.Model):
     
     age = models.IntegerField(null=True, blank=True, verbose_name=_("Age"))
     sex = models.CharField(max_length=10, choices=SEX_CHOICES, null=True, blank=True, verbose_name=_("Gender"))
+    height = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True, verbose_name=_("Height (m)"))
+    weight = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, verbose_name=_("Weight (kg)"))
     bmi = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, verbose_name=_("BMI (Body Mass Index)"))
     children = models.IntegerField(default=0, verbose_name=_("Number of Children"))
     smoker = models.CharField(max_length=3, choices=SMOKER_CHOICES, null=True, blank=True, verbose_name=_("Smoker"))

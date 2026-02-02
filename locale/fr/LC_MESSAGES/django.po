@@ -955,8 +955,8 @@ msgid "Gérer les Utilisateurs"
 msgstr "Gérer les Utilisateurs"
 
 #: templates/admin/dashboard.html:167
-msgid "Voir le Tableau de bord Conseiller"
-msgstr "Voir le Tableau de bord Conseiller"
+msgid "Voir le Tableau de bord conseiller"
+msgstr "Voir le Tableau de bord conseiller"
 
 #: templates/admin/dashboard.html:170
 msgid "Aller à l'Accueil"
@@ -1563,8 +1563,8 @@ msgid "Aucun utilisateur disponible."
 msgstr "Aucun utilisateur disponible."
 
 #: templates/conseiller/dashboard.html:4 templates/conseiller/dashboard.html:9
-msgid "Tableau de bord Conseiller"
-msgstr "Tableau de bord Conseiller"
+msgid "Tableau de bord conseiller"
+msgstr "Tableau de bord conseiller"
 
 #: templates/conseiller/dashboard.html:10
 msgid "Bon retour,"

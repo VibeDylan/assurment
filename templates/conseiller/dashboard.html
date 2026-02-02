@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-{% block title %}{% trans "Tableau de bord Conseiller" %} - Assurement{% endblock %}
+{% block title %}{% trans "Tableau de bord conseiller" %} - Assurement{% endblock %}
 
 {% block content %}
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="mb-8">
-        <h1 class="text-3xl font-semibold text-gray-900 mb-2">{% trans "Tableau de bord Conseiller" %}</h1>
+        <h1 class="text-3xl font-semibold text-gray-900 mb-2">{% trans "Tableau de bord conseiller" %}</h1>
         <p class="text-base text-gray-600">{% trans "Bon retour," %} {{ user.get_full_name|default:user.email }}</p>
     </div>
 
@@ -34,22 +34,6 @@
                 <div class="w-14 h-14 bg-gray-100 rounded flex items-center justify-center">
                     <svg class="w-7 h-7 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                </div>
-            </div>
-        </div>
-
-        <div class="stat-card">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-medium text-gray-500 mb-2 uppercase tracking-wider">{% trans "Actions rapides" %}</p>
-                    <a href="{% url 'insurance_web:conseiller_predict' %}" class="text-sm font-medium text-gray-900 hover:underline inline-flex items-center">
-                        {% trans "Nouvelle prédiction" %}
-                    </a>
-                </div>
-                <div class="w-14 h-14 bg-gray-100 rounded flex items-center justify-center">
-                    <svg class="w-7 h-7 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                     </svg>
                 </div>
             </div>

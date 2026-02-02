@@ -11,7 +11,6 @@ DATABASE_URL = os.getenv('DATABASE_URL')
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Gérer ALLOWED_HOSTS depuis les variables d'environnement
 ALLOWED_HOSTS_ENV = os.getenv('ALLOWED_HOSTS', '')
 if ALLOWED_HOSTS_ENV:
     ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS_ENV.split(',') if host.strip()]
@@ -31,7 +30,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # Doit être juste après SecurityMiddleware
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -39,7 +38,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.contrib.admindocs.middleware.XViewMiddleware',  # Required for admin docs
+    'django.contrib.admindocs.middleware.XViewMiddleware',
 ]
 
 ROOT_URLCONF = 'assurement.urls'
@@ -62,9 +61,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'assurement.wsgi.application'
 
-# Use SQLite in memory for tests (faster and no setup required)
 import sys
-# Detect if we're running tests
 is_testing = 'test' in sys.argv or 'pytest' in sys.modules or os.getenv('DJANGO_TESTING') == '1'
 
 if is_testing:
@@ -118,9 +115,7 @@ LOCALE_PATHS = [
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# Configuration pour les fichiers statiques en production
 if not DEBUG:
-    # En production, utiliser WhiteNoise pour servir les fichiers statiques
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
     
 LOGIN_REDIRECT_URL = '/predict'

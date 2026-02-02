@@ -84,12 +84,22 @@
                     </div>
                     
                     <div>
-                        <label for="{{ form.bmi.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-                            {{ form.bmi.label }}
+                        <label for="{{ form.height.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ form.height.label }}
                         </label>
-                        {{ form.bmi }}
-                        {% if form.bmi.errors %}
-                            <p class="mt-2 text-sm text-red-600">{{ form.bmi.errors.0 }}</p>
+                        {{ form.height }}
+                        {% if form.height.errors %}
+                            <p class="mt-2 text-sm text-red-600">{{ form.height.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.weight.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ form.weight.label }}
+                        </label>
+                        {{ form.weight }}
+                        {% if form.weight.errors %}
+                            <p class="mt-2 text-sm text-red-600">{{ form.weight.errors.0 }}</p>
                         {% endif %}
                     </div>
                     
@@ -188,8 +198,13 @@
             </div>
             
             <div>
-                <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">{% trans "IMC" %}</p>
-                <p class="text-base font-semibold text-gray-900">{{ user.profile.bmi|default:_("Non renseigné") }}</p>
+                <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">{% trans "Taille (m)" %}</p>
+                <p class="text-base font-semibold text-gray-900">{{ user.profile.height|default:_("Non renseigné") }}</p>
+            </div>
+            
+            <div>
+                <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">{% trans "Poids (kg)" %}</p>
+                <p class="text-base font-semibold text-gray-900">{{ user.profile.weight|default:_("Non renseigné") }}</p>
             </div>
             
             <div>

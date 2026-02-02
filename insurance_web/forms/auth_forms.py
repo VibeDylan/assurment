@@ -153,14 +153,27 @@ class ProfileForm(forms.ModelForm):
         widget=forms.Select()
     )
     
-    bmi = forms.DecimalField(
-        label=_("BMI (Body Mass Index)"),
+    height = forms.DecimalField(
+        label=_("Taille (m)"),
         required=False,
-        min_value=10.0,
-        max_value=50.0,
+        min_value=1.0,
+        max_value=2.5,
         decimal_places=2,
         widget=forms.NumberInput(attrs={
-            'placeholder': _('e.g. 22.5')
+            'placeholder': _('e.g. 1.75'),
+            'step': '0.01'
+        })
+    )
+    
+    weight = forms.DecimalField(
+        label=_("Poids (kg)"),
+        required=False,
+        min_value=40.0,
+        max_value=150.0,
+        decimal_places=2,
+        widget=forms.NumberInput(attrs={
+            'placeholder': _('e.g. 70'),
+            'step': '0.1'
         })
     )
     
@@ -204,7 +217,7 @@ class ProfileForm(forms.ModelForm):
     
     class Meta:
         model = Profile
-        fields = ['age', 'sex', 'bmi', 'children', 'smoker', 'region', 'additional_info']
+        fields = ['age', 'sex', 'height', 'weight', 'children', 'smoker', 'region', 'additional_info']
     
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)

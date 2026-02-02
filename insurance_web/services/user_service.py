@@ -18,14 +18,18 @@ def update_profile_from_form_data(profile, form_data):
 
 
 def get_profile_initial_data(profile):
-    """Récupère les données initiales du profil pour pré-remplir un formulaire"""
+    """Récupère les données initiales du profil pour pré-remplir un formulaire (prédiction ou profil)."""
     initial = {}
     if profile:
         if profile.age is not None:
             initial['age'] = profile.age
         if profile.sex:
             initial['sex'] = profile.sex
-        if profile.bmi is not None:
+        if getattr(profile, 'height', None) is not None:
+            initial['height'] = profile.height
+        if getattr(profile, 'weight', None) is not None:
+            initial['weight'] = profile.weight
+        if profile.bmi is not None and 'height' not in initial and 'weight' not in initial:
             initial['bmi'] = profile.bmi
         if profile.children is not None:
             initial['children'] = profile.children
