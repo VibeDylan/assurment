@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
-from .constants import SEX_CHOICES, SMOKER_CHOICES, REGION_CHOICES, ROLE_CHOICES, APPOINTMENT_STATUS_CHOICES, NOTIFICATION_TYPE_CHOICES
+from .constants import SEX_CHOICES, SMOKER_CHOICES, REGION_CHOICES, ROLE_CHOICES, APPOINTMENT_STATUS_CHOICES, NOTIFICATION_TYPE_CHOICES, UNAVAILABILITY_REASON_CHOICES
 
 class Profile(models.Model):
 
@@ -99,6 +99,40 @@ class Appointment(models.Model):
             'client': client_name,
             'date': self.date_time.strftime('%m/%d/%Y %H:%M')
         }
+
+
+class ConseillerUnavailability(models.Model):
+    """Indisponibilité du conseiller (vacances, maladie, formation, etc.)."""
+    conseiller = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='unavailabilities',
+        verbose_name=_("Advisor"),
+    )
+    start_datetime = models.DateTimeField(verbose_name=_("Start"))
+    end_datetime = models.DateTimeField(verbose_name=_("End"))
+    reason = models.CharField(
+        max_length=20,
+        choices=UNAVAILABILITY_REASON_CHOICES,
+        default='other',
+        blank=True,
+        verbose_name=_("Reason"),
+    )
+    notes = models.TextField(blank=True, verbose_name=_("Notes"))
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("Unavailability")
+        verbose_name_plural = _("Unavailabilities")
+        ordering = ['start_datetime']
+
+    def __str__(self):
+        return _("%(conseiller)s unavailable %(start)s - %(end)s") % {
+            'conseiller': self.conseiller.get_full_name() or self.conseiller.email,
+            'start': self.start_datetime.strftime('%d/%m/%Y %H:%M'),
+            'end': self.end_datetime.strftime('%d/%m/%Y %H:%M'),
+        }
+
 
 class Prediction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='predictions')

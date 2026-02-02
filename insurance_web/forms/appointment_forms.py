@@ -2,6 +2,7 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 
 
+
 class AppointmentForm(forms.Form):
     date_time = forms.DateTimeField(
         label=_("Date and Time"),
@@ -34,4 +35,40 @@ class AppointmentForm(forms.Form):
             'rows': 4,
             'placeholder': _('Additional information...')
         })
+    )
+
+
+class UnavailabilityForm(forms.Form):
+    start_datetime = forms.DateTimeField(
+        label=_("Début"),
+        required=True,
+        input_formats=['%Y-%m-%dT%H:%M', '%Y-%m-%d %H:%M'],
+        widget=forms.DateTimeInput(
+            format='%Y-%m-%dT%H:%M',
+            attrs={
+                'class': 'w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-gray-900 focus:border-primary focus:ring-2 focus:ring-primary/20',
+                'type': 'datetime-local',
+            }
+        ),
+    )
+    end_datetime = forms.DateTimeField(
+        label=_("Fin"),
+        required=True,
+        input_formats=['%Y-%m-%dT%H:%M', '%Y-%m-%d %H:%M'],
+        widget=forms.DateTimeInput(
+            format='%Y-%m-%dT%H:%M',
+            attrs={
+                'class': 'w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-gray-900 focus:border-primary focus:ring-2 focus:ring-primary/20',
+                'type': 'datetime-local',
+            }
+        ),
+    )
+    notes = forms.CharField(
+        label=_("Notes (optionnel)"),
+        required=False,
+        widget=forms.Textarea(attrs={
+            'class': 'w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-primary focus:ring-2 focus:ring-primary/20',
+            'rows': 2,
+            'placeholder': _('Optionnel'),
+        }),
     )

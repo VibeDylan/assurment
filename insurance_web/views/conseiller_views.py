@@ -8,19 +8,19 @@ from django.http import JsonResponse
 from datetime import datetime, timedelta
 from calendar import monthrange
 
-from ..models import User, Appointment, Prediction
-from ..forms import PredictionForm, AppointmentForm
+from ..models import User, Appointment, Prediction, ConseillerUnavailability
+from ..forms import PredictionForm, AppointmentForm, UnavailabilityForm
 from ..services import (
     calculate_insurance_premium,
     create_prediction,
-    get_appointments_for_calendar,
-    get_profile_initial_data
+    get_profile_initial_data,
 )
 from ..services.appointment_service import (
     accept_appointment,
     reject_appointment,
     create_appointment,
     check_appointment_conflict,
+    get_week_calendar_data,
 )
 from ..services.notification_service import (
     get_user_notifications,
@@ -228,73 +228,34 @@ class ConseillerCalendarView(ConseillerRequiredMixin, UserProfileMixin, Template
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         conseiller = self.request.user
-        
-        year = self.request.GET.get('year')
-        month = self.request.GET.get('month')
-        
-        appointments_by_date, current_date, first_day, last_day_num, last_day = get_appointments_for_calendar(
-            conseiller, year, month
-        )
-        
-        first_weekday = first_day.weekday()
-        calendar_days = []
-        
-        if first_weekday > 0:
-            prev_month = first_day - timedelta(days=first_weekday)
-            for i in range(first_weekday):
-                day = prev_month + timedelta(days=i)
-                calendar_days.append({'date': day, 'is_current_month': False, 'appointments': []})
-        
-        for day_num in range(1, last_day_num + 1):
-            day = current_date.replace(day=day_num)
-            calendar_days.append({
-                'date': day,
-                'is_current_month': True,
-                'appointments': appointments_by_date.get(day, [])
-            })
-        
-        remaining_days = 42 - len(calendar_days)
-        if remaining_days > 0:
-            next_month = last_day + timedelta(days=1)
-            for i in range(remaining_days):
-                day = next_month + timedelta(days=i)
-                calendar_days.append({'date': day, 'is_current_month': False, 'appointments': []})
-        
-        if current_date.month == 1:
-            prev_month = current_date.replace(year=current_date.year - 1, month=12)
+        today = datetime.now().date()
+        week_start_str = self.request.GET.get('week_start')
+        if week_start_str:
+            try:
+                week_start = datetime.strptime(week_start_str, '%Y-%m-%d').date()
+            except ValueError:
+                week_start = today - timedelta(days=today.weekday())
         else:
-            prev_month = current_date.replace(month=current_date.month - 1)
-        
-        if current_date.month == 12:
-            next_month = current_date.replace(year=current_date.year + 1, month=1)
-        else:
-            next_month = current_date.replace(month=current_date.month + 1)
-        
-        month_names = ['', _('January'), _('February'), _('March'), _('April'), _('May'), _('June'),
-                       _('July'), _('August'), _('September'), _('October'), _('November'), _('December')]
-        
-        all_appointments = []
-        for appointments_list in appointments_by_date.values():
-            all_appointments.extend(appointments_list)
-        
+            week_start = today - timedelta(days=today.weekday())
+        week_data = get_week_calendar_data(conseiller, week_start)
         context.update({
-            'calendar_days': calendar_days,
-            'current_date': current_date,
-            'month_name': month_names[current_date.month],
-            'year': current_date.year,
-            'prev_month': prev_month,
-            'next_month': next_month,
-            'today': datetime.now().date(),
-            'all_appointments': all_appointments,
+            'week_dates': week_data['week_dates'],
+            'hours': week_data['hours'],
+            'slot_events': week_data['slot_events'],
+            'slots_grid': week_data['slots_grid'],
+            'week_start': week_data['week_start'],
+            'prev_week': week_start - timedelta(days=7),
+            'next_week': week_start + timedelta(days=7),
+            'today': today,
             'calendar_clients': _get_calendar_clients(conseiller),
         })
         return context
 
 
-def _calendar_redirect(year, month):
+def _calendar_redirect(week_start=None):
     url = reverse('insurance_web:conseiller_calendar')
-    if year and month:
-        url += f'?year={year}&month={month}'
+    if week_start:
+        url += f'?week_start={week_start}'
     return redirect(url)
 
 
@@ -306,28 +267,27 @@ class ConseillerCalendarCreateAppointmentView(ConseillerRequiredMixin, UserProfi
         time_str = request.POST.get('time')  # HH:MM
         duration_minutes = request.POST.get('duration_minutes')
         notes = (request.POST.get('notes') or '').strip()
-        year = request.POST.get('year')
-        month = request.POST.get('month')
+        week_start = request.POST.get('week_start')
 
         if not client_id:
             messages.error(request, _('Please select a client.'))
-            return _calendar_redirect(year, month)
+            return _calendar_redirect(week_start=week_start)
         client = get_object_or_404(User, id=client_id)
         conseiller = request.user
         if hasattr(client, 'profile') and getattr(client.profile, 'role', None) in ('conseiller', 'admin'):
             messages.error(request, _('You cannot create an appointment with another advisor or admin.'))
-            return _calendar_redirect(year, month)
+            return _calendar_redirect(week_start=week_start)
         if not conseiller.profile.is_admin():
             if not Appointment.objects.filter(conseiller=conseiller, client=client).exists():
                 messages.error(request, _('You can only create appointments with your existing clients.'))
-                return _calendar_redirect(year, month)
+                return _calendar_redirect(week_start=week_start)
 
         try:
             d = datetime.strptime(date_str, '%Y-%m-%d').date()
             t = datetime.strptime(time_str, '%H:%M').time()
         except (ValueError, TypeError):
             messages.error(request, _('Invalid date or time.'))
-            return _calendar_redirect(year, month)
+            return _calendar_redirect(week_start=week_start)
         date_time_naive = datetime.combine(d, t)
         date_time = timezone.make_aware(date_time_naive, timezone.get_current_timezone())
 
@@ -337,13 +297,13 @@ class ConseillerCalendarCreateAppointmentView(ConseillerRequiredMixin, UserProfi
                 raise ValueError('duration')
         except (ValueError, TypeError):
             messages.error(request, _('Duration must be between 15 and 240 minutes.'))
-            return _calendar_redirect(year, month)
+            return _calendar_redirect(week_start=week_start)
 
         try:
             has_conflict, error_message = check_appointment_conflict(conseiller, date_time, dur)
             if has_conflict:
                 messages.error(request, error_message)
-                return _calendar_redirect(year, month)
+                return _calendar_redirect(week_start=week_start)
             appointment = create_appointment(
                 conseiller=conseiller,
                 client=client,
@@ -362,10 +322,50 @@ class ConseillerCalendarCreateAppointmentView(ConseillerRequiredMixin, UserProfi
             return redirect('insurance_web:appointment_detail', appointment_id=appointment.id)
         except AppointmentConflictError as e:
             messages.error(request, str(e))
-            return _calendar_redirect(year, month)
+            return _calendar_redirect(week_start=week_start)
         except AppointmentError as e:
             messages.error(request, _('Erreur : %(error)s') % {'error': str(e)})
-            return _calendar_redirect(year, month)
+            return _calendar_redirect(week_start=week_start)
+
+
+class AddUnavailabilityView(ConseillerRequiredMixin, UserProfileMixin, FormView):
+    """Ajout d'une période d'indisponibilité (vacances, maladie, etc.)."""
+    form_class = UnavailabilityForm
+    template_name = 'conseiller/add_unavailability.html'
+
+    def form_valid(self, form):
+        start = form.cleaned_data['start_datetime']
+        end = form.cleaned_data['end_datetime']
+        if timezone.is_naive(start):
+            start = timezone.make_aware(start, timezone.get_current_timezone())
+        if timezone.is_naive(end):
+            end = timezone.make_aware(end, timezone.get_current_timezone())
+        if end <= start:
+            messages.error(self.request, _('End must be after start.'))
+            return self.form_invalid(form)
+        ConseillerUnavailability.objects.create(
+            conseiller=self.request.user,
+            start_datetime=start,
+            end_datetime=end,
+            reason='other',
+            notes=form.cleaned_data.get('notes') or '',
+        )
+        week_start = (start.date() - timedelta(days=start.date().weekday())).strftime('%Y-%m-%d')
+        messages.success(self.request, _('Unavailability period added.'))
+        return _calendar_redirect(week_start=week_start)
+
+
+class DeleteUnavailabilityView(ConseillerRequiredMixin, View):
+    """Suppression d'une période d'indisponibilité."""
+    def post(self, request, unavailability_id):
+        unav = get_object_or_404(ConseillerUnavailability, id=unavailability_id)
+        if unav.conseiller != request.user:
+            messages.error(request, _('You cannot delete this unavailability.'))
+            return redirect('insurance_web:conseiller_calendar')
+        week_start = request.POST.get('week_start') or request.GET.get('week_start')
+        unav.delete()
+        messages.success(request, _('Unavailability removed.'))
+        return _calendar_redirect(week_start=week_start)
 
 
 class ConseillerClientsListView(ConseillerRequiredMixin, UserProfileMixin, TemplateView):

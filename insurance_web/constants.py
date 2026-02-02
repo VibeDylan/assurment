@@ -29,6 +29,14 @@ APPOINTMENT_STATUS_CHOICES = [
     ('cancelled', _('Cancelled')),
 ]
 
+UNAVAILABILITY_REASON_CHOICES = [
+    ('vacation', _('Vacation')),
+    ('sick', _('Sick leave')),
+    ('training', _('Training')),
+    ('personal', _('Personal')),
+    ('other', _('Other')),
+]
+
 NOTIFICATION_TYPE_CHOICES = [
     ('appointment_confirmation', _('Appointment Confirmation')),
     ('appointment_reminder', _('Appointment Reminder')),

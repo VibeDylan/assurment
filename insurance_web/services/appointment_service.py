@@ -4,7 +4,7 @@ from django.db import transaction
 from datetime import datetime, timedelta
 from calendar import monthrange
 
-from ..models import Appointment
+from ..models import Appointment, ConseillerUnavailability
 from ..utils.logging import log_error, log_appointment, log_warning
 from ..exceptions import AppointmentError, AppointmentConflictError
 from .notification_service import (
@@ -50,9 +50,26 @@ def get_available_slots(conseiller, selected_date, existing_appointments):
     return available_slots
 
 
+def get_conseiller_unavailability(conseiller, start_date, end_date):
+    """Récupère les indisponibilités du conseiller sur une plage de dates."""
+    end_datetime = timezone.make_aware(
+        datetime.combine(end_date, datetime.max.time()),
+        timezone.get_current_timezone()
+    )
+    start_datetime = timezone.make_aware(
+        datetime.combine(start_date, datetime.min.time()),
+        timezone.get_current_timezone()
+    )
+    return ConseillerUnavailability.objects.filter(
+        conseiller=conseiller,
+        start_datetime__lt=end_datetime,
+        end_datetime__gt=start_datetime,
+    ).order_by('start_datetime')
+
+
 def check_appointment_conflict(conseiller, date_time, duration_minutes):
     """
-    Vérifie s'il y a un conflit avec un rendez-vous existant.
+    Vérifie s'il y a un conflit avec un rendez-vous existant ou une indisponibilité.
     
     Args:
         conseiller: Conseiller pour qui vérifier le conflit
@@ -68,14 +85,24 @@ def check_appointment_conflict(conseiller, date_time, duration_minutes):
     if date_time <= timezone.now():
         raise AppointmentConflictError(_("You cannot book a time slot in the past."))
     
+    end_time = date_time + timedelta(minutes=duration_minutes)
+    
     conflicting_appointments = Appointment.objects.filter(
         conseiller=conseiller,
-        date_time__lt=date_time + timedelta(minutes=duration_minutes),
+        date_time__lt=end_time,
         date_time__gte=date_time - timedelta(minutes=duration_minutes)
     ).exclude(status='cancelled')
     
     if conflicting_appointments.exists():
         return True, _("This time slot is no longer available. Please choose another one.")
+    
+    overlapping_unavailability = ConseillerUnavailability.objects.filter(
+        conseiller=conseiller,
+        start_datetime__lt=end_time,
+        end_datetime__gt=date_time,
+    )
+    if overlapping_unavailability.exists():
+        return True, _("You are unavailable during this period (vacation, leave, etc.). Please choose another time.")
     
     return False, None
 
@@ -171,6 +198,95 @@ def get_appointments_for_calendar(conseiller, year=None, month=None):
         appointments_by_date[day].append(appointment)
     
     return appointments_by_date, current_date, first_day, last_day_num, last_day
+
+
+def get_week_calendar_data(conseiller, week_start_date=None):
+    """
+    Données pour la vue semaine : 7 jours × créneaux horaires (8h-19h).
+    Pour chaque (jour, heure) retourne l'événement éventuel (RDV ou indisponibilité).
+    
+    Returns:
+        week_dates: list de 7 dates (lundi à dimanche)
+        hours: list de (hour, label) pour 8..19
+        slot_events: dict (date, hour) -> {'type': 'appointment'|'unavailability', 'obj': ..., 'is_start': bool}
+    """
+    if week_start_date is None:
+        today = datetime.now().date()
+        # Lundi de la semaine
+        week_start_date = today - timedelta(days=today.weekday())
+    elif hasattr(week_start_date, 'date'):
+        week_start_date = week_start_date.date()
+    
+    week_dates = [week_start_date + timedelta(days=i) for i in range(7)]
+    hours = [(h, f'{h:02d}:00') for h in range(8, 20)]  # 8h à 19h
+    
+    tz = timezone.get_current_timezone()
+    slot_events = {}
+    
+    start_dt = timezone.make_aware(datetime.combine(week_start_date, datetime.min.time()), tz)
+    end_dt = start_dt + timedelta(days=7)
+    
+    if conseiller.profile.is_admin():
+        appointments = Appointment.objects.filter(
+            date_time__gte=start_dt,
+            date_time__lt=end_dt,
+        ).exclude(status='cancelled').order_by('date_time')
+    else:
+        appointments = Appointment.objects.filter(
+            conseiller=conseiller,
+            date_time__gte=start_dt,
+            date_time__lt=end_dt,
+        ).exclude(status='cancelled').order_by('date_time')
+    
+    unavailabilities = get_conseiller_unavailability(conseiller, week_start_date, week_dates[-1])
+    
+    for apt in appointments:
+        apt_date = apt.date_time.date()
+        apt_hour = apt.date_time.hour
+        apt_end = apt.date_time + timedelta(minutes=apt.duration_minutes)
+        for h in range(8, 20):
+            slot_start = timezone.make_aware(datetime.combine(apt_date, datetime.min.time().replace(hour=h)), tz)
+            slot_end = slot_start + timedelta(hours=1)
+            if slot_start < apt_end and slot_end > apt.date_time:
+                is_start = (apt_date, h) == (apt_date, apt_hour)
+                key = (apt_date, h)
+                if key not in slot_events or slot_events[key]['type'] == 'unavailability':
+                    slot_events[key] = {'type': 'appointment', 'obj': apt, 'is_start': is_start}
+    
+    for unav in unavailabilities:
+        cur = unav.start_datetime
+        if timezone.is_naive(cur):
+            cur = timezone.make_aware(cur, tz)
+        end_unav = unav.end_datetime
+        if timezone.is_naive(end_unav):
+            end_unav = timezone.make_aware(end_unav, tz)
+        first = True
+        while cur < end_unav:
+            d = cur.date()
+            h = cur.hour
+            if 8 <= h < 20 and week_start_date <= d <= week_dates[-1]:
+                key = (d, h)
+                if key not in slot_events:
+                    slot_events[key] = {'type': 'unavailability', 'obj': unav, 'is_start': first}
+                first = False
+            cur += timedelta(hours=1)
+    
+    # Grille (heure, label, liste de (date, ev) par jour) pour le template
+    slots_grid = []
+    for hour, label in hours:
+        row = []
+        for d in week_dates:
+            ev = slot_events.get((d, hour))
+            row.append((d, ev))
+        slots_grid.append((hour, label, row))
+    
+    return {
+        'week_dates': week_dates,
+        'hours': hours,
+        'slot_events': slot_events,
+        'slots_grid': slots_grid,
+        'week_start': week_start_date,
+    }
 
 
 @transaction.atomic
