@@ -32,7 +32,7 @@ class AdminDashboardView(AdminRequiredMixin, UserProfileMixin, FormView):
         context.update({
             'total_users': User.objects.count(),
             'total_conseillers': User.objects.filter(profile__role='conseiller').count(),
-            'total_appointments': Appointment.objects.count(),
+            'total_appointments': Appointment.objects.exclude(status='cancelled').count(),
             'total_predictions': Prediction.objects.count(),
         })
         return context

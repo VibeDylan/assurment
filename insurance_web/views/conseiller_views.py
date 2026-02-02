@@ -30,23 +30,23 @@ class ConseillerDashboardView(ConseillerRequiredMixin, UserProfileMixin, Templat
         conseiller = self.request.user
         
         if conseiller.profile.is_admin():
-            total_appointments = Appointment.objects.count()
+            total_appointments = Appointment.objects.exclude(status='cancelled').count()
             upcoming_appointments = Appointment.objects.filter(
                 date_time__gte=timezone.now()
-            ).count()
+            ).exclude(status='cancelled').count()
             next_appointments = Appointment.objects.filter(
                 date_time__gte=timezone.now()
-            ).order_by('date_time')[:5]
+            ).exclude(status='cancelled').order_by('date_time')[:5]
         else:
-            total_appointments = Appointment.objects.filter(conseiller=conseiller).count()
+            total_appointments = Appointment.objects.filter(conseiller=conseiller).exclude(status='cancelled').count()
             upcoming_appointments = Appointment.objects.filter(
                 conseiller=conseiller,
                 date_time__gte=timezone.now()
-            ).count()
+            ).exclude(status='cancelled').count()
             next_appointments = Appointment.objects.filter(
                 conseiller=conseiller,
                 date_time__gte=timezone.now()
-            ).order_by('date_time')[:5]
+            ).exclude(status='cancelled').order_by('date_time')[:5]
         
         context.update({
             'total_appointments': total_appointments,

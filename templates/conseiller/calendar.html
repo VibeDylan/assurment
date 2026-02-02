@@ -58,7 +58,7 @@
                     
                     <div class="space-y-1.5 overflow-hidden">
                         {% for appointment in day_data.appointments|slice:":2" %}
-                            <div class="text-xs bg-gray-100 text-gray-900 rounded px-2 py-1.5 border border-gray-200" title="{{ appointment.client.get_full_name|default:appointment.client.email }} - {{ appointment.date_time|date:'H:i' }}">
+                            <div class="text-xs rounded px-2 py-1.5 border {% if appointment.status == 'confirmed' %}bg-green-100 border-green-300 text-green-900{% elif appointment.status == 'pending' %}bg-yellow-100 border-yellow-300 text-yellow-900{% else %}bg-gray-100 border-gray-200 text-gray-900{% endif %}" title="{{ appointment.client.get_full_name|default:appointment.client.email }} - {{ appointment.date_time|date:'H:i' }} - {{ appointment.get_status_display }}">
                                 <div class="font-semibold">{{ appointment.date_time|date:"H:i" }}</div>
                                 <div class="truncate font-medium">{{ appointment.client.get_full_name|default:appointment.client.email|truncatechars:12 }}</div>
                             </div>
@@ -98,6 +98,19 @@
                                         <span class="inline-flex items-center px-3 py-1 rounded text-xs font-medium bg-gray-200 text-gray-700">
                                             {{ appointment.duration_minutes }} min
                                         </span>
+                                        {% if appointment.status == 'pending' %}
+                                            <span class="inline-flex items-center px-3 py-1 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
+                                                {% trans "En attente" %}
+                                            </span>
+                                        {% elif appointment.status == 'confirmed' %}
+                                            <span class="inline-flex items-center px-3 py-1 rounded text-xs font-medium bg-green-100 text-green-800">
+                                                {% trans "Confirmé" %}
+                                            </span>
+                                        {% elif appointment.status == 'cancelled' %}
+                                            <span class="inline-flex items-center px-3 py-1 rounded text-xs font-medium bg-red-100 text-red-800">
+                                                {% trans "Annulé" %}
+                                            </span>
+                                        {% endif %}
                                     </div>
                                     <div class="flex items-center space-x-4">
                                         <p class="text-sm text-gray-600 font-medium">

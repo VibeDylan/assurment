@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
-from .constants import SEX_CHOICES, SMOKER_CHOICES, REGION_CHOICES, ROLE_CHOICES
+from .constants import SEX_CHOICES, SMOKER_CHOICES, REGION_CHOICES, ROLE_CHOICES, APPOINTMENT_STATUS_CHOICES
 
 class Profile(models.Model):
 
@@ -81,6 +81,7 @@ class Appointment(models.Model):
     notes = models.TextField(blank=True, verbose_name=_("Notes"))
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    status = models.CharField(max_length=20, choices=APPOINTMENT_STATUS_CHOICES, default=APPOINTMENT_STATUS_CHOICES[0][0], verbose_name=_("Status"))
     
     class Meta:
         verbose_name = _("Appointment")

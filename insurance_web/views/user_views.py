@@ -1,4 +1,4 @@
-from django.views.generic import TemplateView, CreateView, FormView, ListView
+from django.views.generic import TemplateView, FormView, ListView
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib import messages
 from django.utils import timezone
@@ -114,7 +114,7 @@ class ConseillerAvailabilityView(UserProfileMixin, TemplateView):
         existing_appointments = Appointment.objects.filter(
             conseiller=conseiller,
             date_time__gte=timezone.now()
-        ).order_by('date_time')
+        ).exclude(status='cancelled').order_by('date_time')
         context['existing_appointments'] = existing_appointments
         
         date_filter = self.request.GET.get('date')
@@ -133,9 +133,10 @@ class ConseillerAvailabilityView(UserProfileMixin, TemplateView):
         return context
 
 
-class CreateAppointmentView(UserProfileMixin, CreateView):
+class CreateAppointmentView(UserProfileMixin, FormView):
     form_class = AppointmentForm
     template_name = 'create_appointment.html'
+    success_url = None  # Sera défini dans form_valid
     
     def dispatch(self, request, *args, **kwargs):
         self.conseiller = get_object_or_404(User, id=kwargs['conseiller_id'], profile__role='conseiller')
@@ -162,9 +163,6 @@ class CreateAppointmentView(UserProfileMixin, CreateView):
             if has_conflict:
                 messages.error(self.request, error_message)
                 return self.form_invalid(form)
-        except AppointmentConflictError as e:
-            messages.error(self.request, str(e))
-            return self.form_invalid(form)
             
             create_appointment(
                 conseiller=self.conseiller,
@@ -203,8 +201,12 @@ class MyAppointmentsView(UserProfileMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         appointments = Appointment.objects.filter(
             client=self.request.user
-        ).order_by('date_time')
+        ).exclude(status='cancelled').order_by('date_time')
         
         context['upcoming_appointments'] = appointments.filter(date_time__gte=timezone.now())
         context['past_appointments'] = appointments.filter(date_time__lt=timezone.now())
+        context['cancelled_appointments'] = Appointment.objects.filter(
+            client=self.request.user,
+            status='cancelled'
+        ).order_by('-date_time')
         return context

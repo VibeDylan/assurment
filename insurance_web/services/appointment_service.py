@@ -24,7 +24,7 @@ def get_available_slots(conseiller, selected_date, existing_appointments):
         for apt in existing_appointments.filter(
             date_time__gte=start_datetime,
             date_time__lt=end_datetime
-        ):
+        ).exclude(status='cancelled'):
             slot_start = apt.date_time.replace(minute=0, second=0, microsecond=0)
             for i in range(apt.duration_minutes // 30):
                 booked_slots.add(slot_start + timedelta(minutes=i * 30))
@@ -66,7 +66,7 @@ def check_appointment_conflict(conseiller, date_time, duration_minutes):
         conseiller=conseiller,
         date_time__lt=date_time + timedelta(minutes=duration_minutes),
         date_time__gte=date_time - timedelta(minutes=duration_minutes)
-    )
+    ).exclude(status='cancelled')
     
     if conflicting_appointments.exists():
         return True, _("This time slot is no longer available. Please choose another one.")
@@ -134,13 +134,13 @@ def get_appointments_for_calendar(conseiller, year=None, month=None):
         appointments = Appointment.objects.filter(
             date_time__date__gte=first_day,
             date_time__date__lte=last_day
-        ).order_by('date_time')
+        ).exclude(status='cancelled').order_by('date_time')
     else:
         appointments = Appointment.objects.filter(
             conseiller=conseiller,
             date_time__date__gte=first_day,
             date_time__date__lte=last_day
-        ).order_by('date_time')
+        ).exclude(status='cancelled').order_by('date_time')
     
     appointments_by_date = {}
     for appointment in appointments:

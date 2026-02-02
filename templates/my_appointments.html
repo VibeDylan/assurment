@@ -32,6 +32,7 @@
                                 <th>{% trans "Conseiller" %}</th>
                                 <th>{% trans "Date et Heure" %}</th>
                                 <th>{% trans "Durée" %}</th>
+                                <th>{% trans "Statut" %}</th>
                                 <th>{% trans "Notes" %}</th>
                             </tr>
                         </thead>
@@ -61,6 +62,21 @@
                                         <span class="inline-flex items-center px-3 py-1 rounded text-xs font-medium bg-gray-200 text-gray-700">
                                             {{ appointment.duration_minutes }} min
                                         </span>
+                                    </td>
+                                    <td>
+                                        {% if appointment.status == 'pending' %}
+                                            <span class="inline-flex items-center px-3 py-1 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
+                                                {% trans "En attente" %}
+                                            </span>
+                                        {% elif appointment.status == 'confirmed' %}
+                                            <span class="inline-flex items-center px-3 py-1 rounded text-xs font-medium bg-green-100 text-green-800">
+                                                {% trans "Confirmé" %}
+                                            </span>
+                                        {% elif appointment.status == 'cancelled' %}
+                                            <span class="inline-flex items-center px-3 py-1 rounded text-xs font-medium bg-red-100 text-red-800">
+                                                {% trans "Annulé" %}
+                                            </span>
+                                        {% endif %}
                                     </td>
                                     <td>
                                         <div class="text-sm text-gray-600 max-w-xs">
@@ -97,6 +113,7 @@
                                 <th>{% trans "Conseiller" %}</th>
                                 <th>{% trans "Date et Heure" %}</th>
                                 <th>{% trans "Durée" %}</th>
+                                <th>{% trans "Statut" %}</th>
                                 <th>{% trans "Notes" %}</th>
                             </tr>
                         </thead>
@@ -107,6 +124,86 @@
                                         <div class="flex items-center">
                                             <div class="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center mr-4">
                                                 <span class="text-gray-600 font-bold text-lg">
+                                                    {{ appointment.conseiller.get_full_name|default:appointment.conseiller.email|first|upper }}
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <div class="text-sm font-bold text-gray-900">
+                                                    {{ appointment.conseiller.get_full_name|default:appointment.conseiller.email }}
+                                                </div>
+                                                <div class="text-sm text-gray-500 font-medium">{{ appointment.conseiller.email }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="text-sm font-bold text-gray-900">{{ appointment.date_time|date:"d M Y" }}</div>
+                                        <div class="text-sm text-gray-500 font-medium">{{ appointment.date_time|date:"H:i" }}</div>
+                                    </td>
+                                    <td>
+                                        <span class="inline-flex items-center px-3 py-1 rounded text-xs font-medium bg-gray-200 text-gray-700">
+                                            {{ appointment.duration_minutes }} min
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if appointment.status == 'pending' %}
+                                            <span class="inline-flex items-center px-3 py-1 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
+                                                {% trans "En attente" %}
+                                            </span>
+                                        {% elif appointment.status == 'confirmed' %}
+                                            <span class="inline-flex items-center px-3 py-1 rounded text-xs font-medium bg-green-100 text-green-800">
+                                                {% trans "Confirmé" %}
+                                            </span>
+                                        {% elif appointment.status == 'cancelled' %}
+                                            <span class="inline-flex items-center px-3 py-1 rounded text-xs font-medium bg-red-100 text-red-800">
+                                                {% trans "Annulé" %}
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="text-sm text-gray-600 max-w-xs">
+                                            {% if appointment.notes %}
+                                                {{ appointment.notes|truncatewords:10 }}
+                                            {% else %}
+                                                <span class="text-gray-400 italic">{% trans "Aucune note" %}</span>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if cancelled_appointments %}
+        <div class="mt-8">
+            <div class="flex items-center mb-6">
+                <div class="w-1 h-8 bg-red-300 rounded-full mr-3"></div>
+                <h2 class="text-xl font-semibold text-gray-900">{% trans "Rendez-vous annulés" %}</h2>
+                <span class="ml-4 inline-flex items-center px-3 py-1 rounded text-xs font-medium bg-red-100 text-red-700">
+                    {% blocktrans with count=cancelled_appointments|length %}{{ count }} annulé{{ count|pluralize }}{% endblocktrans %}
+                </span>
+            </div>
+            <div class="card overflow-hidden opacity-75">
+                <div class="overflow-x-auto">
+                    <table class="table-modern">
+                        <thead>
+                            <tr>
+                                <th>{% trans "Conseiller" %}</th>
+                                <th>{% trans "Date et Heure" %}</th>
+                                <th>{% trans "Durée" %}</th>
+                                <th>{% trans "Notes" %}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for appointment in cancelled_appointments %}
+                                <tr>
+                                    <td>
+                                        <div class="flex items-center">
+                                            <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mr-4">
+                                                <span class="text-red-600 font-bold text-lg">
                                                     {{ appointment.conseiller.get_full_name|default:appointment.conseiller.email|first|upper }}
                                                 </span>
                                             </div>

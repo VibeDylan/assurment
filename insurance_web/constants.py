@@ -22,3 +22,9 @@ ROLE_CHOICES = [
     ('conseiller', _('Advisor')),
     ('admin', _('Administrator')),
 ]
+
+APPOINTMENT_STATUS_CHOICES = [
+    ('pending', _('Pending')),
+    ('confirmed', _('Confirmed')),
+    ('cancelled', _('Cancelled')),
+]

@@ -12,8 +12,8 @@ class ProfileAdmin(admin.ModelAdmin):
 
 @admin.register(Appointment)
 class AppointmentAdmin(admin.ModelAdmin):
-    list_display = ('conseiller', 'client', 'date_time', 'duration_minutes', 'created_at')
-    list_filter = ('date_time', 'conseiller')
+    list_display = ('conseiller', 'client', 'date_time', 'duration_minutes', 'status', 'created_at')
+    list_filter = ('status', 'date_time', 'conseiller')
     search_fields = ('conseiller__email', 'conseiller__first_name', 'conseiller__last_name', 'client__email', 'client__first_name', 'client__last_name', 'notes')
     readonly_fields = ('created_at', 'updated_at')
     date_hierarchy = 'date_time'

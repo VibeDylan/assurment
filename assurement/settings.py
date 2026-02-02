@@ -11,7 +11,12 @@ DATABASE_URL = os.getenv('DATABASE_URL')
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-ALLOWED_HOSTS = []
+# Gérer ALLOWED_HOSTS depuis les variables d'environnement
+ALLOWED_HOSTS_ENV = os.getenv('ALLOWED_HOSTS', '')
+if ALLOWED_HOSTS_ENV:
+    ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS_ENV.split(',') if host.strip()]
+else:
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1'] if DEBUG else []
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -26,6 +31,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Doit être juste après SecurityMiddleware
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -109,6 +115,13 @@ LOCALE_PATHS = [
 ]
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Configuration pour les fichiers statiques en production
+if not DEBUG:
+    # En production, utiliser WhiteNoise pour servir les fichiers statiques
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    
 LOGIN_REDIRECT_URL = '/predict'
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_URL = '/login/'
