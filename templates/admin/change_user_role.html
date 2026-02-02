@@ -20,7 +20,7 @@
         <div class="mb-8 p-6 bg-gray-50 rounded-lg border border-gray-200">
             <p class="text-sm font-semibold text-gray-500 mb-3 uppercase tracking-wider">{% trans "Utilisateur" %}</p>
             <div class="flex items-center mb-4">
-                <div class="w-14 h-14 bg-gray-900 rounded flex items-center justify-center mr-4">
+                <div class="w-14 h-14 bg-primary rounded-lg flex items-center justify-center mr-4 shadow-sm">
                     <span class="text-white font-semibold text-lg">
                         {{ target_user.first_name|first|default:target_user.email|first|upper }}
                     </span>

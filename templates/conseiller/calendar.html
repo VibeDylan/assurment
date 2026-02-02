@@ -52,7 +52,7 @@
                             {{ day_data.date.day }}
                         </span>
                         {% if day_data.date == today %}
-                            <span class="w-2.5 h-2.5 bg-gray-900 rounded-full"></span>
+                            <span class="w-2.5 h-2.5 bg-primary rounded-full"></span>
                         {% endif %}
                     </div>
                     
@@ -85,7 +85,7 @@
                     <div class="px-6 py-4 hover:bg-gray-50">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center space-x-5">
-                                <div class="w-12 h-12 bg-gray-900 rounded flex items-center justify-center flex-shrink-0">
+                                <div class="w-12 h-12 bg-primary rounded-lg flex items-center justify-center flex-shrink-0 shadow-sm">
                                     <span class="text-white font-semibold">
                                         {{ appointment.date_time|date:"d" }}
                                     </span>

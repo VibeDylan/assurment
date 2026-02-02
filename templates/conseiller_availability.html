@@ -13,7 +13,7 @@
             {% trans "Retour à la Liste des Conseillers" %}
         </a>
         <div class="flex items-center space-x-4 mb-4">
-            <div class="w-16 h-16 bg-gray-900 rounded flex items-center justify-center">
+            <div class="w-16 h-16 bg-primary rounded-lg flex items-center justify-center shadow-sm">
                 <span class="text-white font-semibold text-2xl">{{ conseiller.get_full_name|default:conseiller.email|first|upper }}</span>
             </div>
             <div>
@@ -48,7 +48,7 @@
         {% if available_slots %}
             <div class="card p-8 mb-8">
                 <div class="flex items-center mb-6">
-                    <div class="w-1 h-8 bg-gray-900 rounded-full mr-3"></div>
+                    <div class="w-1 h-8 bg-primary rounded-full mr-3"></div>
                     <h2 class="text-xl font-semibold text-gray-900">
                         {% blocktrans with date=selected_date|date:"d F Y" %}Créneaux Disponibles le {{ date }}{% endblocktrans %}
                     </h2>

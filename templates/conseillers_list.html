@@ -19,7 +19,7 @@
             {% for conseiller in conseillers %}
                 <div class="card p-8">
                     <div class="flex items-center mb-6">
-                        <div class="w-20 h-20 bg-gray-900 rounded flex items-center justify-center mr-4">
+                        <div class="w-20 h-20 bg-primary rounded-lg flex items-center justify-center mr-4 shadow-sm">
                             <span class="text-white font-semibold text-2xl">
                                 {{ conseiller.get_full_name|default:conseiller.email|first|upper }}
                             </span>
