@@ -7,7 +7,7 @@ from calendar import monthrange
 from ..models import Appointment
 from ..utils.logging import log_error, log_appointment, log_warning
 from ..exceptions import AppointmentError, AppointmentConflictError
-from .notification_service import create_appointment_request_notification
+from .notification_service import create_appointment_request_notification, create_appointment_response_notification
 
 
 def get_available_slots(conseiller, selected_date, existing_appointments):
@@ -162,3 +162,126 @@ def get_appointments_for_calendar(conseiller, year=None, month=None):
         appointments_by_date[day].append(appointment)
     
     return appointments_by_date, current_date, first_day, last_day_num, last_day
+
+
+@transaction.atomic
+def accept_appointment(appointment_id, conseiller):
+    """
+    Accepte un rendez-vous en attente.
+    
+    Args:
+        appointment_id: ID du rendez-vous à accepter
+        conseiller: Conseiller qui accepte (pour vérification de sécurité)
+        
+    Returns:
+        Appointment: Instance de rendez-vous mise à jour
+        
+    Raises:
+        AppointmentError: Si le rendez-vous n'existe pas, n'est pas en attente, 
+                         ou n'appartient pas au conseiller
+    """
+    try:
+        appointment = Appointment.objects.get(id=appointment_id)
+        
+        # Vérifications de sécurité
+        if appointment.conseiller != conseiller:
+            raise AppointmentError(_("You can only accept appointments assigned to you."))
+        
+        if appointment.status != 'pending':
+            raise AppointmentError(_("This appointment is not pending and cannot be accepted."))
+        
+        # Mettre à jour le statut
+        appointment.status = 'confirmed'
+        appointment.save()
+        
+        log_appointment(appointment, 'accepted')
+        
+        # Créer la notification pour le client
+        try:
+            create_appointment_response_notification(appointment, 'accepted')
+        except Exception as notification_error:
+            log_warning(
+                _("Failed to create notification for appointment acceptance: %(error)s") % {'error': notification_error},
+                extra={
+                    'appointment_id': appointment.id,
+                    'conseiller_id': conseiller.id,
+                }
+            )
+        
+        return appointment
+    except Appointment.DoesNotExist:
+        raise AppointmentError(_("Appointment not found."))
+    except AppointmentError:
+        raise
+    except Exception as e:
+        log_error(
+            _("Error accepting appointment: %(error)s") % {'error': e},
+            exc_info=True,
+            extra={
+                'appointment_id': appointment_id,
+                'conseiller_id': conseiller.id,
+            }
+        )
+        raise AppointmentError(_("Failed to accept appointment: %(error)s") % {'error': e})
+
+
+@transaction.atomic
+def reject_appointment(appointment_id, conseiller, reason=None):
+    """
+    Refuse un rendez-vous en attente.
+    
+    Args:
+        appointment_id: ID du rendez-vous à refuser
+        conseiller: Conseiller qui refuse (pour vérification de sécurité)
+        reason: Raison du refus (optionnel)
+        
+    Returns:
+        Appointment: Instance de rendez-vous mise à jour
+        
+    Raises:
+        AppointmentError: Si le rendez-vous n'existe pas, n'est pas en attente, 
+                         ou n'appartient pas au conseiller
+    """
+    try:
+        appointment = Appointment.objects.get(id=appointment_id)
+        
+        # Vérifications de sécurité
+        if appointment.conseiller != conseiller:
+            raise AppointmentError(_("You can only reject appointments assigned to you."))
+        
+        if appointment.status != 'pending':
+            raise AppointmentError(_("This appointment is not pending and cannot be rejected."))
+        
+        # Mettre à jour le statut
+        appointment.status = 'cancelled'
+        appointment.save()
+        
+        log_appointment(appointment, 'rejected')
+        
+        # Créer la notification pour le client
+        try:
+            create_appointment_response_notification(appointment, 'rejected', reason=reason)
+        except Exception as notification_error:
+            log_warning(
+                _("Failed to create notification for appointment rejection: %(error)s") % {'error': notification_error},
+                extra={
+                    'appointment_id': appointment.id,
+                    'conseiller_id': conseiller.id,
+                }
+            )
+        
+        return appointment
+    except Appointment.DoesNotExist:
+        raise AppointmentError(_("Appointment not found."))
+    except AppointmentError:
+        raise
+    except Exception as e:
+        log_error(
+            _("Error rejecting appointment: %(error)s") % {'error': e},
+            exc_info=True,
+            extra={
+                'appointment_id': appointment_id,
+                'conseiller_id': conseiller.id,
+            }
+        )
+        raise AppointmentError(_("Failed to reject appointment: %(error)s") % {'error': e})

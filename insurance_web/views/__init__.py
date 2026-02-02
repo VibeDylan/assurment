@@ -12,7 +12,12 @@ from .conseiller_views import (
     ConseillerDashboardView,
     ConseillerPredictView,
     ConseillerCalendarView,
-    ConseillerClientsListView
+    ConseillerClientsListView,
+    NotificationListView,
+    MarkNotificationReadView,
+    MarkAllNotificationsReadView,
+    AcceptAppointmentView,
+    RejectAppointmentView,
 )
 from .admin_views import (
     AdminDashboardView,
@@ -37,6 +42,11 @@ __all__ = [
     'ConseillerPredictView',
     'ConseillerCalendarView',
     'ConseillerClientsListView',
+    'NotificationListView',
+    'MarkNotificationReadView',
+    'MarkAllNotificationsReadView',
+    'AcceptAppointmentView',
+    'RejectAppointmentView',
     'AdminDashboardView',
     'AdminUserManagementView',
     'AdminChangeUserRoleView',

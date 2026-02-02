@@ -1,8 +1,9 @@
-from django.views.generic import TemplateView, FormView
-from django.shortcuts import get_object_or_404
+from django.views.generic import TemplateView, FormView, View
+from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 from django.utils import timezone
 from django.utils.translation import gettext as _
+from django.http import JsonResponse
 from datetime import datetime, timedelta
 from calendar import monthrange
 
@@ -14,11 +15,19 @@ from ..services import (
     get_appointments_for_calendar,
     get_profile_initial_data
 )
+from ..services.appointment_service import accept_appointment, reject_appointment
+from ..services.notification_service import (
+    get_user_notifications,
+    get_unread_notifications_count,
+    mark_notification_as_read,
+    mark_all_notifications_as_read
+)
 from ..utils.mixins import ConseillerRequiredMixin, UserProfileMixin
 from ..exceptions import (
     PredictionError,
     InvalidPredictionDataError,
     ModelNotFoundError,
+    AppointmentError,
 )
 
 
@@ -37,6 +46,10 @@ class ConseillerDashboardView(ConseillerRequiredMixin, UserProfileMixin, Templat
             next_appointments = Appointment.objects.filter(
                 date_time__gte=timezone.now()
             ).exclude(status='cancelled').order_by('date_time')[:5]
+            pending_appointments = Appointment.objects.filter(
+                status='pending',
+                date_time__gte=timezone.now()
+            ).order_by('date_time')[:10]
         else:
             total_appointments = Appointment.objects.filter(conseiller=conseiller).exclude(status='cancelled').count()
             upcoming_appointments = Appointment.objects.filter(
@@ -47,11 +60,21 @@ class ConseillerDashboardView(ConseillerRequiredMixin, UserProfileMixin, Templat
                 conseiller=conseiller,
                 date_time__gte=timezone.now()
             ).exclude(status='cancelled').order_by('date_time')[:5]
+            pending_appointments = Appointment.objects.filter(
+                conseiller=conseiller,
+                status='pending',
+                date_time__gte=timezone.now()
+            ).order_by('date_time')[:10]
+        
+        # Compter les notifications non lues
+        unread_notifications_count = get_unread_notifications_count(conseiller)
         
         context.update({
             'total_appointments': total_appointments,
             'upcoming_appointments': upcoming_appointments,
             'next_appointments': next_appointments,
+            'pending_appointments': pending_appointments,
+            'unread_notifications_count': unread_notifications_count,
         })
         return context
 
@@ -204,3 +227,88 @@ class ConseillerClientsListView(ConseillerRequiredMixin, UserProfileMixin, Templ
             'all_users': all_users,
         })
         return context
+
+
+class NotificationListView(UserProfileMixin, TemplateView):
+    template_name = 'notifications/list.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        
+        # Récupérer toutes les notifications ou seulement les non lues
+        unread_only = self.request.GET.get('unread', 'false').lower() == 'true'
+        notifications = get_user_notifications(user, unread_only=unread_only, limit=50)
+        
+        # Compter les notifications non lues
+        unread_count = get_unread_notifications_count(user)
+        
+        context.update({
+            'notifications': notifications,
+            'unread_only': unread_only,
+            'unread_count': unread_count,
+        })
+        return context
+
+
+class MarkNotificationReadView(UserProfileMixin, View):
+    """Marque une notification comme lue"""
+    
+    def post(self, request, notification_id):
+        try:
+            mark_notification_as_read(notification_id, request.user)
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'success': True})
+            messages.success(request, _('Notification marked as read.'))
+        except Exception as e:
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'error': str(e)}, status=400)
+            messages.error(request, _('Failed to mark notification as read: %(error)s') % {'error': e})
+        
+        return redirect('insurance_web:notifications')
+
+
+class MarkAllNotificationsReadView(UserProfileMixin, View):
+    """Marque toutes les notifications comme lues"""
+    
+    def post(self, request):
+        try:
+            count = mark_all_notifications_as_read(request.user)
+            messages.success(request, _('%(count)s notification(s) marked as read.') % {'count': count})
+        except Exception as e:
+            messages.error(request, _('Failed to mark all notifications as read: %(error)s') % {'error': e})
+        
+        return redirect('insurance_web:notifications')
+
+
+class AcceptAppointmentView(ConseillerRequiredMixin, View):
+    """Accepte un rendez-vous en attente"""
+    
+    def post(self, request, appointment_id):
+        try:
+            appointment = get_object_or_404(Appointment, id=appointment_id)
+            accept_appointment(appointment_id, request.user)
+            messages.success(request, _('Appointment accepted successfully.'))
+        except AppointmentError as e:
+            messages.error(request, str(e))
+        except Exception as e:
+            messages.error(request, _('An error occurred: %(error)s') % {'error': e})
+        
+        return redirect('insurance_web:conseiller_dashboard')
+
+
+class RejectAppointmentView(ConseillerRequiredMixin, View):
+    """Refuse un rendez-vous en attente"""
+    
+    def post(self, request, appointment_id):
+        reason = request.POST.get('reason', '')
+        try:
+            appointment = get_object_or_404(Appointment, id=appointment_id)
+            reject_appointment(appointment_id, request.user, reason=reason if reason else None)
+            messages.success(request, _('Appointment rejected successfully.'))
+        except AppointmentError as e:
+            messages.error(request, str(e))
+        except Exception as e:
+            messages.error(request, _('An error occurred: %(error)s') % {'error': e})
+        
+        return redirect('insurance_web:conseiller_dashboard')

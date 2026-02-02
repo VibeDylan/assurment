@@ -56,6 +56,52 @@
         </div>
     </div>
 
+    {% if pending_appointments %}
+    <div class="card p-6 mb-6 border-l-4 border-l-yellow-500">
+        <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center">
+                <div class="w-1 h-6 bg-yellow-500 rounded-full mr-3"></div>
+                <h2 class="text-lg font-semibold text-gray-900">{% trans "Rendez-vous en Attente" %}</h2>
+                <span class="ml-4 inline-flex items-center px-3 py-1 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
+                    {% blocktrans with count=pending_appointments|length %}{{ count }} en attente{% endblocktrans %}
+                </span>
+            </div>
+        </div>
+        <div class="space-y-3">
+            {% for appointment in pending_appointments %}
+                <div class="flex items-center justify-between p-4 bg-yellow-50 rounded border border-yellow-200">
+                    <div class="flex items-center space-x-3 flex-1">
+                        <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center shadow-sm">
+                            <span class="text-white font-semibold text-sm">{{ appointment.client.get_full_name|default:appointment.client.email|first|upper }}</span>
+                        </div>
+                        <div class="flex-1">
+                            <p class="font-medium text-gray-900">{{ appointment.client.get_full_name|default:appointment.client.email }}</p>
+                            <p class="text-sm text-gray-600">{{ appointment.date_time|date:"d M Y à H:i" }} - {{ appointment.duration_minutes }} min</p>
+                            {% if appointment.notes %}
+                                <p class="text-xs text-gray-500 mt-1">{{ appointment.notes|truncatewords:10 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2 ml-4">
+                        <form method="post" action="{% url 'insurance_web:accept_appointment' appointment.id %}" class="inline">
+                            {% csrf_token %}
+                            <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-accent rounded hover:bg-accent-dark transition-colors">
+                                {% trans "Accepter" %}
+                            </button>
+                        </form>
+                        <form method="post" action="{% url 'insurance_web:reject_appointment' appointment.id %}" class="inline" onsubmit="return confirm('{% trans 'Êtes-vous sûr de vouloir refuser ce rendez-vous ?' %}');">
+                            {% csrf_token %}
+                            <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-red-500 rounded hover:bg-red-600 transition-colors">
+                                {% trans "Refuser" %}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div class="card p-6">
             <div class="flex items-center justify-between mb-4">

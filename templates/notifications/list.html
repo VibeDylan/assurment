@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Notifications" %} - Assurement{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-8 flex items-center justify-between">
+        <div>
+            <h1 class="text-3xl font-semibold text-gray-900 mb-2">{% trans "Notifications" %}</h1>
+            <p class="text-base text-gray-600">{% trans "Gérez vos notifications" %}</p>
+        </div>
+        {% if not unread_only and unread_count > 0 %}
+        <form method="post" action="{% url 'insurance_web:mark_all_notifications_read' %}" class="inline">
+            {% csrf_token %}
+            <button type="submit" class="btn-secondary px-6 py-2">
+                {% trans "Tout marquer comme lu" %}
+            </button>
+        </form>
+        {% endif %}
+    </div>
+
+    <div class="mb-4 flex items-center space-x-4">
+        <a href="{% url 'insurance_web:notifications' %}" class="px-4 py-2 rounded text-sm font-medium {% if not unread_only %}bg-primary text-white{% else %}bg-gray-100 text-gray-700 hover:bg-gray-200{% endif %} transition-colors">
+            {% trans "Toutes" %} {% if not unread_only %}({{ notifications|length }}){% endif %}
+        </a>
+        <a href="{% url 'insurance_web:notifications' %}?unread=true" class="px-4 py-2 rounded text-sm font-medium {% if unread_only %}bg-primary text-white{% else %}bg-gray-100 text-gray-700 hover:bg-gray-200{% endif %} transition-colors">
+            {% trans "Non lues" %} {% if unread_only %}({{ notifications|length }}){% else %}({{ unread_count }}){% endif %}
+        </a>
+    </div>
+
+    {% if notifications %}
+    <div class="card overflow-hidden">
+        <div class="divide-y divide-gray-200">
+            {% for notification in notifications %}
+            <div class="p-6 hover:bg-gray-50 transition-colors {% if not notification.read %}bg-blue-50/30{% endif %}">
+                <div class="flex items-start justify-between">
+                    <div class="flex items-start space-x-4 flex-1">
+                        <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center flex-shrink-0 shadow-sm">
+                            {% if notification.type == 'appointment_request' %}
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                            {% elif notification.type == 'appointment_accepted' %}
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            {% elif notification.type == 'appointment_rejected' %}
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            {% else %}
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                                </svg>
+                            {% endif %}
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-base font-medium text-gray-900 {% if not notification.read %}font-semibold{% endif %}">
+                                {{ notification.message }}
+                            </p>
+                            <p class="text-sm text-gray-500 mt-1">
+                                {{ notification.created_at|timesince }} {% trans "ago" %}
+                            </p>
+                            {% if notification.appointment %}
+                                <div class="mt-3 flex items-center space-x-2">
+                                    {% if notification.type == 'appointment_request' and user.profile.is_conseiller %}
+                                        <form method="post" action="{% url 'insurance_web:accept_appointment' notification.appointment.id %}" class="inline">
+                                            {% csrf_token %}
+                                            <button type="submit" class="px-3 py-1.5 text-xs font-medium text-white bg-accent rounded hover:bg-accent-dark transition-colors">
+                                                {% trans "Accepter" %}
+                                            </button>
+                                        </form>
+                                        <form method="post" action="{% url 'insurance_web:reject_appointment' notification.appointment.id %}" class="inline">
+                                            {% csrf_token %}
+                                            <button type="submit" class="px-3 py-1.5 text-xs font-medium text-white bg-red-500 rounded hover:bg-red-600 transition-colors" onclick="return confirm('{% trans 'Êtes-vous sûr de vouloir refuser ce rendez-vous ?' %}');">
+                                                {% trans "Refuser" %}
+                                            </button>
+                                        </form>
+                                    {% endif %}
+                                    <a href="{% url 'insurance_web:my_appointments' %}" class="text-xs text-primary hover:underline">
+                                        {% trans "Voir le rendez-vous" %}
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="ml-4 flex items-center space-x-2">
+                        {% if not notification.read %}
+                        <form method="post" action="{% url 'insurance_web:mark_notification_read' notification.id %}" class="inline">
+                            {% csrf_token %}
+                            <button type="submit" class="p-2 text-gray-400 hover:text-gray-600 transition-colors" title="{% trans 'Marquer comme lu' %}">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+    <div class="card p-12 text-center">
+        <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+            </svg>
+        </div>
+        <h2 class="text-2xl font-semibold text-gray-900 mb-4">
+            {% if unread_only %}
+                {% trans "Aucune notification non lue" %}
+            {% else %}
+                {% trans "Aucune notification" %}
+            {% endif %}
+        </h2>
+        <p class="text-gray-600">
+            {% if unread_only %}
+                {% trans "Vous avez lu toutes vos notifications." %}
+            {% else %}
+                {% trans "Vous n'avez aucune notification pour le moment." %}
+            {% endif %}
+        </p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
