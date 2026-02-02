@@ -26,3 +26,8 @@ class AppointmentError(InsuranceWebException):
 class AppointmentConflictError(AppointmentError):
     """Conflit avec un rendez-vous existant"""
     pass
+
+
+class NotificationError(InsuranceWebException):
+    """Erreur lors de la création ou gestion d'une notification"""
+    pass

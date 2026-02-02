@@ -132,7 +132,7 @@ class Notification(models.Model):
         null=True, 
         blank=True
     )
-    type = models.CharField(max_length=20, choices=NOTIFICATION_TYPE_CHOICES, verbose_name=_("Type"))
+    type = models.CharField(choices=NOTIFICATION_TYPE_CHOICES, verbose_name=_("Type"))
     message = models.TextField(verbose_name=_("Message"))
     read = models.BooleanField(default=False, verbose_name=_("Read"))
     created_at = models.DateTimeField(auto_now_add=True)
