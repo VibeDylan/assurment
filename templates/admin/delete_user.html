@@ -71,14 +71,14 @@
             </div>
         </div>
 
-        <form method="post" class="space-y-4">
+        <form method="post" class="space-y-4" data-confirm="{% trans 'Êtes-vous ABSOLUMENT SÛR de vouloir supprimer définitivement ce compte ? Cette action ne peut pas être annulée.' %}" data-danger>
             {% csrf_token %}
             
             <div class="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200">
                 <a href="{% url 'insurance_web:admin_user_management' %}" class="btn-secondary px-8 py-3">
                     {% trans "Annuler" %}
                 </a>
-                <button type="submit" class="px-8 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded" onclick="return confirm('{% trans "Êtes-vous ABSOLUMENT SÛR de vouloir supprimer définitivement ce compte ? Cette action ne peut pas être annulée." %}');">
+                <button type="submit" class="px-8 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded">
                     {% trans "Supprimer définitivement" %}
                 </button>
             </div>

@@ -67,7 +67,7 @@
                                         </div>
                                     </div>
                                     <div class="ml-4">
-                                        <form method="post" action="{% url 'insurance_web:delete_prediction' prediction.id %}" onsubmit="return confirm('{% trans 'Êtes-vous sûr de vouloir supprimer cette prédiction ?' %}');">
+                                        <form method="post" action="{% url 'insurance_web:delete_prediction' prediction.id %}" data-confirm="{% trans 'Êtes-vous sûr de vouloir supprimer cette prédiction ?' %}" data-danger>
                                             {% csrf_token %}
                                             <button type="submit" class="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded transition-colors" title="{% trans 'Supprimer' %}">
                                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -106,7 +106,7 @@
                     <a href="{% url 'insurance_web:conseiller_calendar' %}?client_id={{ client.id }}" class="block w-full btn-secondary text-center py-3">
                         {% trans "Planifier un rendez-vous" %}
                     </a>
-                    <form method="post" action="{% url 'insurance_web:remove_client' client.id %}" onsubmit="return confirm('{% trans 'Êtes-vous sûr de vouloir retirer ce client ? Tous les rendez-vous futurs seront annulés.' %}');">
+                    <form method="post" action="{% url 'insurance_web:remove_client' client.id %}" data-confirm="{% trans 'Êtes-vous sûr de vouloir retirer ce client ? Tous les rendez-vous futurs seront annulés.' %}" data-danger>
                         {% csrf_token %}
                         <button type="submit" class="block w-full px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded text-center transition-colors">
                             {% trans "Retirer ce client" %}

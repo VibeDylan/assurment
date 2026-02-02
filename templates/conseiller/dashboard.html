@@ -89,7 +89,7 @@
                                 {% trans "Accepter" %}
                             </button>
                         </form>
-                        <form method="post" action="{% url 'insurance_web:reject_appointment' appointment.id %}" class="inline" onsubmit="return confirm('{% trans 'Êtes-vous sûr de vouloir refuser ce rendez-vous ?' %}');">
+                        <form method="post" action="{% url 'insurance_web:reject_appointment' appointment.id %}" class="inline" data-confirm="{% trans 'Êtes-vous sûr de vouloir refuser ce rendez-vous ?' %}" data-danger>
                             {% csrf_token %}
                             <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-red-500 rounded hover:bg-red-600 transition-colors">
                                 {% trans "Refuser" %}

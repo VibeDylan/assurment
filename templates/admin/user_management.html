@@ -105,7 +105,7 @@
                                                         </div>
                                                     </a>
                                                     {% if user.is_active %}
-                                                        <a href="{% url 'insurance_web:admin_toggle_user_status' user.id %}" onclick="return confirm('{% trans "Êtes-vous sûr de vouloir désactiver ce compte ?" %}');" class="block px-4 py-3 text-sm text-gray-700 hover:bg-orange-50 font-medium transition-colors" role="menuitem">
+                                                        <a href="{% url 'insurance_web:admin_toggle_user_status' user.id %}" data-confirm="{% trans 'Êtes-vous sûr de vouloir désactiver ce compte ?' %}" data-danger class="block px-4 py-3 text-sm text-gray-700 hover:bg-orange-50 font-medium transition-colors" role="menuitem">
                                                             <div class="flex items-center">
                                                                 <svg class="w-5 h-5 mr-3 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path>
