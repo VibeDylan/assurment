@@ -22,6 +22,7 @@ class Profile(models.Model):
     children = models.IntegerField(default=0, verbose_name=_("Number of Children"))
     smoker = models.CharField(max_length=3, choices=SMOKER_CHOICES, null=True, blank=True, verbose_name=_("Smoker"))
     region = models.CharField(max_length=20, choices=REGION_CHOICES, null=True, blank=True, verbose_name=_("Region"))
+    additional_info = models.TextField(null=True, blank=True, verbose_name=_("Additional Information"))
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

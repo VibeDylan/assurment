@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
+from ..constants import SEX_CHOICES, SMOKER_CHOICES, REGION_CHOICES
+from ..models import Profile
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -100,3 +102,125 @@ class CustomUserCreationForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+
+class ProfileForm(forms.ModelForm):
+    """Formulaire pour éditer le profil utilisateur"""
+    
+    first_name = forms.CharField(
+        label=_("First Name"),
+        max_length=150,
+        required=True,
+        widget=forms.TextInput(attrs={
+            'placeholder': _('Enter your first name'),
+            'autocomplete': 'first-name'
+        })
+    )
+    
+    last_name = forms.CharField(
+        label=_("Last Name"),
+        max_length=150,
+        required=True,
+        widget=forms.TextInput(attrs={
+            'placeholder': _('Enter your last name'),
+            'autocomplete': 'last-name'
+        })
+    )
+    
+    email = forms.EmailField(
+        label=_("Email"),
+        required=True,
+        widget=forms.EmailInput(attrs={
+            'placeholder': _('Enter your email'),
+            'autocomplete': 'email'
+        })
+    )
+    
+    age = forms.IntegerField(
+        label=_("Age"),
+        required=False,
+        min_value=18,
+        max_value=100,
+        widget=forms.NumberInput(attrs={
+            'placeholder': _('e.g. 40')
+        })
+    )
+    
+    sex = forms.ChoiceField(
+        label=_("Gender"),
+        choices=[('', _('---------'))] + list(SEX_CHOICES),
+        required=False,
+        widget=forms.Select()
+    )
+    
+    bmi = forms.DecimalField(
+        label=_("BMI (Body Mass Index)"),
+        required=False,
+        min_value=10.0,
+        max_value=50.0,
+        decimal_places=2,
+        widget=forms.NumberInput(attrs={
+            'placeholder': _('e.g. 22.5')
+        })
+    )
+    
+    children = forms.IntegerField(
+        label=_("Number of Children"),
+        required=False,
+        min_value=0,
+        max_value=10,
+        widget=forms.NumberInput(attrs={
+            'placeholder': _('e.g. 2')
+        })
+    )
+    
+    def clean_children(self):
+        """Assure que children a toujours une valeur par défaut de 0 si vide"""
+        children = self.cleaned_data.get('children')
+        return children if children is not None else 0
+    
+    smoker = forms.ChoiceField(
+        label=_("Smoker"),
+        choices=[('', _('---------'))] + list(SMOKER_CHOICES),
+        required=False,
+        widget=forms.Select()
+    )
+    
+    region = forms.ChoiceField(
+        label=_("Region"),
+        choices=[('', _('---------'))] + list(REGION_CHOICES),
+        required=False,
+        widget=forms.Select()
+    )
+    
+    additional_info = forms.CharField(
+        label=_("Additional Information"),
+        required=False,
+        widget=forms.Textarea(attrs={
+            'placeholder': _('Enter any additional information (optional)'),
+            'rows': 4
+        })
+    )
+    
+    class Meta:
+        model = Profile
+        fields = ['age', 'sex', 'bmi', 'children', 'smoker', 'region', 'additional_info']
+    
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        
+        # Pré-remplir les champs User si un utilisateur est fourni
+        if user:
+            self.fields['first_name'].initial = user.first_name
+            self.fields['last_name'].initial = user.last_name
+            self.fields['email'].initial = user.email
+    
+    def clean_email(self):
+        email = self.cleaned_data.get("email")
+        user = getattr(self, 'user', None)
+        if user:
+            # Vérifier si l'email existe déjà pour un autre utilisateur
+            if User.objects.filter(email=email).exclude(pk=user.pk).exists():
+                raise forms.ValidationError(_("A user with this email already exists."))
+        return email

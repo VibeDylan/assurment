@@ -11,21 +11,11 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: {
-                            50: '#f8fafc',
-                            100: '#f1f5f9',
-                            200: '#e2e8f0',
-                            300: '#cbd5e1',
-                            400: '#94a3b8',
-                            500: '#64748b',
-                            600: '#475569',
-                            700: '#334155',
-                            800: '#1e293b',
-                            900: '#0f172a',
-                        }
+                        primary: '#0066cc',
+                        secondary: '#6b7280',
                     },
                     fontFamily: {
-                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
                     }
                 }
             }
@@ -33,82 +23,75 @@
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <style>
         * {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: 'Inter', system-ui, sans-serif;
         }
         
         body {
-            background: #ffffff;
-            min-height: 100vh;
-            color: #1e293b;
+            background: #fafafa;
+            color: #111827;
         }
         
         .card {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 4px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
         }
         
         .btn-primary {
-            background: #1e293b;
+            background: #0066cc;
             color: white;
             font-weight: 500;
-            padding: 0.625rem 1.5rem;
-            border-radius: 4px;
-            transition: all 0.2s;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: background 0.2s;
             border: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            font-size: 0.875rem;
             cursor: pointer;
+            font-size: 0.875rem;
         }
         
         .btn-primary:hover {
-            background: #0f172a;
+            background: #0052a3;
         }
         
         .btn-secondary {
             background: white;
-            color: #475569;
+            color: #374151;
             font-weight: 500;
-            padding: 0.625rem 1.5rem;
-            border-radius: 4px;
-            transition: all 0.2s;
-            border: 1px solid #e2e8f0;
-            font-size: 0.875rem;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            border: 1px solid #d1d5db;
             cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.2s;
         }
         
         .btn-secondary:hover {
-            border-color: #cbd5e1;
-            background: #f8fafc;
+            border-color: #9ca3af;
+            background: #f9fafb;
         }
         
         .nav-link {
             display: flex;
             align-items: center;
             padding: 0.5rem 0.75rem;
-            margin: 0.125rem 0;
-            border-radius: 4px;
-            color: #64748b;
-            font-weight: 400;
+            color: #6b7280;
             font-size: 0.875rem;
-            transition: all 0.2s;
+            border-radius: 6px;
+            transition: all 0.15s;
         }
         
         .nav-link:hover {
-            background: #f8fafc;
-            color: #1e293b;
+            background: #f3f4f6;
+            color: #111827;
         }
         
         .nav-link.active {
-            background: #f1f5f9;
-            color: #1e293b;
+            background: #eff6ff;
+            color: #0066cc;
             font-weight: 500;
         }
         
@@ -122,64 +105,32 @@
         select,
         textarea {
             width: 100%;
-            padding: 0.625rem 0.75rem;
+            padding: 0.5rem 0.75rem;
             font-size: 0.875rem;
-            border: 1px solid #e2e8f0;
-            border-radius: 4px;
-            background-color: white;
-            color: #1e293b;
-            transition: border-color 0.2s;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            background: white;
+            color: #111827;
         }
         
         input:focus,
         select:focus,
         textarea:focus {
             outline: none;
-            border-color: #94a3b8;
-        }
-        
-        input::placeholder,
-        textarea::placeholder {
-            color: #94a3b8;
+            border-color: #0066cc;
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
         }
         
         .sidebar {
-            background: #ffffff;
-            border-right: 1px solid #e2e8f0;
+            background: white;
+            border-right: 1px solid #e5e7eb;
         }
         
         .stat-card {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 4px;
-            padding: 1.5rem;
-        }
-        
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.25rem 0.75rem;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 500;
-        }
-        
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: #f8fafc;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 3px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1.25rem;
         }
         
         .table-modern {
@@ -187,7 +138,7 @@
         }
         
         .table-modern thead {
-            background: #f8fafc;
+            background: #f9fafb;
         }
         
         .table-modern th {
@@ -195,46 +146,48 @@
             text-align: left;
             font-size: 0.75rem;
             font-weight: 600;
+            color: #6b7280;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            color: #64748b;
-            border-bottom: 1px solid #e2e8f0;
         }
         
         .table-modern td {
             padding: 0.875rem 1rem;
-            border-bottom: 1px solid #f1f5f9;
-            color: #1e293b;
-        }
-        
-        .table-modern tbody tr {
-            transition: background-color 0.15s;
+            border-bottom: 1px solid #f3f4f6;
+            color: #111827;
         }
         
         .table-modern tbody tr:hover {
-            background: #f8fafc;
+            background: #f9fafb;
         }
         
-        @media (max-width: 1024px) {
-            .sidebar {
-                transform: translateX(-100%);
-                transition: transform 0.3s ease;
-            }
-            
-            .sidebar.open {
-                transform: translateX(0);
-            }
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f3f4f6;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
         }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
-<body class="min-h-screen antialiased flex flex-col">
+<body class="min-h-screen antialiased">
     {% if user.is_authenticated %}
-        <div class="flex flex-1" x-data="{ sidebarOpen: false }">
+        <div class="flex" x-data="{ sidebarOpen: false }">
             <aside class="sidebar w-64 flex flex-col min-h-screen fixed left-0 top-0 z-50 lg:translate-x-0" :class="{ 'translate-x-0': sidebarOpen, '-translate-x-full': !sidebarOpen }">
                 <div class="p-6 border-b border-gray-200">
-                    <a href="{% url 'insurance_web:home' %}" class="flex items-center space-x-3">
-                        <div class="w-8 h-8 bg-gray-900 rounded flex items-center justify-center">
+                    <a href="{% url 'insurance_web:home' %}" class="flex items-center space-x-2">
+                        <div class="w-8 h-8 bg-primary rounded flex items-center justify-center">
                             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                             </svg>
@@ -277,7 +230,7 @@
 
                         {% if user.profile.is_conseiller or user.profile.is_admin %}
                             <div class="pt-4 mt-4 border-t border-gray-200">
-                                <p class="px-3 py-2 text-xs font-medium text-gray-400 uppercase tracking-wider">{% trans "Conseiller" %}</p>
+                                <p class="px-3 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">{% trans "Conseiller" %}</p>
                                 <a href="{% url 'insurance_web:conseiller_dashboard' %}" class="nav-link {% if 'conseiller' in request.resolver_match.url_name and request.resolver_match.url_name == 'conseiller_dashboard' %}active{% endif %}">
                                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
@@ -307,7 +260,7 @@
 
                         {% if user.profile.is_admin %}
                             <div class="pt-4 mt-4 border-t border-gray-200">
-                                <p class="px-3 py-2 text-xs font-medium text-gray-400 uppercase tracking-wider">{% trans "Administration" %}</p>
+                                <p class="px-3 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">{% trans "Administration" %}</p>
                                 <a href="{% url 'insurance_web:admin_dashboard' %}" class="nav-link {% if 'admin' in request.resolver_match.url_name and request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
                                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
@@ -333,7 +286,7 @@
                 </nav>
 
                 <div class="p-4 border-t border-gray-200">
-                    <div class="mb-3 px-3 py-2 bg-gray-50 rounded border border-gray-200">
+                    <div class="mb-3 px-3 py-2 bg-gray-50 rounded">
                         <p class="text-xs font-medium text-gray-500 mb-1">{% trans "Connecté en tant que :" %}</p>
                         <p class="text-sm font-medium text-gray-900 truncate">{{ user.get_full_name|default:user.email }}</p>
                         {% if user.profile %}
@@ -345,7 +298,7 @@
 
                     <form method="post" action="{% url 'insurance_web:logout' %}">
                         {% csrf_token %}
-                        <button type="submit" class="w-full flex items-center justify-center px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded transition-all">
+                        <button type="submit" class="w-full flex items-center justify-center px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded transition-colors">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                             </svg>
@@ -357,7 +310,7 @@
 
             <div class="flex-1 ml-0 lg:ml-64 flex flex-col min-h-screen">
                 <div class="lg:hidden fixed top-4 left-4 z-50">
-                    <button @click="sidebarOpen = !sidebarOpen" class="p-2 rounded bg-white shadow-sm border border-gray-200">
+                    <button @click="sidebarOpen = !sidebarOpen" class="p-2 rounded bg-white shadow border border-gray-200">
                         <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                         </svg>
@@ -384,8 +337,8 @@
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between items-center h-16">
                         <div class="flex items-center">
-                            <a href="{% url 'insurance_web:home' %}" class="flex items-center space-x-3">
-                                <div class="w-8 h-8 bg-gray-900 rounded flex items-center justify-center">
+                            <a href="{% url 'insurance_web:home' %}" class="flex items-center space-x-2">
+                                <div class="w-8 h-8 bg-primary rounded flex items-center justify-center">
                                     <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                                     </svg>
@@ -413,7 +366,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
                         <div>
                             <div class="flex items-center space-x-2 mb-3">
-                                <div class="w-8 h-8 bg-gray-900 rounded flex items-center justify-center">
+                                <div class="w-8 h-8 bg-primary rounded flex items-center justify-center">
                                     <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                                     </svg>

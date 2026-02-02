@@ -1,6 +1,7 @@
 from .base import HomeView, SignupView, LogoutView
 from .user_views import (
     ProfileView,
+    EditProfileView,
     PredictView,
     ConseillersListView,
     ConseillerAvailabilityView,
@@ -26,6 +27,7 @@ __all__ = [
     'SignupView',
     'LogoutView',
     'ProfileView',
+    'EditProfileView',
     'PredictView',
     'ConseillersListView',
     'ConseillerAvailabilityView',

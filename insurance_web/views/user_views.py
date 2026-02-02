@@ -6,7 +6,7 @@ from django.utils.translation import gettext as _, gettext_lazy as _lazy
 from datetime import datetime
 
 from ..models import User, Appointment, Prediction
-from ..forms import PredictionForm, AppointmentForm
+from ..forms import PredictionForm, AppointmentForm, ProfileForm
 from ..services import (
     calculate_insurance_premium,
     create_prediction,
@@ -25,13 +25,83 @@ from ..exceptions import (
 )
 
 
-class ProfileView(UserProfileMixin, ListView):
+class ProfileView(UserProfileMixin, TemplateView):
     template_name = 'authentification/profile.html'
-    context_object_name = 'predictions'
-    paginate_by = 10
     
-    def get_queryset(self):
-        return Prediction.objects.filter(user=self.request.user).order_by('-created_at')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
+        context['profile'] = self.request.user.profile
+        context['edit_mode'] = self.request.GET.get('edit', 'false').lower() == 'true'
+        
+        # Récupérer les prédictions avec pagination
+        predictions = Prediction.objects.filter(user=self.request.user).order_by('-created_at')
+        
+        # Pagination manuelle
+        from django.core.paginator import Paginator
+        paginator = Paginator(predictions, 10)
+        page_number = self.request.GET.get('page', 1)
+        context['predictions'] = paginator.get_page(page_number)
+        
+        # Initialiser le formulaire avec les données du profil
+        if context['edit_mode']:
+            context['form'] = ProfileForm(user=self.request.user)
+        else:
+            context['form'] = ProfileForm(user=self.request.user)
+        
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        """Gère la soumission du formulaire d'édition"""
+        form = ProfileForm(request.POST, user=request.user)
+        if form.is_valid():
+            user = request.user
+            user.first_name = form.cleaned_data['first_name']
+            user.last_name = form.cleaned_data['last_name']
+            user.email = form.cleaned_data['email']
+            user.save()
+            
+            profile = user.profile
+            profile_fields = ['age', 'sex', 'bmi', 'children', 'smoker', 'region', 'additional_info']
+            for field in profile_fields:
+                if field in form.cleaned_data:
+                    value = form.cleaned_data[field]
+                    setattr(profile, field, value)
+            profile.save()
+            
+            messages.success(self.request, _('Votre profil à été mis à jour avec succès.'))
+            return redirect('insurance_web:profile')
+        else:
+            context = self.get_context_data(**kwargs)
+            context['form'] = form
+            context['edit_mode'] = True
+            return self.render_to_response(context)
+
+
+class EditProfileView(UserProfileMixin, FormView):
+    form_class = ProfileForm
+    template_name = 'authentification/edit_profile.html'
+    
+    def get_initial(self):
+        profile = self.request.user.profile
+        return {
+            'age': profile.age,
+            'sex': profile.sex,
+            'bmi': profile.bmi,
+            'children': profile.children,
+            'smoker': profile.smoker,
+            'region': profile.region,
+            'additional_info': profile.additional_info,
+        }
+    
+    def form_valid(self, form):
+        """Sauvegarde les données du formulaire dans le profil"""
+        profile = self.request.user.profile
+        for field in form.cleaned_data:
+            setattr(profile, field, form.cleaned_data[field])
+        profile.save()
+        messages.success(self.request, _('Votre profil à été mis à jour avec succès.'))
+        return redirect('insurance_web:profile')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -136,7 +206,7 @@ class ConseillerAvailabilityView(UserProfileMixin, TemplateView):
 class CreateAppointmentView(UserProfileMixin, FormView):
     form_class = AppointmentForm
     template_name = 'create_appointment.html'
-    success_url = None  # Sera défini dans form_valid
+    success_url = None 
     
     def dispatch(self, request, *args, **kwargs):
         self.conseiller = get_object_or_404(User, id=kwargs['conseiller_id'], profile__role='conseiller')

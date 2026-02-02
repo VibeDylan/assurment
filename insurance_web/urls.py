@@ -5,6 +5,7 @@ from .views import (
     SignupView,
     LogoutView,
     ProfileView,
+    EditProfileView,
     PredictView,
     ConseillersListView,
     ConseillerAvailabilityView,
@@ -30,6 +31,7 @@ urlpatterns = [
     path('signup/', SignupView.as_view(), name='signup'),
     
     path('profile/', ProfileView.as_view(), name='profile'),
+    path('profile/edit/', EditProfileView.as_view(), name='edit_profile'),
     path('predict/', PredictView.as_view(), name='predict'),
     path('conseillers/', ConseillersListView.as_view(), name='conseillers_list'),
     path('conseiller/<int:conseiller_id>/availability/', ConseillerAvailabilityView.as_view(), name='conseiller_availability'),

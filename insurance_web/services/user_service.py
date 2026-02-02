@@ -33,4 +33,6 @@ def get_profile_initial_data(profile):
             initial['smoker'] = profile.smoker
         if profile.region:
             initial['region'] = profile.region
+        if profile.additional_info:
+            initial['additional_info'] = profile.additional_info
     return initial
