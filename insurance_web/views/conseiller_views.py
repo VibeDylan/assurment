@@ -434,31 +434,31 @@ class NotificationListView(UserProfileMixin, TemplateView):
 
 
 class MarkNotificationReadView(UserProfileMixin, View):
-    """Marque une notification comme lue"""
+    """Supprime une notification lorsqu'elle est marquée comme lue (elle ne réapparaît plus)."""
     
     def post(self, request, notification_id):
         try:
             mark_notification_as_read(notification_id, request.user)
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                 return JsonResponse({'success': True})
-            messages.success(request, _('Notification marked as read.'))
+            messages.success(request, _('Notification supprimée.'))
         except Exception as e:
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                 return JsonResponse({'success': False, 'error': str(e)}, status=400)
-            messages.error(request, _('Failed to mark notification as read: %(error)s') % {'error': e})
+            messages.error(request, _('Impossible de supprimer la notification : %(error)s') % {'error': e})
         
         return redirect('insurance_web:notifications')
 
 
 class MarkAllNotificationsReadView(UserProfileMixin, View):
-    """Marque toutes les notifications comme lues"""
+    """Supprime toutes les notifications non lues (considérées comme lues)."""
     
     def post(self, request):
         try:
             count = mark_all_notifications_as_read(request.user)
-            messages.success(request, _('%(count)s notification(s) marked as read.') % {'count': count})
+            messages.success(request, _('%(count)s notification(s) supprimée(s).') % {'count': count})
         except Exception as e:
-            messages.error(request, _('Failed to mark all notifications as read: %(error)s') % {'error': e})
+            messages.error(request, _('Impossible de supprimer les notifications : %(error)s') % {'error': e})
         
         return redirect('insurance_web:notifications')
 

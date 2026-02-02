@@ -201,28 +201,25 @@ def get_user_notifications(user, unread_only=False, limit=None):
 
 def mark_notification_as_read(notification_id, user):
     """
-    Marque une notification comme lue.
+    Marque une notification comme lue en la supprimant (elle ne réapparaît plus).
     
     Args:
         notification_id: ID de la notification
         user: Utilisateur propriétaire de la notification (pour sécurité)
         
     Returns:
-        bool: True si la notification a été marquée comme lue, False sinon
+        bool: True si la notification a été supprimée, False sinon
         
     Raises:
         NotificationError: Si la notification n'existe pas ou n'appartient pas à l'utilisateur
     """
     try:
         notification = Notification.objects.get(id=notification_id, user=user)
-        if notification.read:
-            return False
-        notification.read = True
-        notification.save()
+        notification.delete()
         log_info(
-            _("Notification marked as read"),
+            _("Notification deleted after read"),
             extra={
-                'notification_id': notification.id,
+                'notification_id': notification_id,
                 'user_id': user.id,
             }
         )
@@ -231,30 +228,32 @@ def mark_notification_as_read(notification_id, user):
         raise NotificationError(_("Notification not found or you don't have permission to access it"))
     except Exception as e:
         log_error(
-            _("Error marking notification as read: %(error)s") % {'error': e},
+            _("Error deleting notification: %(error)s") % {'error': e},
             exc_info=True,
             extra={
                 'notification_id': notification_id,
                 'user_id': user.id,
             }
         )
-        raise NotificationError(_("Failed to mark notification as read: %(error)s") % {'error': e})
+        raise NotificationError(_("Failed to delete notification: %(error)s") % {'error': e})
 
 
 def mark_all_notifications_as_read(user):
     """
-    Marque toutes les notifications d'un utilisateur comme lues.
+    Supprime toutes les notifications non lues d'un utilisateur (considérées comme lues).
     
     Args:
-        user: Utilisateur pour qui marquer toutes les notifications comme lues
+        user: Utilisateur pour qui supprimer les notifications non lues
         
     Returns:
-        int: Nombre de notifications marquées comme lues
+        int: Nombre de notifications supprimées
     """
     try:
-        count = Notification.objects.filter(user=user, read=False).update(read=True)
+        qs = Notification.objects.filter(user=user, read=False)
+        count = qs.count()
+        qs.delete()
         log_info(
-            _("All notifications marked as read"),
+            _("All unread notifications deleted"),
             extra={
                 'user_id': user.id,
                 'count': count,
@@ -263,10 +262,10 @@ def mark_all_notifications_as_read(user):
         return count
     except Exception as e:
         log_error(
-            _("Error marking all notifications as read: %(error)s") % {'error': e},
+            _("Error deleting notifications: %(error)s") % {'error': e},
             exc_info=True,
             extra={
                 'user_id': user.id,
             }
         )
-        raise NotificationError(_("Failed to mark all notifications as read: %(error)s") % {'error': e})
+        raise NotificationError(_("Failed to delete notifications: %(error)s") % {'error': e})

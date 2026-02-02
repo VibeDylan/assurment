@@ -42,7 +42,21 @@ class ProfileView(UserProfileMixin, TemplateView):
         context['predictions'] = paginator.get_page(page_number)
         
         if context['edit_mode']:
-            context['form'] = ProfileForm(user=self.request.user)
+            profile = self.request.user.profile
+            initial_data = {
+                'first_name': self.request.user.first_name,
+                'last_name': self.request.user.last_name,
+                'email': self.request.user.email,
+                'age': profile.age,
+                'sex': profile.sex,
+                'height': getattr(profile, 'height', None),
+                'weight': getattr(profile, 'weight', None),
+                'children': profile.children,
+                'smoker': profile.smoker,
+                'region': profile.region,
+                'additional_info': profile.additional_info,
+            }
+            context['form'] = ProfileForm(initial=initial_data, user=self.request.user)
         else:
             context['form'] = ProfileForm(user=self.request.user)
         
@@ -64,7 +78,6 @@ class ProfileView(UserProfileMixin, TemplateView):
                 if field in form.cleaned_data:
                     value = form.cleaned_data[field]
                     setattr(profile, field, value)
-            # Calculer le BMI si taille et poids sont renseignés
             if profile.height and profile.weight and profile.height > 0:
                 from decimal import Decimal
                 profile.bmi = Decimal(str(float(profile.weight) / (float(profile.height) ** 2))).quantize(Decimal('0.01'))
@@ -104,7 +117,6 @@ class EditProfileView(UserProfileMixin, FormView):
         for field in profile_field_names:
             if field in form.cleaned_data:
                 setattr(profile, field, form.cleaned_data[field])
-        # Recalculer le BMI si taille et poids sont renseignés
         if profile.height and profile.weight and profile.height > 0:
             profile.bmi = Decimal(str(float(profile.weight) / (float(profile.height) ** 2))).quantize(Decimal('0.01'))
         profile.save()
