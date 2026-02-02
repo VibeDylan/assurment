@@ -78,8 +78,8 @@
                                             </button>
                                         </form>
                                     {% endif %}
-                                    <a href="{% url 'insurance_web:my_appointments' %}" class="text-xs text-primary hover:underline">
-                                        {% trans "Voir le rendez-vous" %}
+                                    <a href="{% url 'insurance_web:appointment_detail' notification.appointment.id %}" class="text-xs text-primary hover:underline">
+                                        {% trans "Voir le détail du rendez-vous" %}
                                     </a>
                                 </div>
                             {% endif %}

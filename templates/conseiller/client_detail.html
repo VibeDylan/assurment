@@ -103,9 +103,9 @@
                     <a href="{% url 'insurance_web:conseiller_predict_client' client.id %}" class="block w-full btn-primary text-center py-3">
                         {% trans "Faire une prédiction" %}
                     </a>
-                    <a href="{% url 'insurance_web:conseiller_calendar' %}?client_id={{ client.id }}" class="block w-full btn-secondary text-center py-3">
-                        {% trans "Planifier un rendez-vous" %}
-                    </a>
+<a href="{% url 'insurance_web:conseiller_create_appointment' client.id %}" class="block w-full btn-secondary text-center py-3">
+                            {% trans "Planifier un rendez-vous" %}
+                        </a>
                     <form method="post" action="{% url 'insurance_web:remove_client' client.id %}" data-confirm="{% trans 'Êtes-vous sûr de vouloir retirer ce client ? Tous les rendez-vous futurs seront annulés.' %}" data-danger>
                         {% csrf_token %}
                         <button type="submit" class="block w-full px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded text-center transition-colors">
@@ -120,16 +120,16 @@
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">{% trans "Rendez-vous" %}</h3>
                     <div class="space-y-3">
                         {% for appointment in appointments|slice:":5" %}
-                            <div class="p-3 bg-gray-50 rounded border border-gray-200">
+                            <a href="{% url 'insurance_web:appointment_detail' appointment.id %}" class="block p-3 bg-gray-50 rounded border border-gray-200 hover:bg-gray-100 transition-colors">
                                 <p class="text-sm font-medium text-gray-900">{{ appointment.date_time|date:"d M Y à H:i" }}</p>
                                 <p class="text-xs text-gray-500 mt-1">
                                     {% if appointment.status == 'pending' %}
                                         <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
                                             {% trans "En attente" %}
                                         </span>
-                                    {% elif appointment.status == 'accepted' %}
+                                    {% elif appointment.status == 'confirmed' %}
                                         <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
-                                            {% trans "Accepté" %}
+                                            {% trans "Confirmé" %}
                                         </span>
                                     {% elif appointment.status == 'rejected' %}
                                         <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
@@ -141,7 +141,8 @@
                                         </span>
                                     {% endif %}
                                 </p>
-                            </div>
+                                <p class="text-xs text-primary font-medium mt-2">{% trans "Voir le détail" %}</p>
+                            </a>
                         {% endfor %}
                         {% if appointments|length > 5 %}
                             <p class="text-xs text-gray-500 text-center mt-2">

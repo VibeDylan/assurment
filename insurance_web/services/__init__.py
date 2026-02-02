@@ -10,6 +10,8 @@ from .appointment_service import (
     get_appointments_for_calendar,
     accept_appointment,
     reject_appointment,
+    cancel_appointment,
+    reschedule_appointment,
 )
 from .user_service import (
     update_profile_from_form_data,
@@ -26,6 +28,8 @@ __all__ = [
     'get_appointments_for_calendar',
     'accept_appointment',
     'reject_appointment',
+    'cancel_appointment',
+    'reschedule_appointment',
     'update_profile_from_form_data',
     'get_profile_initial_data',
 ]

@@ -6,10 +6,14 @@ class AppointmentForm(forms.Form):
     date_time = forms.DateTimeField(
         label=_("Date and Time"),
         required=True,
-        widget=forms.DateTimeInput(attrs={
-            'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors',
-            'type': 'datetime-local'
-        })
+        input_formats=['%Y-%m-%dT%H:%M', '%Y-%m-%dT%H:%M:%S', '%Y-%m-%d %H:%M', '%Y-%m-%d %H:%M:%S'],
+        widget=forms.DateTimeInput(
+            format='%Y-%m-%dT%H:%M',
+            attrs={
+                'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors',
+                'type': 'datetime-local'
+            }
+        )
     )
     duration_minutes = forms.IntegerField(
         label=_("Duration (minutes)"),

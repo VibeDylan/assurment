@@ -1,6 +1,7 @@
-from django.views.generic import TemplateView, FormView, ListView
+from django.views.generic import TemplateView, FormView, ListView, View
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib import messages
+from django.http import Http404
 from django.utils import timezone
 from django.utils.translation import gettext as _, gettext_lazy as _lazy
 from datetime import datetime
@@ -13,7 +14,9 @@ from ..services import (
     get_available_slots,
     check_appointment_conflict,
     create_appointment,
-    get_profile_initial_data
+    get_profile_initial_data,
+    cancel_appointment,
+    reschedule_appointment,
 )
 from ..utils.mixins import UserProfileMixin
 from ..exceptions import (
@@ -296,4 +299,98 @@ class MyAppointmentsView(UserProfileMixin, TemplateView):
             client=self.request.user,
             status='cancelled'
         ).order_by('-date_time')
+        return context
+
+
+class AppointmentDetailView(UserProfileMixin, TemplateView):
+    """Affiche le détail d'un rendez-vous (client, conseiller ou admin)."""
+    template_name = 'appointment_detail.html'
+
+    def get(self, request, *args, **kwargs):
+        appointment = get_object_or_404(Appointment, pk=kwargs['appointment_id'])
+        user = request.user
+        # Accès : client du rendez-vous, conseiller du rendez-vous, ou admin
+        if user != appointment.client and user != appointment.conseiller:
+            if not (hasattr(user, 'profile') and user.profile.is_admin()):
+                raise Http404()
+        self.appointment = appointment
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['appointment'] = self.appointment
+        context['is_client'] = self.request.user == self.appointment.client
+        context['is_conseiller'] = self.request.user == self.appointment.conseiller
+        context['is_admin'] = hasattr(self.request.user, 'profile') and self.request.user.profile.is_admin()
+        return context
+
+
+class CancelAppointmentView(UserProfileMixin, View):
+    """Annule un rendez-vous (client ou conseiller ou admin)."""
+
+    def post(self, request, appointment_id):
+        try:
+            cancel_appointment(appointment_id, request.user)
+            messages.success(request, _('Rendez-vous annulé.'))
+        except AppointmentError as e:
+            messages.error(request, str(e))
+        return redirect('insurance_web:appointment_detail', appointment_id=appointment_id)
+
+
+class RescheduleAppointmentView(UserProfileMixin, FormView):
+    """Reporter un rendez-vous (client ou conseiller ou admin)."""
+    form_class = AppointmentForm
+    template_name = 'reschedule_appointment.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.appointment = get_object_or_404(Appointment, pk=kwargs['appointment_id'])
+        user = request.user
+        if user != self.appointment.client and user != self.appointment.conseiller:
+            if not (hasattr(user, 'profile') and user.profile.is_admin()):
+                raise Http404()
+        if self.appointment.status == 'cancelled':
+            messages.error(request, _('Cannot reschedule a cancelled appointment.'))
+            return redirect('insurance_web:appointment_detail', appointment_id=self.appointment.id)
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_initial(self):
+        dt = self.appointment.date_time
+        if timezone.is_naive(dt):
+            dt = timezone.make_aware(dt, timezone.get_current_timezone())
+        return {
+            'date_time': dt,
+            'duration_minutes': self.appointment.duration_minutes,
+            'notes': self.appointment.notes or '',
+        }
+
+    def form_valid(self, form):
+        new_date_time = form.cleaned_data['date_time']
+        if timezone.is_naive(new_date_time):
+            new_date_time = timezone.make_aware(new_date_time, timezone.get_current_timezone())
+        duration_minutes = form.cleaned_data['duration_minutes']
+        notes = form.cleaned_data.get('notes', '')
+        try:
+            reschedule_appointment(
+                self.appointment.id,
+                self.request.user,
+                new_date_time,
+                duration_minutes=duration_minutes,
+                notes=notes,
+            )
+            messages.success(
+                self.request,
+                _('Rendez-vous reporté au %(date)s.') % {'date': new_date_time.strftime('%d/%m/%Y à %H:%M')},
+            )
+        except AppointmentConflictError as e:
+            messages.error(self.request, str(e))
+            return self.form_invalid(form)
+        except AppointmentError as e:
+            messages.error(self.request, str(e))
+            return self.form_invalid(form)
+        return redirect('insurance_web:appointment_detail', appointment_id=self.appointment.id)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['appointment'] = self.appointment
+        context['conseiller'] = self.appointment.conseiller
         return context

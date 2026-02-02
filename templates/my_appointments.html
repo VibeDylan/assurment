@@ -34,6 +34,7 @@
                                 <th>{% trans "Durée" %}</th>
                                 <th>{% trans "Statut" %}</th>
                                 <th>{% trans "Notes" %}</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -87,6 +88,11 @@
                                             {% endif %}
                                         </div>
                                     </td>
+                                    <td>
+                                        <a href="{% url 'insurance_web:appointment_detail' appointment.id %}" class="text-primary hover:text-primary-dark font-medium text-sm">
+                                            {% trans "Voir le détail" %}
+                                        </a>
+                                    </td>
                                 </tr>
                             {% endfor %}
                         </tbody>
@@ -115,6 +121,7 @@
                                 <th>{% trans "Durée" %}</th>
                                 <th>{% trans "Statut" %}</th>
                                 <th>{% trans "Notes" %}</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -168,6 +175,11 @@
                                             {% endif %}
                                         </div>
                                     </td>
+                                    <td>
+                                        <a href="{% url 'insurance_web:appointment_detail' appointment.id %}" class="text-primary hover:text-primary-dark font-medium text-sm">
+                                            {% trans "Voir le détail" %}
+                                        </a>
+                                    </td>
                                 </tr>
                             {% endfor %}
                         </tbody>
@@ -195,6 +207,7 @@
                                 <th>{% trans "Date et Heure" %}</th>
                                 <th>{% trans "Durée" %}</th>
                                 <th>{% trans "Notes" %}</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -232,6 +245,11 @@
                                                 <span class="text-gray-400 italic">{% trans "Aucune note" %}</span>
                                             {% endif %}
                                         </div>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'insurance_web:appointment_detail' appointment.id %}" class="text-primary hover:text-primary-dark font-medium text-sm">
+                                            {% trans "Voir le détail" %}
+                                        </a>
                                     </td>
                                 </tr>
                             {% endfor %}

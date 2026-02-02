@@ -61,6 +61,39 @@ def create_notification(user, notification_type, message, appointment=None):
         )
         raise
 
+def create_appointment_by_conseiller_notification(appointment):
+    """
+    Crée une notification pour le client lorsqu'un conseiller planifie un rendez-vous pour lui.
+    
+    Args:
+        appointment: Instance Appointment créée
+        
+    Returns:
+        Notification: Instance de notification créée
+    """
+    try:
+        client = appointment.client
+        conseiller_name = appointment.conseiller.get_full_name() or appointment.conseiller.email
+        appointment_date = appointment.date_time.strftime('%d/%m/%Y à %H:%M')
+        message = _("Un rendez-vous a été planifié pour vous avec %(conseiller)s le %(date)s.") % {
+            'conseiller': conseiller_name,
+            'date': appointment_date
+        }
+        return create_notification(
+            user=client,
+            notification_type='appointment_confirmation',
+            message=message,
+            appointment=appointment
+        )
+    except Exception as e:
+        log_error(
+            _("Error creating appointment by conseiller notification: %(error)s") % {'error': e},
+            exc_info=True,
+            extra={'appointment_id': appointment.id},
+        )
+        raise NotificationError(_("Failed to create notification: %(error)s") % {'error': e})
+
+
 def create_appointment_request_notification(appointment):
     """
     Crée une notification pour le conseiller lorsqu'un client demande un rendez-vous.

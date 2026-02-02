@@ -1,5 +1,6 @@
 from django.views.generic import TemplateView, FormView, View
 from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse
 from django.contrib import messages
 from django.utils import timezone
 from django.utils.translation import gettext as _
@@ -8,14 +9,19 @@ from datetime import datetime, timedelta
 from calendar import monthrange
 
 from ..models import User, Appointment, Prediction
-from ..forms import PredictionForm
+from ..forms import PredictionForm, AppointmentForm
 from ..services import (
     calculate_insurance_premium,
     create_prediction,
     get_appointments_for_calendar,
     get_profile_initial_data
 )
-from ..services.appointment_service import accept_appointment, reject_appointment
+from ..services.appointment_service import (
+    accept_appointment,
+    reject_appointment,
+    create_appointment,
+    check_appointment_conflict,
+)
 from ..services.notification_service import (
     get_user_notifications,
     get_unread_notifications_count,
@@ -28,6 +34,7 @@ from ..exceptions import (
     InvalidPredictionDataError,
     ModelNotFoundError,
     AppointmentError,
+    AppointmentConflictError,
 )
 
 
@@ -165,8 +172,12 @@ class ConseillerPredictView(ConseillerRequiredMixin, UserProfileMixin, FormView)
                 }
             )
             
-            # Rediriger vers la même page avec le client sélectionné pour permettre une nouvelle prédiction
-            return redirect('insurance_web:conseiller_predict_client', client_id=selected_client.id)
+            # Afficher immédiatement le résultat sur la page (sans redirection)
+            context = self.get_context_data()
+            context['predicted_amount'] = predicted_amount
+            context['client'] = selected_client
+            context['form'] = self.form_class(initial=get_profile_initial_data(selected_client.profile))
+            return self.render_to_response(context)
         except InvalidPredictionDataError as e:
             messages.error(self.request, _('Invalid data: %(error)s') % {'error': str(e)})
             return self.form_invalid(form)
@@ -199,6 +210,16 @@ class ConseillerPredictView(ConseillerRequiredMixin, UserProfileMixin, FormView)
                 except (PredictionError, InvalidPredictionDataError, ModelNotFoundError):
                     pass
         return context
+
+
+def _get_calendar_clients(conseiller):
+    """Clients avec lesquels le conseiller peut créer un RDV (pour le calendrier)."""
+    if conseiller.profile.is_admin():
+        return User.objects.exclude(id=conseiller.id).exclude(
+            profile__role__in=('conseiller', 'admin')
+        ).order_by('first_name', 'last_name', 'email')
+    client_ids = Appointment.objects.filter(conseiller=conseiller).values_list('client_id', flat=True).distinct()
+    return User.objects.filter(id__in=client_ids).order_by('first_name', 'last_name', 'email')
 
 
 class ConseillerCalendarView(ConseillerRequiredMixin, UserProfileMixin, TemplateView):
@@ -265,8 +286,86 @@ class ConseillerCalendarView(ConseillerRequiredMixin, UserProfileMixin, Template
             'next_month': next_month,
             'today': datetime.now().date(),
             'all_appointments': all_appointments,
+            'calendar_clients': _get_calendar_clients(conseiller),
         })
         return context
+
+
+def _calendar_redirect(year, month):
+    url = reverse('insurance_web:conseiller_calendar')
+    if year and month:
+        url += f'?year={year}&month={month}'
+    return redirect(url)
+
+
+class ConseillerCalendarCreateAppointmentView(ConseillerRequiredMixin, UserProfileMixin, View):
+    """Création d'un rendez-vous depuis le calendrier (POST : client, date, heure, durée, notes)."""
+    def post(self, request):
+        client_id = request.POST.get('client_id')
+        date_str = request.POST.get('date')  # YYYY-MM-DD
+        time_str = request.POST.get('time')  # HH:MM
+        duration_minutes = request.POST.get('duration_minutes')
+        notes = (request.POST.get('notes') or '').strip()
+        year = request.POST.get('year')
+        month = request.POST.get('month')
+
+        if not client_id:
+            messages.error(request, _('Please select a client.'))
+            return _calendar_redirect(year, month)
+        client = get_object_or_404(User, id=client_id)
+        conseiller = request.user
+        if hasattr(client, 'profile') and getattr(client.profile, 'role', None) in ('conseiller', 'admin'):
+            messages.error(request, _('You cannot create an appointment with another advisor or admin.'))
+            return _calendar_redirect(year, month)
+        if not conseiller.profile.is_admin():
+            if not Appointment.objects.filter(conseiller=conseiller, client=client).exists():
+                messages.error(request, _('You can only create appointments with your existing clients.'))
+                return _calendar_redirect(year, month)
+
+        try:
+            d = datetime.strptime(date_str, '%Y-%m-%d').date()
+            t = datetime.strptime(time_str, '%H:%M').time()
+        except (ValueError, TypeError):
+            messages.error(request, _('Invalid date or time.'))
+            return _calendar_redirect(year, month)
+        date_time_naive = datetime.combine(d, t)
+        date_time = timezone.make_aware(date_time_naive, timezone.get_current_timezone())
+
+        try:
+            dur = int(duration_minutes)
+            if dur < 15 or dur > 240:
+                raise ValueError('duration')
+        except (ValueError, TypeError):
+            messages.error(request, _('Duration must be between 15 and 240 minutes.'))
+            return _calendar_redirect(year, month)
+
+        try:
+            has_conflict, error_message = check_appointment_conflict(conseiller, date_time, dur)
+            if has_conflict:
+                messages.error(request, error_message)
+                return _calendar_redirect(year, month)
+            appointment = create_appointment(
+                conseiller=conseiller,
+                client=client,
+                date_time=date_time,
+                duration_minutes=dur,
+                notes=notes,
+                created_by_conseiller=True
+            )
+            messages.success(
+                request,
+                _('Rendez-vous créé avec %(name)s le %(date)s.') % {
+                    'name': client.get_full_name() or client.email,
+                    'date': date_time.strftime('%d/%m/%Y à %H:%M')
+                }
+            )
+            return redirect('insurance_web:appointment_detail', appointment_id=appointment.id)
+        except AppointmentConflictError as e:
+            messages.error(request, str(e))
+            return _calendar_redirect(year, month)
+        except AppointmentError as e:
+            messages.error(request, _('Erreur : %(error)s') % {'error': str(e)})
+            return _calendar_redirect(year, month)
 
 
 class ConseillerClientsListView(ConseillerRequiredMixin, UserProfileMixin, TemplateView):
@@ -342,6 +441,72 @@ class ConseillerClientDetailView(ConseillerRequiredMixin, UserProfileMixin, Temp
             'predictions': predictions,
             'appointments': appointments,
         })
+        return context
+
+
+class ConseillerCreateAppointmentView(ConseillerRequiredMixin, UserProfileMixin, FormView):
+    """Permet au conseiller de créer un rendez-vous avec un de ses clients."""
+    form_class = AppointmentForm
+    template_name = 'conseiller/create_appointment.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.client = get_object_or_404(User, id=kwargs['client_id'])
+        conseiller = request.user
+        # Le client ne doit pas être conseiller ni admin
+        if hasattr(self.client, 'profile') and self.client.profile.role in ('conseiller', 'admin'):
+            messages.error(request, _('You cannot create an appointment with another advisor or admin.'))
+            return redirect('insurance_web:conseiller_clients')
+        if not conseiller.profile.is_admin():
+            has_appointment = Appointment.objects.filter(
+                conseiller=conseiller,
+                client=self.client
+            ).exists()
+            if not has_appointment:
+                messages.error(request, _('You can only create appointments with your existing clients.'))
+                return redirect('insurance_web:conseiller_clients')
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        date_time = form.cleaned_data['date_time']
+        if timezone.is_naive(date_time):
+            date_time = timezone.make_aware(date_time, timezone.get_current_timezone())
+        duration_minutes = form.cleaned_data['duration_minutes']
+        notes = form.cleaned_data.get('notes', '')
+        try:
+            has_conflict, error_message = check_appointment_conflict(
+                self.request.user,
+                date_time,
+                duration_minutes
+            )
+            if has_conflict:
+                messages.error(self.request, error_message)
+                return self.form_invalid(form)
+            appointment = create_appointment(
+                conseiller=self.request.user,
+                client=self.client,
+                date_time=date_time,
+                duration_minutes=duration_minutes,
+                notes=notes,
+                created_by_conseiller=True
+            )
+            messages.success(
+                self.request,
+                _('Rendez-vous créé avec %(name)s le %(date)s.') % {
+                    'name': self.client.get_full_name() or self.client.email,
+                    'date': date_time.strftime('%d/%m/%Y à %H:%M')
+                }
+            )
+            return redirect('insurance_web:appointment_detail', appointment_id=appointment.id)
+        except AppointmentConflictError as e:
+            messages.error(self.request, str(e))
+            return self.form_invalid(form)
+        except AppointmentError as e:
+            messages.error(self.request, _('Erreur : %(error)s') % {'error': str(e)})
+            return self.form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['client'] = self.client
         return context
 
 
