@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-28 16:43+0100\n"
+"POT-Creation-Date: 2026-02-02 12:29+0100\n"
 "PO-Revision-Date: 2026-01-28 16:43+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: French <fr@li.org>\n"
@@ -16,11 +16,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-#: assurement/settings.py:103
+
+#: assurement/settings.py:110
 msgid "French"
 msgstr "Français"
 
-#: assurement/settings.py:104
+#: assurement/settings.py:111
 msgid "English"
 msgstr "Anglais"
 
@@ -60,7 +61,7 @@ msgstr "Sud-Est"
 msgid "User"
 msgstr "Utilisateur"
 
-#: insurance_web/constants.py:22 insurance_web/models.py:71
+#: insurance_web/constants.py:22 insurance_web/models.py:72
 msgid "Advisor"
 msgstr "Conseiller"
 
@@ -68,7 +69,70 @@ msgstr "Conseiller"
 msgid "Administrator"
 msgstr "Administrateur"
 
-#: insurance_web/forms/admin_forms.py:9 insurance_web/forms/auth_forms.py:9
+#: insurance_web/constants.py:27
+msgid "Pending"
+msgstr ""
+
+#: insurance_web/constants.py:28
+#, fuzzy
+#| msgid "Confirm Password"
+msgid "Confirmed"
+msgstr "Confirmer le mot de passe"
+
+#: insurance_web/constants.py:29
+msgid "Cancelled"
+msgstr ""
+
+#: insurance_web/constants.py:33
+#, fuzzy
+#| msgid "Appointment"
+msgid "Appointment Confirmation"
+msgstr "Rendez-vous"
+
+#: insurance_web/constants.py:34
+#, fuzzy
+#| msgid "Appointment"
+msgid "Appointment Reminder"
+msgstr "Rendez-vous"
+
+#: insurance_web/constants.py:35
+#, fuzzy
+#| msgid "Appointment"
+msgid "Appointment Cancelled"
+msgstr "Rendez-vous"
+
+#: insurance_web/constants.py:36
+#, fuzzy
+#| msgid "Appointments"
+msgid "Appointment Rescheduled"
+msgstr "Rendez-vous"
+
+#: insurance_web/constants.py:37
+#, fuzzy
+#| msgid "Appointment"
+msgid "Appointment Moved"
+msgstr "Rendez-vous"
+
+#: insurance_web/constants.py:38
+#, fuzzy
+#| msgid "Appointments"
+msgid "Appointment Request"
+msgstr "Rendez-vous"
+
+#: insurance_web/constants.py:39
+#, fuzzy
+#| msgid "Appointment"
+msgid "Appointment Accepted"
+msgstr "Rendez-vous"
+
+#: insurance_web/constants.py:40
+#, fuzzy
+#| msgid "Appointment"
+msgid "Appointment Rejected"
+msgstr "Rendez-vous"
+
+#: insurance_web/forms/admin_forms.py:9 insurance_web/forms/auth_forms.py:11
+#: insurance_web/forms/auth_forms.py:111
 msgid "First Name"
 msgstr "Prénom"
 
@@ -76,7 +140,8 @@ msgstr "Prénom"
 msgid "Enter first name"
 msgstr "Entrez le prénom"
 
-#: insurance_web/forms/admin_forms.py:20 insurance_web/forms/auth_forms.py:19
+#: insurance_web/forms/admin_forms.py:20 insurance_web/forms/auth_forms.py:21
+#: insurance_web/forms/auth_forms.py:121
 msgid "Last Name"
 msgstr "Nom"
 
@@ -84,9 +149,10 @@ msgstr "Nom"
 msgid "Enter last name"
 msgstr "Entrez le nom"
 
-#: insurance_web/forms/admin_forms.py:31 insurance_web/forms/auth_forms.py:30
+#: insurance_web/forms/admin_forms.py:31 insurance_web/forms/auth_forms.py:32
+#: insurance_web/forms/auth_forms.py:131
 #: templates/admin/user_management.html:46
-#: templates/authentification/profile.html:48
+#: templates/authentification/profile.html:192
 msgid "Email"
 msgstr "Email"
 
@@ -94,7 +160,7 @@ msgstr "Email"
 msgid "Enter email address"
 msgstr "Entrez l'adresse email"
 
-#: insurance_web/forms/admin_forms.py:41 insurance_web/forms/auth_forms.py:40
+#: insurance_web/forms/admin_forms.py:41 insurance_web/forms/auth_forms.py:42
 msgid "Password"
 msgstr "Mot de passe"
 
@@ -111,15 +177,16 @@ msgstr "Le mot de passe doit contenir au moins 8 caractères."
 msgid "Role"
 msgstr "Rôle"
 
-#: insurance_web/forms/admin_forms.py:64 insurance_web/forms/auth_forms.py:86
+#: insurance_web/forms/admin_forms.py:64 insurance_web/forms/auth_forms.py:88
+#: insurance_web/forms/auth_forms.py:225
 msgid "A user with this email already exists."
 msgstr "Un utilisateur avec cet email existe déjà."
 
-#: insurance_web/forms/appointment_forms.py:7 insurance_web/models.py:79
+#: insurance_web/forms/appointment_forms.py:7 insurance_web/models.py:80
 msgid "Date and Time"
 msgstr "Date et Heure"
 
-#: insurance_web/forms/appointment_forms.py:15 insurance_web/models.py:80
+#: insurance_web/forms/appointment_forms.py:15 insurance_web/models.py:81
 msgid "Duration (minutes)"
 msgstr "Durée (minutes)"
 
@@ -131,51 +198,107 @@ msgstr "Notes (optionnel)"
 msgid "Additional information..."
 msgstr "Informations supplémentaires..."
 
-#: insurance_web/forms/auth_forms.py:14
+#: insurance_web/forms/auth_forms.py:16 insurance_web/forms/auth_forms.py:115
 msgid "Enter your first name"
 msgstr "Entrez votre prénom"
 
-#: insurance_web/forms/auth_forms.py:24
+#: insurance_web/forms/auth_forms.py:26 insurance_web/forms/auth_forms.py:125
 msgid "Enter your last name"
 msgstr "Entrez votre nom"
 
-#: insurance_web/forms/auth_forms.py:34
+#: insurance_web/forms/auth_forms.py:36 insurance_web/forms/auth_forms.py:134
 msgid "Enter your email"
 msgstr "Entrez votre email"
 
-#: insurance_web/forms/auth_forms.py:44
+#: insurance_web/forms/auth_forms.py:46
 msgid "Create a password"
 msgstr "Créez un mot de passe"
 
-#: insurance_web/forms/auth_forms.py:50
+#: insurance_web/forms/auth_forms.py:52
 msgid "Confirm Password"
 msgstr "Confirmer le mot de passe"
 
-#: insurance_web/forms/auth_forms.py:54
+#: insurance_web/forms/auth_forms.py:56
 msgid "Confirm your password"
 msgstr "Confirmez votre mot de passe"
 
-#: insurance_web/forms/auth_forms.py:73
+#: insurance_web/forms/auth_forms.py:75
 msgid "Password must contain at least 8 characters."
 msgstr "Le mot de passe doit contenir au moins 8 caractères."
 
-#: insurance_web/forms/auth_forms.py:80
+#: insurance_web/forms/auth_forms.py:82
 msgid "The two passwords do not match."
 msgstr "Les deux mots de passe ne correspondent pas."
 
+#: insurance_web/forms/auth_forms.py:140
 #: insurance_web/forms/prediction_forms.py:8 insurance_web/models.py:19
-#: insurance_web/models.py:104
+#: insurance_web/models.py:106
 msgid "Age"
 msgstr "Âge"
 
+#: insurance_web/forms/auth_forms.py:145
 #: insurance_web/forms/prediction_forms.py:14
 msgid "e.g. 40"
 msgstr "ex. 40"
 
+#: insurance_web/forms/auth_forms.py:150
 #: insurance_web/forms/prediction_forms.py:19 insurance_web/models.py:20
-#: insurance_web/models.py:105
+#: insurance_web/models.py:107
 msgid "Gender"
 msgstr "Genre"
+
+#: insurance_web/forms/auth_forms.py:151 insurance_web/forms/auth_forms.py:184
+#: insurance_web/forms/auth_forms.py:191
+msgid "---------"
+msgstr ""
+
+#: insurance_web/forms/auth_forms.py:157 insurance_web/models.py:21
+#: insurance_web/models.py:108
+msgid "BMI (Body Mass Index)"
+msgstr "IMC (Indice de Masse Corporelle)"
+
+#: insurance_web/forms/auth_forms.py:163
+#, fuzzy
+#| msgid "e.g. 2"
+msgid "e.g. 22.5"
+msgstr "ex. 2"
+
+#: insurance_web/forms/auth_forms.py:168
+#: insurance_web/forms/prediction_forms.py:53 insurance_web/models.py:22
+#: insurance_web/models.py:109
+msgid "Number of Children"
+msgstr "Nombre d'enfants"
+
+#: insurance_web/forms/auth_forms.py:173
+#: insurance_web/forms/prediction_forms.py:59
+msgid "e.g. 2"
+msgstr "ex. 2"
+
+#: insurance_web/forms/auth_forms.py:183
+#: insurance_web/forms/prediction_forms.py:64 insurance_web/models.py:23
+#: insurance_web/models.py:110
+msgid "Smoker"
+msgstr "Fumeur"
+
+#: insurance_web/forms/auth_forms.py:190
+#: insurance_web/forms/prediction_forms.py:73 insurance_web/models.py:24
+#: insurance_web/models.py:111
+msgid "Region"
+msgstr "Région"
+
+#: insurance_web/forms/auth_forms.py:197
+#: insurance_web/forms/prediction_forms.py:82 insurance_web/models.py:25
+#, fuzzy
+#| msgid "Additional information..."
+msgid "Additional Information"
+msgstr "Informations supplémentaires..."
+
+#: insurance_web/forms/auth_forms.py:200
+#: insurance_web/forms/prediction_forms.py:86
+#, fuzzy
+#| msgid "Additional information..."
+msgid "Enter any additional information (optional)"
+msgstr "Informations supplémentaires..."
 
 #: insurance_web/forms/prediction_forms.py:29
 msgid "Height (in meters)"
@@ -193,76 +316,95 @@ msgstr "Poids (en kilogrammes)"
 msgid "e.g. 70.0"
 msgstr "ex. 70,0"
 
-#: insurance_web/forms/prediction_forms.py:53 insurance_web/models.py:22
-#: insurance_web/models.py:107
-msgid "Number of Children"
-msgstr "Nombre d'enfants"
-
-#: insurance_web/forms/prediction_forms.py:59
-msgid "e.g. 2"
-msgstr "ex. 2"
-
-#: insurance_web/forms/prediction_forms.py:64 insurance_web/models.py:23
-#: insurance_web/models.py:108
-msgid "Smoker"
-msgstr "Fumeur"
-
-#: insurance_web/forms/prediction_forms.py:73 insurance_web/models.py:24
-#: insurance_web/models.py:109
-msgid "Region"
-msgstr "Région"
-
-#: insurance_web/models.py:21 insurance_web/models.py:106
-msgid "BMI (Body Mass Index)"
-msgstr "IMC (Indice de Masse Corporelle)"
-
-#: insurance_web/models.py:30
+#: insurance_web/models.py:31
 msgid "Profile"
 msgstr "Profil"
 
-#: insurance_web/models.py:31
+#: insurance_web/models.py:32
 msgid "Profiles"
 msgstr "Profils"
 
-#: insurance_web/models.py:34
+#: insurance_web/models.py:35
 #, python-format
 msgid "Profile of %(name)s"
 msgstr "Profil de %(name)s"
 
-#: insurance_web/models.py:77
+#: insurance_web/models.py:78
 msgid "Client"
 msgstr "Client"
 
-#: insurance_web/models.py:81 templates/my_appointments.html:35
-#: templates/my_appointments.html:100
+#: insurance_web/models.py:82 templates/my_appointments.html:36
+#: templates/my_appointments.html:117 templates/my_appointments.html:197
 msgid "Notes"
 msgstr "Notes"
 
-#: insurance_web/models.py:86
+#: insurance_web/models.py:85
+#, fuzzy
+#| msgid "Statut"
+msgid "Status"
+msgstr "Statut"
+
+#: insurance_web/models.py:88
 msgid "Appointment"
 msgstr "Rendez-vous"
 
-#: insurance_web/models.py:87
+#: insurance_web/models.py:89
 msgid "Appointments"
 msgstr "Rendez-vous"
 
-#: insurance_web/models.py:93
+#: insurance_web/models.py:95
 #, python-format
 msgid "Appointment %(conseiller)s - %(client)s - %(date)s"
 msgstr "Rendez-vous %(conseiller)s - %(client)s - %(date)s"
 
-#: insurance_web/models.py:112
+#: insurance_web/models.py:114
 msgid "Prediction"
 msgstr "Prédiction"
 
-#: insurance_web/models.py:113
+#: insurance_web/models.py:115
 msgid "Predictions"
 msgstr "Prédictions"
 
-#: insurance_web/models.py:118
+#: insurance_web/models.py:120
 #, python-format
 msgid "Prediction for %(user)s - %(amount)s €"
 msgstr "Prédiction pour %(user)s - %(amount)s €"
+
+#: insurance_web/models.py:135
+msgid "Type"
+msgstr ""
+
+#: insurance_web/models.py:136
+msgid "Message"
+msgstr ""
+
+#: insurance_web/models.py:137
+msgid "Read"
+msgstr ""
+
+#: insurance_web/models.py:142
+#, fuzzy
+#| msgid "Tarification"
+msgid "Notification"
+msgstr "Tarification"
+
+#: insurance_web/models.py:143 templates/base.html:288
+#: templates/notifications/list.html:4 templates/notifications/list.html:10
+#, fuzzy
+#| msgid "Tarification"
+msgid "Notifications"
+msgstr "Tarification"
+
+#: insurance_web/models.py:149
+#, fuzzy, python-format
+#| msgid "Prediction for %(user)s - %(amount)s €"
+msgid "Notification for %(user)s - %(appointment)s"
+msgstr "Prédiction pour %(user)s - %(amount)s €"
+
+#: insurance_web/models.py:153
+#, python-format
+msgid "Notification for %(user)s"
+msgstr ""
 
 #: insurance_web/permissions.py:9
 msgid "You must be authenticated to access this resource."
@@ -274,11 +416,14 @@ msgstr "Profil utilisateur introuvable."
 
 #: insurance_web/permissions.py:24
 msgid "You do not have the necessary permissions to access this resource."
-msgstr "Vous n'avez pas les permissions nécessaires pour accéder à cette ressource."
+msgstr ""
+"Vous n'avez pas les permissions nécessaires pour accéder à cette ressource."
 
 #: insurance_web/permissions.py:31
 msgid "You do not have administrator permissions to access this resource."
-msgstr "Vous n'avez pas les permissions d'administrateur pour accéder à cette ressource."
+msgstr ""
+"Vous n'avez pas les permissions d'administrateur pour accéder à cette "
+"ressource."
 
 #: insurance_web/permissions.py:38
 msgid "You can only access your own resources."
@@ -289,28 +434,219 @@ msgstr "Vous ne pouvez accéder qu'à vos propres ressources."
 msgid "You cannot %(action)s on your own account."
 msgstr "Vous ne pouvez pas %(action)s sur votre propre compte."
 
-#: insurance_web/services/appointment_service.py:41
+#: insurance_web/services/appointment_service.py:42
 #, python-format
 msgid "Error getting available slots: %(error)s"
 msgstr "Erreur lors de la récupération des créneaux disponibles : %(error)s"
 
-#: insurance_web/services/appointment_service.py:63
+#: insurance_web/services/appointment_service.py:64
 msgid "You cannot book a time slot in the past."
 msgstr "Vous ne pouvez pas réserver un créneau dans le passé."
 
-#: insurance_web/services/appointment_service.py:72
+#: insurance_web/services/appointment_service.py:73
 msgid "This time slot is no longer available. Please choose another one."
 msgstr "Ce créneau n'est plus disponible. Veuillez en choisir un autre."
 
-#: insurance_web/services/appointment_service.py:107
+#: insurance_web/services/appointment_service.py:110
+#, fuzzy, python-format
+#| msgid "Failed to create appointment: %(error)s"
+msgid "Failed to create notification for appointment: %(error)s"
+msgstr "Échec de la création du rendez-vous : %(error)s"
+
+#: insurance_web/services/appointment_service.py:119
 #, python-format
 msgid "Error creating appointment: %(error)s"
 msgstr "Erreur lors de la création du rendez-vous : %(error)s"
 
-#: insurance_web/services/appointment_service.py:115
+#: insurance_web/services/appointment_service.py:127
 #, python-format
 msgid "Failed to create appointment: %(error)s"
 msgstr "Échec de la création du rendez-vous : %(error)s"
+
+#: insurance_web/services/appointment_service.py:188
+msgid "You can only accept appointments assigned to you."
+msgstr ""
+
+#: insurance_web/services/appointment_service.py:191
+msgid "This appointment is not pending and cannot be accepted."
+msgstr ""
+
+#: insurance_web/services/appointment_service.py:204
+#, fuzzy, python-format
+#| msgid "Failed to create appointment: %(error)s"
+msgid "Failed to create notification for appointment acceptance: %(error)s"
+msgstr "Échec de la création du rendez-vous : %(error)s"
+
+#: insurance_web/services/appointment_service.py:213
+#: insurance_web/services/appointment_service.py:275
+#, fuzzy
+#| msgid "Appointment"
+msgid "Appointment not found."
+msgstr "Rendez-vous"
+
+#: insurance_web/services/appointment_service.py:218
+#, fuzzy, python-format
+#| msgid "Error creating appointment: %(error)s"
+msgid "Error accepting appointment: %(error)s"
+msgstr "Erreur lors de la création du rendez-vous : %(error)s"
+
+#: insurance_web/services/appointment_service.py:225
+#, fuzzy, python-format
+#| msgid "Failed to create appointment: %(error)s"
+msgid "Failed to accept appointment: %(error)s"
+msgstr "Échec de la création du rendez-vous : %(error)s"
+
+#: insurance_web/services/appointment_service.py:250
+msgid "You can only reject appointments assigned to you."
+msgstr ""
+
+#: insurance_web/services/appointment_service.py:253
+msgid "This appointment is not pending and cannot be rejected."
+msgstr ""
+
+#: insurance_web/services/appointment_service.py:266
+#, fuzzy, python-format
+#| msgid "Failed to create appointment: %(error)s"
+msgid "Failed to create notification for appointment rejection: %(error)s"
+msgstr "Échec de la création du rendez-vous : %(error)s"
+
+#: insurance_web/services/appointment_service.py:280
+#, fuzzy, python-format
+#| msgid "Error creating appointment: %(error)s"
+msgid "Error rejecting appointment: %(error)s"
+msgstr "Erreur lors de la création du rendez-vous : %(error)s"
+
+#: insurance_web/services/appointment_service.py:287
+#, fuzzy, python-format
+#| msgid "Failed to create appointment: %(error)s"
+msgid "Failed to reject appointment: %(error)s"
+msgstr "Échec de la création du rendez-vous : %(error)s"
+
+#: insurance_web/services/notification_service.py:30
+#, python-format
+msgid "Invalid notification type: %(type)s"
+msgstr ""
+
+#: insurance_web/services/notification_service.py:33
+msgid "Notification message cannot be empty"
+msgstr ""
+
+#: insurance_web/services/notification_service.py:43
+msgid "Notification created"
+msgstr ""
+
+#: insurance_web/services/notification_service.py:54
+#, fuzzy, python-format
+#| msgid "Error creating appointment: %(error)s"
+msgid "Error creating notification: %(error)s"
+msgstr "Erreur lors de la création du rendez-vous : %(error)s"
+
+#: insurance_web/services/notification_service.py:77
+#, python-format
+msgid "Nouvelle demande de rendez-vous de %(client)s pour %(appointment)s"
+msgstr ""
+
+#: insurance_web/services/notification_service.py:89
+#, fuzzy, python-format
+#| msgid "Error creating appointment: %(error)s"
+msgid "Error creating appointment request notification: %(error)s"
+msgstr "Erreur lors de la création du rendez-vous : %(error)s"
+
+#: insurance_web/services/notification_service.py:95
+#, fuzzy, python-format
+#| msgid "Failed to create appointment: %(error)s"
+msgid "Failed to create appointment request notification: %(error)s"
+msgstr "Échec de la création du rendez-vous : %(error)s"
+
+#: insurance_web/services/notification_service.py:115
+#, fuzzy, python-format
+#| msgid "Invalid data: %(error)s"
+msgid "Invalid action: %(action)s"
+msgstr "Données invalides : %(error)s"
+
+#: insurance_web/services/notification_service.py:123
+#, fuzzy, python-format
+#| msgid "Appointment %(conseiller)s - %(client)s - %(date)s"
+msgid "Your appointment with %(conseiller)s on %(date)s has been confirmed."
+msgstr "Rendez-vous %(conseiller)s - %(client)s - %(date)s"
+
+#: insurance_web/services/notification_service.py:128
+#, fuzzy, python-format
+#| msgid "Appointment confirmed with %(name)s on %(date)s."
+msgid ""
+"Your appointment request with %(conseiller)s on %(date)s has been rejected."
+msgstr "Rendez-vous confirmé avec %(name)s le %(date)s."
+
+#: insurance_web/services/notification_service.py:133
+#, python-format
+msgid "Reason: %(reason)s"
+msgstr ""
+
+#: insurance_web/services/notification_service.py:143
+#, fuzzy, python-format
+#| msgid "Error creating appointment: %(error)s"
+msgid "Error creating appointment response notification: %(error)s"
+msgstr "Erreur lors de la création du rendez-vous : %(error)s"
+
+#: insurance_web/services/notification_service.py:153
+#, fuzzy, python-format
+#| msgid "Failed to create appointment: %(error)s"
+msgid "Failed to create appointment response notification: %(error)s"
+msgstr "Échec de la création du rendez-vous : %(error)s"
+
+#: insurance_web/services/notification_service.py:191
+#, fuzzy, python-format
+#| msgid "Error getting available slots: %(error)s"
+msgid "Error getting user notifications: %(error)s"
+msgstr "Erreur lors de la récupération des créneaux disponibles : %(error)s"
+
+#: insurance_web/services/notification_service.py:199
+#, fuzzy, python-format
+#| msgid "Failed to create prediction: %(error)s"
+msgid "Failed to get user notifications: %(error)s"
+msgstr "Échec de la création de la prédiction : %(error)s"
+
+#: insurance_web/services/notification_service.py:223
+msgid "Notification marked as read"
+msgstr ""
+
+#: insurance_web/services/notification_service.py:231
+msgid "Notification not found or you don't have permission to access it"
+msgstr ""
+
+#: insurance_web/services/notification_service.py:234
+#, fuzzy, python-format
+#| msgid "Error creating prediction for user %(id)s: %(error)s"
+msgid "Error marking notification as read: %(error)s"
+msgstr ""
+"Erreur lors de la création de la prédiction pour l'utilisateur %(id)s : "
+"%(error)s"
+
+#: insurance_web/services/notification_service.py:241
+#: insurance_web/views/conseiller_views.py:266
+#, fuzzy, python-format
+#| msgid "Failed to load prediction model: %(error)s"
+msgid "Failed to mark notification as read: %(error)s"
+msgstr "Échec du chargement du modèle de prédiction : %(error)s"
+
+#: insurance_web/services/notification_service.py:257
+msgid "All notifications marked as read"
+msgstr ""
+
+#: insurance_web/services/notification_service.py:266
+#, fuzzy, python-format
+#| msgid "Error creating prediction for user %(id)s: %(error)s"
+msgid "Error marking all notifications as read: %(error)s"
+msgstr ""
+"Erreur lors de la création de la prédiction pour l'utilisateur %(id)s : "
+"%(error)s"
+
+#: insurance_web/services/notification_service.py:272
+#: insurance_web/views/conseiller_views.py:279
+#, fuzzy, python-format
+#| msgid "Failed to create prediction: %(error)s"
+msgid "Failed to mark all notifications as read: %(error)s"
+msgstr "Échec de la création de la prédiction : %(error)s"
 
 #: insurance_web/services/prediction_service.py:27
 #: insurance_web/services/prediction_service.py:30
@@ -364,12 +700,14 @@ msgstr "Échec du calcul de la prime d'assurance : %(error)s"
 msgid "User must have a profile"
 msgstr "L'utilisateur doit avoir un profil"
 
-#: insurance_web/services/prediction_service.py:137
+#: insurance_web/services/prediction_service.py:144
 #, python-format
 msgid "Error creating prediction for user %(id)s: %(error)s"
-msgstr "Erreur lors de la création de la prédiction pour l'utilisateur %(id)s : %(error)s"
+msgstr ""
+"Erreur lors de la création de la prédiction pour l'utilisateur %(id)s : "
+"%(error)s"
 
-#: insurance_web/services/prediction_service.py:141
+#: insurance_web/services/prediction_service.py:148
 #, python-format
 msgid "Failed to create prediction: %(error)s"
 msgstr "Échec de la création de la prédiction : %(error)s"
@@ -407,94 +745,121 @@ msgstr "Le compte de %(name)s a été supprimé définitivement."
 msgid "Welcome %(name)s!"
 msgstr "Bienvenue %(name)s !"
 
-#: insurance_web/views/conseiller_views.py:87
+#: insurance_web/views/conseiller_views.py:110
 #, python-format
 msgid "Estimated premium: %(amount).2f € per year"
 msgstr "Prime estimée : %(amount).2f € par an"
 
-#: insurance_web/views/conseiller_views.py:89
-#: insurance_web/views/user_views.py:73
+#: insurance_web/views/conseiller_views.py:112
+#: insurance_web/views/user_views.py:143
 #, python-format
 msgid "Invalid data: %(error)s"
 msgstr "Données invalides : %(error)s"
 
-#: insurance_web/views/conseiller_views.py:92
-#: insurance_web/views/user_views.py:76
+#: insurance_web/views/conseiller_views.py:115
+#: insurance_web/views/user_views.py:146
 msgid "Prediction service is temporarily unavailable. Please try again later."
-msgstr "Le service de prédiction est temporairement indisponible. Veuillez réessayer plus tard."
+msgstr ""
+"Le service de prédiction est temporairement indisponible. Veuillez réessayer "
+"plus tard."
 
-#: insurance_web/views/conseiller_views.py:95
+#: insurance_web/views/conseiller_views.py:118
+#: insurance_web/views/conseiller_views.py:295
+#: insurance_web/views/conseiller_views.py:312
 #, python-format
 msgid "An error occurred: %(error)s"
 msgstr "Une erreur s'est produite : %(error)s"
 
-#: insurance_web/views/conseiller_views.py:162
+#: insurance_web/views/conseiller_views.py:185
 msgid "January"
 msgstr "Janvier"
 
-#: insurance_web/views/conseiller_views.py:162
+#: insurance_web/views/conseiller_views.py:185
 msgid "February"
 msgstr "Février"
 
-#: insurance_web/views/conseiller_views.py:162
+#: insurance_web/views/conseiller_views.py:185
 msgid "March"
 msgstr "Mars"
 
-#: insurance_web/views/conseiller_views.py:162
+#: insurance_web/views/conseiller_views.py:185
 msgid "April"
 msgstr "Avril"
 
-#: insurance_web/views/conseiller_views.py:162
+#: insurance_web/views/conseiller_views.py:185
 msgid "May"
 msgstr "Mai"
 
-#: insurance_web/views/conseiller_views.py:162
+#: insurance_web/views/conseiller_views.py:185
 msgid "June"
 msgstr "Juin"
 
-#: insurance_web/views/conseiller_views.py:163
+#: insurance_web/views/conseiller_views.py:186
 msgid "July"
 msgstr "Juillet"
 
-#: insurance_web/views/conseiller_views.py:163
+#: insurance_web/views/conseiller_views.py:186
 msgid "August"
 msgstr "Août"
 
-#: insurance_web/views/conseiller_views.py:163
+#: insurance_web/views/conseiller_views.py:186
 msgid "September"
 msgstr "Septembre"
 
-#: insurance_web/views/conseiller_views.py:163
+#: insurance_web/views/conseiller_views.py:186
 msgid "October"
 msgstr "Octobre"
 
-#: insurance_web/views/conseiller_views.py:163
+#: insurance_web/views/conseiller_views.py:186
 msgid "November"
 msgstr "Novembre"
 
-#: insurance_web/views/conseiller_views.py:163
+#: insurance_web/views/conseiller_views.py:186
 msgid "December"
 msgstr "Décembre"
 
-#: insurance_web/views/user_views.py:71
+#: insurance_web/views/conseiller_views.py:262
+msgid "Notification marked as read."
+msgstr ""
+
+#: insurance_web/views/conseiller_views.py:277
+#, python-format
+msgid "%(count)s notification(s) marked as read."
+msgstr ""
+
+#: insurance_web/views/conseiller_views.py:291
+msgid "Appointment accepted successfully."
+msgstr ""
+
+#: insurance_web/views/conseiller_views.py:308
+msgid "Appointment rejected successfully."
+msgstr ""
+
+#: insurance_web/views/user_views.py:72 insurance_web/views/user_views.py:103
+msgid "Votre profil à été mis à jour avec succès."
+msgstr ""
+
+#: insurance_web/views/user_views.py:141
 #, python-format
 msgid "Your estimated insurance premium is %(amount).2f € per year."
 msgstr "Votre prime d'assurance estimée est de %(amount).2f € par an."
 
-#: insurance_web/views/user_views.py:79
+#: insurance_web/views/user_views.py:149
 #, python-format
 msgid "An error occurred while processing your prediction: %(error)s"
-msgstr "Une erreur s'est produite lors du traitement de votre prédiction : %(error)s"
+msgstr ""
+"Une erreur s'est produite lors du traitement de votre prédiction : %(error)s"
 
-#: insurance_web/views/user_views.py:179
+#: insurance_web/views/user_views.py:247
 #, python-format
 msgid "Appointment confirmed with %(name)s on %(date)s."
 msgstr "Rendez-vous confirmé avec %(name)s le %(date)s."
 
-#: insurance_web/views/user_views.py:188
+#: insurance_web/views/user_views.py:256
 #, python-format
 msgid "An error occurred while creating the appointment: %(error)s"
-msgstr "Une erreur s'est produite lors de la création du rendez-vous : %(error)s"
+msgstr ""
+"Une erreur s'est produite lors de la création du rendez-vous : %(error)s"
 
 #: templates/admin/change_user_role.html:4
 #: templates/admin/change_user_role.html:15
@@ -526,8 +891,9 @@ msgid "Administrateur"
 msgstr "Administrateur"
 
 #: templates/admin/change_user_role.html:43 templates/admin/delete_user.html:62
-#: templates/admin/user_management.html:83 templates/base.html:280
-#: templates/my_appointments.html:32 templates/my_appointments.html:97
+#: templates/admin/user_management.html:83 templates/base.html:238
+#: templates/my_appointments.html:32 templates/my_appointments.html:113
+#: templates/my_appointments.html:194
 msgid "Conseiller"
 msgstr "Conseiller"
 
@@ -536,11 +902,15 @@ msgid "Nouveau Rôle"
 msgstr "Nouveau Rôle"
 
 #: templates/admin/change_user_role.html:85 templates/admin/delete_user.html:96
+#: templates/authentification/edit_profile.html:120
+#: templates/authentification/profile.html:35
 #: templates/create_appointment.html:88
 msgid "Annuler"
 msgstr "Annuler"
 
 #: templates/admin/change_user_role.html:88
+#: templates/authentification/edit_profile.html:123
+#: templates/authentification/profile.html:157
 msgid "Enregistrer les Modifications"
 msgstr "Enregistrer les Modifications"
 
@@ -676,7 +1046,8 @@ msgstr "Rôle"
 msgid "Date d'Inscription"
 msgstr "Date d'Inscription"
 
-#: templates/admin/user_management.html:49
+#: templates/admin/user_management.html:49 templates/my_appointments.html:35
+#: templates/my_appointments.html:116
 msgid "Statut"
 msgstr "Statut"
 
@@ -713,8 +1084,34 @@ msgstr "Supprimer le Compte"
 msgid "Aucun utilisateur trouvé."
 msgstr "Aucun utilisateur trouvé."
 
+#: templates/authentification/edit_profile.html:4
+#: templates/authentification/edit_profile.html:10
+#: templates/authentification/profile.html:34
+#: templates/authentification/profile.html:181
+#, fuzzy
+#| msgid "Mon Profil"
+msgid "Modifier le Profil"
+msgstr "Mon Profil"
+
+#: templates/authentification/edit_profile.html:13
+#, fuzzy
+#| msgid "Informations Personnelles"
+msgid "Mettez à jour vos informations personnelles"
+msgstr "Informations Personnelles"
+
+#: templates/authentification/edit_profile.html:40
+#: templates/authentification/profile.html:80 templates/predict.html:58
+msgid "Informations Personnelles"
+msgstr "Informations Personnelles"
+
+#: templates/authentification/edit_profile.html:114
+msgid ""
+"Ces informations seront utilisées pour pré-remplir le formulaire de "
+"prédiction."
+msgstr ""
+
 #: templates/authentification/login.html:4
-#: templates/authentification/login.html:17 templates/base.html:430
+#: templates/authentification/login.html:17 templates/base.html:366
 msgid "Connexion"
 msgstr "Connexion"
 
@@ -743,60 +1140,109 @@ msgid "Se Connecter"
 msgstr "Se Connecter"
 
 #: templates/authentification/profile.html:4
+#: templates/authentification/profile.html:9
 msgid "Mon Profil"
 msgstr "Mon Profil"
 
-#: templates/authentification/profile.html:15
-msgid "Email non fourni"
-msgstr "Email non fourni"
+#: templates/authentification/profile.html:10
+#, fuzzy
+#| msgid "Informations Personnelles"
+msgid "Gérez vos informations personnelles"
+msgstr "Informations Personnelles"
 
-#: templates/authentification/profile.html:34
+#: templates/authentification/profile.html:43
+#, fuzzy
+#| msgid "Informations Client"
+msgid "Informations de Compte"
+msgstr "Informations Client"
+
+#: templates/authentification/profile.html:187
 msgid "Nom Complet"
 msgstr "Nom Complet"
 
-#: templates/authentification/profile.html:35
-#: templates/authentification/profile.html:49
+#: templates/authentification/profile.html:188
+#: templates/authentification/profile.html:193
 msgid "Non fourni"
 msgstr "Non fourni"
 
-#: templates/authentification/profile.html:63
+#: templates/authentification/profile.html:198
+msgid "Âge"
+msgstr ""
+
+#: templates/authentification/profile.html:199
+#: templates/authentification/profile.html:204
+#: templates/authentification/profile.html:209
+#: templates/authentification/profile.html:219
+#: templates/authentification/profile.html:224
+msgid "Non renseigné"
+msgstr ""
+
+#: templates/authentification/profile.html:203
+msgid "Genre"
+msgstr ""
+
+#: templates/authentification/profile.html:208
+msgid "IMC"
+msgstr ""
+
+#: templates/authentification/profile.html:213
+msgid "Nombre d'Enfants"
+msgstr ""
+
+#: templates/authentification/profile.html:218
+msgid "Fumeur"
+msgstr ""
+
+#: templates/authentification/profile.html:223
+#, fuzzy
+#| msgid "Region"
+msgid "Région"
+msgstr "Région"
+
+#: templates/authentification/profile.html:229
+#, fuzzy
+#| msgid "Informations Client"
+msgid "Informations Complémentaires"
+msgstr "Informations Client"
+
+#: templates/authentification/profile.html:235
 msgid "Membre Depuis"
 msgstr "Membre Depuis"
 
-#: templates/authentification/profile.html:74
+#: templates/authentification/profile.html:247
 msgid "Historique des Prédictions"
 msgstr "Historique des Prédictions"
 
-#: templates/authentification/profile.html:77
+#: templates/authentification/profile.html:250
 #, python-format
 msgid "%(count)s prédiction%(count|pluralize)s"
 msgstr "%(count)s prédiction%(count|pluralize)s"
 
-#: templates/authentification/profile.html:94
+#: templates/authentification/profile.html:268
 msgid "Montant Prédit"
 msgstr "Montant Prédit"
 
-#: templates/authentification/profile.html:98
+#: templates/authentification/profile.html:272
 msgid "Date"
 msgstr "Date"
 
-#: templates/authentification/profile.html:105
+#: templates/authentification/profile.html:279
 msgid "Créé par :"
 msgstr "Créé par :"
 
-#: templates/authentification/profile.html:119
-#: templates/authentification/profile.html:121
-#: templates/authentification/profile.html:145
+#: templates/authentification/profile.html:293
+#: templates/authentification/profile.html:295
+#: templates/authentification/profile.html:319
 msgid "Précédent"
 msgstr "Précédent"
 
-#: templates/authentification/profile.html:124
-#: templates/authentification/profile.html:126
-#: templates/authentification/profile.html:162
+#: templates/authentification/profile.html:298
+#: templates/authentification/profile.html:300
+#: templates/authentification/profile.html:336
 msgid "Suivant"
 msgstr "Suivant"
 
-#: templates/authentification/profile.html:132
+#: templates/authentification/profile.html:306
 #, python-format
 msgid ""
 "Affichage de <span class=\"font-semibold\">%(start)s</span> à <span "
@@ -807,23 +1253,23 @@ msgstr ""
 "class=\"font-semibold\">%(end)s</span> sur <span class=\"font-"
 "semibold\">%(count)s</span> résultats"
 
-#: templates/authentification/profile.html:139
+#: templates/authentification/profile.html:313
 msgid "Premier"
 msgstr "Premier"
 
-#: templates/authentification/profile.html:168
+#: templates/authentification/profile.html:342
 msgid "Dernier"
 msgstr "Dernier"
 
-#: templates/authentification/profile.html:187
+#: templates/authentification/profile.html:361
 msgid "Aucune Prédiction"
 msgstr "Aucune Prédiction"
 
-#: templates/authentification/profile.html:188
+#: templates/authentification/profile.html:362
 msgid "Faites votre première prédiction pour la voir ici."
 msgstr "Faites votre première prédiction pour la voir ici."
 
-#: templates/authentification/profile.html:190
+#: templates/authentification/profile.html:364
 msgid "Faire Ma Première Prédiction"
 msgstr "Faire Ma Première Prédiction"
 
@@ -868,116 +1314,116 @@ msgstr "Très Fort"
 msgid "Assurement - Prédiction de Primes d'Assurance"
 msgstr "Assurement - Prédiction de Primes d'Assurance"
 
-#: templates/base.html:252 templates/base.html:285
+#: templates/base.html:210 templates/base.html:243
 msgid "Tableau de bord"
 msgstr "Tableau de bord"
 
-#: templates/base.html:259
+#: templates/base.html:217
 msgid "Prédire une prime"
 msgstr "Prédire une prime"
 
-#: templates/base.html:267
+#: templates/base.html:225
 msgid "Prendre rendez-vous"
 msgstr "Prendre rendez-vous"
 
-#: templates/base.html:274 templates/my_appointments.html:4
+#: templates/base.html:232 templates/my_appointments.html:4
 #: templates/my_appointments.html:10
 msgid "Mes rendez-vous"
 msgstr "Mes rendez-vous"
 
-#: templates/base.html:291
+#: templates/base.html:249
 msgid "Prédire pour un client"
 msgstr "Prédire pour un client"
 
-#: templates/base.html:297 templates/conseiller/calendar.html:4
+#: templates/base.html:255 templates/conseiller/calendar.html:4
 msgid "Calendrier"
 msgstr "Calendrier"
 
-#: templates/base.html:303
+#: templates/base.html:261
 msgid "Clients"
 msgstr "Clients"
 
-#: templates/base.html:310
+#: templates/base.html:268
 msgid "Administration"
 msgstr "Administration"
 
-#: templates/base.html:315
+#: templates/base.html:273
 msgid "Tableau de bord administration"
 msgstr "Tableau de bord administration"
 
-#: templates/base.html:321
+#: templates/base.html:279
 msgid "Gestion des utilisateurs"
 msgstr "Gestion des utilisateurs"
 
-#: templates/base.html:330
+#: templates/base.html:298
 msgid "Mon profil"
 msgstr "Mon profil"
 
-#: templates/base.html:337
+#: templates/base.html:305
 msgid "Connecté en tant que :"
 msgstr "Connecté en tant que :"
 
-#: templates/base.html:369
+#: templates/base.html:320
 msgid "Se déconnecter"
 msgstr "Se déconnecter"
 
-#: templates/base.html:392 templates/base.html:483
+#: templates/base.html:343 templates/base.html:419
 msgid "© 2026 Assurement. Tous droits réservés."
 msgstr "© 2026 Assurement. Tous droits réservés."
 
-#: templates/base.html:433
+#: templates/base.html:369
 msgid "Commencer"
 msgstr "Commencer"
 
-#: templates/base.html:455
+#: templates/base.html:391
 msgid "Plateforme de prédiction de primes d'assurance."
 msgstr "Plateforme de prédiction de primes d'assurance."
 
-#: templates/base.html:458
+#: templates/base.html:394
 msgid "Produit"
 msgstr "Produit"
 
-#: templates/base.html:460
+#: templates/base.html:396
 msgid "Fonctionnalités"
 msgstr "Fonctionnalités"
 
-#: templates/base.html:461
+#: templates/base.html:397
 msgid "Tarification"
 msgstr "Tarification"
 
-#: templates/base.html:462
+#: templates/base.html:398
 msgid "Documentation"
 msgstr "Documentation"
 
-#: templates/base.html:466
+#: templates/base.html:402
 msgid "Entreprise"
 msgstr "Entreprise"
 
-#: templates/base.html:468
+#: templates/base.html:404
 msgid "À propos"
 msgstr "À propos"
 
-#: templates/base.html:469
+#: templates/base.html:405
 msgid "Blog"
 msgstr "Blog"
 
-#: templates/base.html:470
+#: templates/base.html:406
 msgid "Contact"
 msgstr "Contact"
 
-#: templates/base.html:474
+#: templates/base.html:410
 msgid "Légal"
 msgstr "Légal"
 
-#: templates/base.html:476
+#: templates/base.html:412
 msgid "Confidentialité"
 msgstr "Confidentialité"
 
-#: templates/base.html:477
+#: templates/base.html:413
 msgid "Conditions"
 msgstr "Conditions"
 
-#: templates/base.html:478
+#: templates/base.html:414
 msgid "Sécurité"
 msgstr "Sécurité"
 
@@ -1040,11 +1486,28 @@ msgstr "+%(count)s autre%(count|pluralize)s"
 msgid "Tous les Rendez-vous pour %(name)s %(y)s"
 msgstr "Tous les Rendez-vous pour %(name)s %(y)s"
 
-#: templates/conseiller/calendar.html:123
+#: templates/conseiller/calendar.html:103 templates/my_appointments.html:69
+#: templates/my_appointments.html:150
+msgid "En attente"
+msgstr ""
+
+#: templates/conseiller/calendar.html:107 templates/my_appointments.html:73
+#: templates/my_appointments.html:154
+msgid "Confirmé"
+msgstr ""
+
+#: templates/conseiller/calendar.html:111 templates/my_appointments.html:77
+#: templates/my_appointments.html:158
+#, fuzzy
+#| msgid "Annuler"
+msgid "Annulé"
+msgstr "Annuler"
+
+#: templates/conseiller/calendar.html:136
 msgid "Aucun Rendez-vous"
 msgstr "Aucun Rendez-vous"
 
-#: templates/conseiller/calendar.html:124
+#: templates/conseiller/calendar.html:137
 msgid "Vous n'avez aucun rendez-vous programmé pour ce mois."
 msgstr "Vous n'avez aucun rendez-vous programmé pour ce mois."
 
@@ -1078,7 +1541,7 @@ msgstr "%(age)s ans"
 #: templates/conseiller/clients_list.html:70
 #: templates/conseiller/clients_list.html:129
 #: templates/conseiller/clients_list.html:146
-#: templates/conseiller/dashboard.html:108
+#: templates/conseiller/dashboard.html:154
 msgid "Faire une Prédiction"
 msgstr "Faire une Prédiction"
 
@@ -1112,34 +1575,60 @@ msgid "Total Rendez-vous"
 msgstr "Total Rendez-vous"
 
 #: templates/conseiller/dashboard.html:31
-msgid "À Venir"
-msgstr "À Venir"
+msgid "À venir"
+msgstr "À venir"
 
 #: templates/conseiller/dashboard.html:47
 msgid "Nouvelle Prédiction"
 msgstr "Nouvelle Prédiction"
 
-#: templates/conseiller/dashboard.html:62
-msgid "Rendez-vous à Venir"
-msgstr "Rendez-vous à Venir"
-
 #: templates/conseiller/dashboard.html:64
+#, fuzzy
+#| msgid "Rendez-vous à Venir"
+msgid "Rendez-vous en Attente"
+msgstr "Rendez-vous en Attente"
+
+#: templates/conseiller/dashboard.html:66
+#, fuzzy, python-format
+#| msgid "%(count)s à venir"
+msgid "%(count)s en attente"
+msgstr "%(count)s à venir"
+
+#: templates/conseiller/dashboard.html:89 templates/notifications/list.html:71
+msgid "Accepter"
+msgstr ""
+
+#: templates/conseiller/dashboard.html:92 templates/notifications/list.html:76
+#, fuzzy
+#| msgid "Êtes-vous sûr de vouloir désactiver ce compte ?"
+msgid "Êtes-vous sûr de vouloir refuser ce rendez-vous ?"
+msgstr "Êtes-vous sûr de vouloir désactiver ce compte ?"
+
+#: templates/conseiller/dashboard.html:95 templates/notifications/list.html:77
+msgid "Refuser"
+msgstr ""
+
+#: templates/conseiller/dashboard.html:108
+msgid "Rendez-vous à venir"
+msgstr "Rendez-vous à venir"
+
+#: templates/conseiller/dashboard.html:110
 msgid "Voir Tout"
 msgstr "Voir Tout"
 
-#: templates/conseiller/dashboard.html:97
+#: templates/conseiller/dashboard.html:143
 msgid "Aucun rendez-vous à venir"
 msgstr "Aucun rendez-vous à venir"
 
-#: templates/conseiller/dashboard.html:104
+#: templates/conseiller/dashboard.html:150
 msgid "Navigation Rapide"
 msgstr "Navigation Rapide"
 
-#: templates/conseiller/dashboard.html:111
+#: templates/conseiller/dashboard.html:157
 msgid "Voir le Calendrier"
 msgstr "Voir le Calendrier"
 
-#: templates/conseiller/dashboard.html:114
+#: templates/conseiller/dashboard.html:160
 msgid "Gérer les Clients"
 msgstr "Gérer les Clients"
 
@@ -1176,7 +1665,7 @@ msgstr "Informations Client"
 msgid "(Poids en kg / (Taille en m)²)"
 msgstr "(Poids en kg / (Taille en m)²)"
 
-#: templates/conseiller/predict_for_client.html:125 templates/predict.html:135
+#: templates/conseiller/predict_for_client.html:125 templates/predict.html:148
 msgid "Calculer la Prime"
 msgstr "Calculer la Prime"
 
@@ -1377,38 +1866,105 @@ msgstr "Rendez-vous à venir"
 msgid "%(count)s à venir"
 msgstr "%(count)s à venir"
 
-#: templates/my_appointments.html:33 templates/my_appointments.html:98
+#: templates/my_appointments.html:33 templates/my_appointments.html:114
+#: templates/my_appointments.html:195
 msgid "Date et Heure"
 msgstr "Date et Heure"
 
-#: templates/my_appointments.html:34 templates/my_appointments.html:99
+#: templates/my_appointments.html:34 templates/my_appointments.html:115
+#: templates/my_appointments.html:196
 msgid "Durée"
 msgstr "Durée"
 
-#: templates/my_appointments.html:70 templates/my_appointments.html:135
+#: templates/my_appointments.html:86 templates/my_appointments.html:167
+#: templates/my_appointments.html:232
 msgid "Aucune note"
 msgstr "Aucune note"
 
-#: templates/my_appointments.html:87
+#: templates/my_appointments.html:103
 msgid "Rendez-vous passés"
 msgstr "Rendez-vous passés"
 
-#: templates/my_appointments.html:89
+#: templates/my_appointments.html:105
 #, python-format
 msgid "%(count)s passé%(count|pluralize)s"
 msgstr "%(count)s passé%(count|pluralize)s"
 
-#: templates/my_appointments.html:155
+#: templates/my_appointments.html:184
+#, fuzzy
+#| msgid "Rendez-vous passés"
+msgid "Rendez-vous annulés"
+msgstr "Rendez-vous passés"
+
+#: templates/my_appointments.html:186
+#, fuzzy, python-format
+#| msgid "%(count)s passé%(count|pluralize)s"
+msgid "%(count)s annulé%(count|pluralize)s"
+msgstr "%(count)s passé%(count|pluralize)s"
+
+#: templates/my_appointments.html:252
 msgid "Aucun rendez-vous"
 msgstr "Aucun rendez-vous"
 
-#: templates/my_appointments.html:156
+#: templates/my_appointments.html:253
 msgid "Vous n'avez aucun rendez-vous programmé."
 msgstr "Vous n'avez aucun rendez-vous programmé."
 
-#: templates/my_appointments.html:158
+#: templates/my_appointments.html:255
 msgid "Prendre votre premier rendez-vous"
 msgstr "Prendre votre premier rendez-vous"
+
+#: templates/notifications/list.html:11
+#, fuzzy
+#| msgid "Gérez vos clients et leurs prédictions"
+msgid "Gérez vos notifications"
+msgstr "Gérez vos clients et leurs prédictions"
+
+#: templates/notifications/list.html:17
+msgid "Tout marquer comme lu"
+msgstr ""
+
+#: templates/notifications/list.html:25
+msgid "Toutes"
+msgstr ""
+
+#: templates/notifications/list.html:28
+msgid "Non lues"
+msgstr ""
+
+#: templates/notifications/list.html:63
+msgid "ago"
+msgstr ""
+
+#: templates/notifications/list.html:82
+#, fuzzy
+#| msgid "Confirmer le Rendez-vous"
+msgid "Voir le rendez-vous"
+msgstr "Confirmer le Rendez-vous"
+
+#: templates/notifications/list.html:92
+msgid "Marquer comme lu"
+msgstr ""
+
+#: templates/notifications/list.html:114
+msgid "Aucune notification non lue"
+msgstr ""
+
+#: templates/notifications/list.html:116
+#, fuzzy
+#| msgid "Aucune Prédiction"
+msgid "Aucune notification"
+msgstr "Aucune Prédiction"
+
+#: templates/notifications/list.html:121
+msgid "Vous avez lu toutes vos notifications."
+msgstr ""
+
+#: templates/notifications/list.html:123
+#, fuzzy
+#| msgid "Vous n'avez aucun rendez-vous programmé pour ce mois."
+msgid "Vous n'avez aucune notification pour le moment."
+msgstr "Vous n'avez aucun rendez-vous programmé pour ce mois."
 
 #: templates/predict.html:4
 msgid "Prediction de Prime"
@@ -1438,24 +1994,29 @@ msgstr ""
 "Cette estimation est basée sur les informations fournies et peut varier "
 "selon les conditions finales du contrat."
 
-#: templates/predict.html:58
-msgid "Informations Personnelles"
-msgstr "Informations Personnelles"
+#: templates/predict.html:142
+msgid ""
+"Vous pouvez ajouter des informations complémentaires qui seront sauvegardées "
+"dans votre profil pour les prochaines fois."
+msgstr ""
 
-#: templates/predict.html:147
+#: templates/predict.html:160
 msgid "Note :"
 msgstr "Note :"
 
-#: templates/predict.html:147
+#: templates/predict.html:160
 msgid ""
 "Cette estimation est indicative et ne constitue pas une offre contractuelle."
 msgstr ""
 "Cette estimation est indicative et ne constitue pas une offre contractuelle."
 
-#: templates/predict.html:148
+#: templates/predict.html:161
 msgid ""
 "Le montant final de la prime peut varier selon les conditions spécifiques du "
 "contrat et la vérification de l'assureur."
 msgstr ""
 "Le montant final de la prime peut varier selon les conditions spécifiques du "
 "contrat et la vérification de l'assureur."
+
+#~ msgid "Email non fourni"
+#~ msgstr "Email non fourni"

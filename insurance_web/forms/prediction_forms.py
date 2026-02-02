@@ -79,11 +79,11 @@ class PredictionForm(forms.Form):
     )
     
     additional_info = forms.CharField(
-        label=_("Additional Information"),
+        label=_("Informations complémentaires"),
         required=False,
         widget=forms.Textarea(attrs={
             'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors',
-            'placeholder': _('Enter any additional information (optional)'),
+            'placeholder': _('Entrez des informations complémentaires (optionnel)'),
             'rows': 4
         })
     )

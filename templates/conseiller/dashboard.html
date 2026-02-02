@@ -14,7 +14,7 @@
         <div class="stat-card">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-xs font-medium text-gray-500 mb-2 uppercase tracking-wider">{% trans "Total Rendez-vous" %}</p>
+                    <p class="text-xs font-medium text-gray-500 mb-2 uppercase tracking-wider">{% trans "Total rendez-vous" %}</p>
                     <p class="text-3xl font-semibold text-gray-900">{{ total_appointments }}</p>
                 </div>
                 <div class="w-14 h-14 bg-gray-100 rounded flex items-center justify-center">
@@ -28,7 +28,7 @@
         <div class="stat-card">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-xs font-medium text-gray-500 mb-2 uppercase tracking-wider">{% trans "À Venir" %}</p>
+                    <p class="text-xs font-medium text-gray-500 mb-2 uppercase tracking-wider">{% trans "À venir" %}</p>
                     <p class="text-3xl font-semibold text-gray-900">{{ upcoming_appointments }}</p>
                 </div>
                 <div class="w-14 h-14 bg-gray-100 rounded flex items-center justify-center">
@@ -42,9 +42,9 @@
         <div class="stat-card">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-xs font-medium text-gray-500 mb-2 uppercase tracking-wider">{% trans "Actions Rapides" %}</p>
+                    <p class="text-xs font-medium text-gray-500 mb-2 uppercase tracking-wider">{% trans "Actions rapides" %}</p>
                     <a href="{% url 'insurance_web:conseiller_predict' %}" class="text-sm font-medium text-gray-900 hover:underline inline-flex items-center">
-                        {% trans "Nouvelle Prédiction" %}
+                        {% trans "Nouvelle prédiction" %}
                     </a>
                 </div>
                 <div class="w-14 h-14 bg-gray-100 rounded flex items-center justify-center">
@@ -61,7 +61,7 @@
         <div class="flex items-center justify-between mb-4">
             <div class="flex items-center">
                 <div class="w-1 h-6 bg-yellow-500 rounded-full mr-3"></div>
-                <h2 class="text-lg font-semibold text-gray-900">{% trans "Rendez-vous en Attente" %}</h2>
+                <h2 class="text-lg font-semibold text-gray-900">{% trans "Rendez-vous en attente" %}</h2>
                 <span class="ml-4 inline-flex items-center px-3 py-1 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
                     {% blocktrans with count=pending_appointments|length %}{{ count }} en attente{% endblocktrans %}
                 </span>
@@ -105,9 +105,9 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div class="card p-6">
             <div class="flex items-center justify-between mb-4">
-                <h2 class="text-lg font-semibold text-gray-900">{% trans "Rendez-vous à Venir" %}</h2>
+                <h2 class="text-lg font-semibold text-gray-900">{% trans "Rendez-vous à venir" %}</h2>
                 <a href="{% url 'insurance_web:conseiller_calendar' %}" class="text-sm font-medium text-gray-700 hover:underline inline-flex items-center">
-                    {% trans "Voir Tout" %}
+                    {% trans "Voir tout" %}
                 </a>
             </div>
             {% if next_appointments %}
@@ -147,17 +147,17 @@
 
         <div class="card p-6">
             <div class="flex items-center justify-between mb-4">
-                <h2 class="text-lg font-semibold text-gray-900">{% trans "Navigation Rapide" %}</h2>
+                <h2 class="text-lg font-semibold text-gray-900">{% trans "Navigation rapide" %}</h2>
             </div>
             <div class="space-y-3">
                 <a href="{% url 'insurance_web:conseiller_predict' %}" class="block w-full btn-primary text-center py-3">
-                    {% trans "Faire une Prédiction" %}
+                    {% trans "Faire une prédiction" %}
                 </a>
                 <a href="{% url 'insurance_web:conseiller_calendar' %}" class="block w-full btn-secondary text-center py-3">
                     {% trans "Voir le Calendrier" %}
                 </a>
                 <a href="{% url 'insurance_web:conseiller_clients' %}" class="block w-full btn-secondary text-center py-3">
-                    {% trans "Gérer les Clients" %}
+                    {% trans "Gérer les clients" %}
                 </a>
             </div>
         </div>

@@ -34,16 +34,13 @@ class ProfileView(UserProfileMixin, TemplateView):
         context['profile'] = self.request.user.profile
         context['edit_mode'] = self.request.GET.get('edit', 'false').lower() == 'true'
         
-        # Récupérer les prédictions avec pagination
         predictions = Prediction.objects.filter(user=self.request.user).order_by('-created_at')
         
-        # Pagination manuelle
         from django.core.paginator import Paginator
         paginator = Paginator(predictions, 10)
         page_number = self.request.GET.get('page', 1)
         context['predictions'] = paginator.get_page(page_number)
         
-        # Initialiser le formulaire avec les données du profil
         if context['edit_mode']:
             context['form'] = ProfileForm(user=self.request.user)
         else:
@@ -120,7 +117,7 @@ class PredictView(UserProfileMixin, FormView):
         return weight / (height ** 2)
     
     def form_valid(self, form):
-        form_data = form.cleaned_data
+        form_data = form.cleaned_data.copy()
         height = form_data['height']
         weight = form_data['weight']
         bmi = self.calculate_bmi(weight, height)
@@ -139,6 +136,11 @@ class PredictView(UserProfileMixin, FormView):
             )
             
             messages.success(self.request, _('Your estimated insurance premium is %(amount).2f € per year.') % {'amount': predicted_amount})
+            
+            context = self.get_context_data()
+            context['predicted_amount'] = predicted_amount
+            context['form'] = self.form_class(initial=form.cleaned_data)
+            return self.render_to_response(context)
         except InvalidPredictionDataError as e:
             messages.error(self.request, _('Invalid data: %(error)s') % {'error': str(e)})
             return self.form_invalid(form)
@@ -148,20 +150,12 @@ class PredictView(UserProfileMixin, FormView):
         except PredictionError as e:
             messages.error(self.request, _('An error occurred while processing your prediction: %(error)s') % {'error': str(e)})
             return self.form_invalid(form)
-        
-        return self.form_invalid(form)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['profile'] = self.request.user.profile
-        if self.request.method == 'POST':
-            form = self.get_form()
-            if form.is_valid():
-                try:
-                    form_data = form.cleaned_data
-                    context['predicted_amount'] = calculate_insurance_premium(form_data)
-                except (PredictionError, InvalidPredictionDataError, ModelNotFoundError):
-                    pass
+        if 'predicted_amount' in kwargs:
+            context['predicted_amount'] = kwargs['predicted_amount']
         return context
 
 

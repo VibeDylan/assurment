@@ -1,37 +1,20 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-{% block title %}{% trans "Mon Profil" %} - Assurement{% endblock %}
+{% block title %}{% trans "Mon profil" %} - Assurement{% endblock %}
 
 {% block content %}
 <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="mb-8">
-        <h1 class="text-3xl font-semibold text-gray-900 mb-2">{% trans "Mon Profil" %}</h1>
+        <h1 class="text-3xl font-semibold text-gray-900 mb-2">{% trans "Mon profil" %}</h1>
         <p class="text-base text-gray-600">{% trans "Gérez vos informations personnelles" %}</p>
     </div>
-
-    {% if messages %}
-        {% for message in messages %}
-            <div class="mb-6 p-4 rounded border {% if message.tags == 'success' %}bg-green-50 border-green-200 text-green-800{% else %}bg-red-50 border-red-200 text-red-800{% endif %}">
-                <div class="flex items-center">
-                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        {% if message.tags == 'success' %}
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        {% else %}
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        {% endif %}
-                    </svg>
-                    <p class="font-medium">{{ message }}</p>
-                </div>
-            </div>
-        {% endfor %}
-    {% endif %}
 
     {% if edit_mode %}
     <!-- Formulaire d'édition -->
     <div class="card p-8 mb-8">
         <div class="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
-            <h2 class="text-xl font-semibold text-gray-900">{% trans "Modifier le Profil" %}</h2>
+            <h2 class="text-xl font-semibold text-gray-900">{% trans "Modifier le profil" %}</h2>
             <a href="{% url 'insurance_web:profile' %}" class="text-sm text-gray-600 hover:text-gray-900">{% trans "Annuler" %}</a>
         </div>
         
@@ -77,7 +60,7 @@
 
             <div class="pt-4 border-t border-gray-200">
                 <h3 class="text-base font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-200">
-                    {% trans "Informations Personnelles" %}
+                    {% trans "Informations personnelles" %}
                 </h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
@@ -178,13 +161,13 @@
                 </div>
             </div>
             <a href="{% url 'insurance_web:profile' %}?edit=true" class="btn-primary px-6 py-2">
-                {% trans "Modifier le Profil" %}
+                {% trans "Modifier le profil" %}
             </a>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-                <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">{% trans "Nom Complet" %}</p>
+                <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">{% trans "Nom complet" %}</p>
                 <p class="text-base font-semibold text-gray-900">{{ user.get_full_name|default:_("Non fourni") }}</p>
             </div>
             
@@ -226,13 +209,13 @@
             
             {% if user.profile.additional_info %}
             <div class="md:col-span-2 pt-4 border-t border-gray-200">
-                <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">{% trans "Informations Complémentaires" %}</p>
+                <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">{% trans "Informations complémentaires" %}</p>
                 <p class="text-base text-gray-900 whitespace-pre-wrap">{{ user.profile.additional_info }}</p>
             </div>
             {% endif %}
             
             <div class="md:col-span-2 pt-4 border-t border-gray-200">
-                <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">{% trans "Membre Depuis" %}</p>
+                <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">{% trans "Membre depuis" %}</p>
                 <p class="text-base font-semibold text-gray-900">{{ user.profile.created_at|date:"d F Y" }}</p>
             </div>
             {% endif %}
@@ -244,7 +227,7 @@
     {% if predictions %}
     <div class="card p-8">
         <div class="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
-            <h2 class="text-xl font-semibold text-gray-900">{% trans "Historique des Prédictions" %}</h2>
+            <h2 class="text-xl font-semibold text-gray-900">{% trans "Historique des prédictions" %}</h2>
             {% if predictions.paginator.count > 0 %}
             <span class="inline-flex items-center px-3 py-1 rounded text-xs font-medium bg-gray-200 text-gray-700">
                 {% blocktrans with count=predictions.paginator.count %}{{ count }} prédiction{{ count|pluralize }}{% endblocktrans %}
@@ -265,7 +248,7 @@
                         <div class="flex-1">
                             <div class="flex items-center justify-between mb-2">
                                 <div>
-                                    <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">{% trans "Montant Prédit" %}</p>
+                                    <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">{% trans "Montant prédit" %}</p>
                                     <p class="text-3xl font-semibold text-gray-900 mt-1">{{ prediction.predicted_amount }} €</p>
                                 </div>
                                 <div class="text-right">
@@ -358,10 +341,10 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
             </svg>
         </div>
-        <h2 class="text-2xl font-semibold text-gray-900 mb-4">{% trans "Aucune Prédiction" %}</h2>
+        <h2 class="text-2xl font-semibold text-gray-900 mb-4">{% trans "Aucune prédiction" %}</h2>
         <p class="text-gray-600 mb-6">{% trans "Faites votre première prédiction pour la voir ici." %}</p>
         <a href="{% url 'insurance_web:predict' %}" class="inline-flex items-center btn-primary px-8 py-3">
-            {% trans "Faire Ma Première Prédiction" %}
+            {% trans "Faire ma première prédiction" %}
         </a>
     </div>
     {% endif %}

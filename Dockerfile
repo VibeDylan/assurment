@@ -2,9 +2,10 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
-# Installer les dépendances système pour PostgreSQL
+# Installer les dépendances système pour PostgreSQL et gettext (pour les traductions)
 RUN apt-get update && apt-get install -y \
     postgresql-client \
+    gettext \
     && rm -rf /var/lib/apt/lists/*
 
 # Installer setuptools et wheel pour compiler les packages

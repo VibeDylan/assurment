@@ -1,4 +1,5 @@
 from django.utils.translation import gettext as _
+from django.utils.formats import date_format
 from django.db import transaction
 from django.core.exceptions import ValidationError
 
@@ -72,9 +73,10 @@ def create_appointment_request_notification(appointment):
     """
     try:
         conseiller = appointment.conseiller
-        message = _("New appointment request from %(client)s for %(appointment)s") % {
+        appointment_date = appointment.date_time.strftime('%d/%m/%Y à %H:%M')
+        message = _("Nouvelle demande de rendez-vous de %(client)s pour %(appointment)s") % {
             'client': appointment.client.get_full_name() or appointment.client.email,
-            'appointment': appointment.date_time.strftime('%m/%d/%Y %H:%M')
+            'appointment': appointment_date
         }
         return create_notification(
             user=conseiller,

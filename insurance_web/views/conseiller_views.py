@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from datetime import datetime, timedelta
 from calendar import monthrange
 
-from ..models import User, Appointment
+from ..models import User, Appointment, Prediction
 from ..forms import PredictionForm
 from ..services import (
     calculate_insurance_premium,
@@ -87,27 +87,86 @@ class ConseillerPredictView(ConseillerRequiredMixin, UserProfileMixin, FormView)
         if 'client_id' in kwargs:
             self.client = get_object_or_404(User, id=kwargs['client_id'])
         else:
+            # Si aucun client_id dans l'URL, essayer de le récupérer depuis POST
             self.client = None
         return super().dispatch(request, *args, **kwargs)
     
+    def get_available_clients(self):
+        """Récupère la liste des clients disponibles pour ce conseiller"""
+        conseiller = self.request.user
+        if conseiller.profile.is_admin():
+            # Les admins peuvent prédire pour tous les utilisateurs sauf les conseillers et admins
+            return User.objects.exclude(id=conseiller.id).exclude(
+                profile__role__in=['conseiller', 'admin']
+            ).order_by('first_name', 'last_name', 'email')
+        else:
+            # Les conseillers ne peuvent prédire que pour leurs clients (ceux avec qui ils ont des rendez-vous)
+            # Utiliser values_list pour éviter les doublons, puis récupérer les utilisateurs
+            client_ids = Appointment.objects.filter(
+                conseiller=conseiller
+            ).values_list('client_id', flat=True).distinct()
+            
+            return User.objects.filter(id__in=client_ids).order_by('first_name', 'last_name', 'email')
+    
     def get_initial(self):
+        initial = {}
         if self.client and self.client.profile:
-            return get_profile_initial_data(self.client.profile)
-        return {}
+            initial = get_profile_initial_data(self.client.profile)
+        return initial
+    
+    def calculate_bmi(self, weight, height):
+        """Calcule le BMI à partir du poids et de la taille"""
+        return weight / (height ** 2)
     
     def form_valid(self, form):
-        form_data = form.cleaned_data
+        form_data = form.cleaned_data.copy()
+        
+        # Récupérer le client sélectionné depuis le formulaire ou l'URL
+        client_id = self.request.POST.get('client_id') or (self.client.id if self.client else None)
+        
+        if not client_id:
+            messages.error(self.request, _('Please select a client.'))
+            return self.form_invalid(form)
+        
+        try:
+            selected_client = User.objects.get(id=client_id)
+        except User.DoesNotExist:
+            messages.error(self.request, _('Selected client does not exist.'))
+            return self.form_invalid(form)
+        
+        # Calculer le BMI à partir de height et weight
+        height = form_data['height']
+        weight = form_data['weight']
+        bmi = self.calculate_bmi(weight, height)
+        form_data['bmi'] = bmi
+        
+        # Supprimer height et weight car le service attend seulement bmi
+        del form_data['height']
+        del form_data['weight']
+        
         try:
             predicted_amount = calculate_insurance_premium(form_data)
             
             create_prediction(
-                user=self.client,
+                user=selected_client,
                 created_by=self.request.user,
                 form_data=form_data,
                 predicted_amount=predicted_amount
             )
             
-            messages.success(self.request, _('Estimated premium: %(amount).2f € per year') % {'amount': predicted_amount})
+            creator_name = self.request.user.get_full_name() or self.request.user.email
+            client_name = selected_client.get_full_name() or selected_client.email
+            messages.success(
+                self.request, 
+                _('Prediction created successfully for %(client)s. Estimated premium: %(amount).2f € per year. (Predicted by %(creator)s)') % {
+                    'client': client_name,
+                    'amount': predicted_amount,
+                    'creator': creator_name
+                }
+            )
+            
+            # Rediriger vers la même page avec le client sélectionné pour permettre une nouvelle prédiction
+            return redirect('insurance_web:conseiller_predict_client', client_id=selected_client.id)
         except InvalidPredictionDataError as e:
             messages.error(self.request, _('Invalid data: %(error)s') % {'error': str(e)})
             return self.form_invalid(form)
@@ -117,17 +176,25 @@ class ConseillerPredictView(ConseillerRequiredMixin, UserProfileMixin, FormView)
         except PredictionError as e:
             messages.error(self.request, _('An error occurred: %(error)s') % {'error': str(e)})
             return self.form_invalid(form)
-        
-        return self.form_invalid(form)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['client'] = self.client
+        context['available_clients'] = self.get_available_clients()
+        
         if self.request.method == 'POST':
             form = self.get_form()
             if form.is_valid():
                 try:
-                    form_data = form.cleaned_data
+                    form_data = form.cleaned_data.copy()
+                    # Calculer le BMI à partir de height et weight
+                    height = form_data['height']
+                    weight = form_data['weight']
+                    bmi = self.calculate_bmi(weight, height)
+                    form_data['bmi'] = bmi
+                    # Supprimer height et weight car le service attend seulement bmi
+                    del form_data['height']
+                    del form_data['weight']
                     context['predicted_amount'] = calculate_insurance_premium(form_data)
                 except (PredictionError, InvalidPredictionDataError, ModelNotFoundError):
                     pass
@@ -210,23 +277,138 @@ class ConseillerClientsListView(ConseillerRequiredMixin, UserProfileMixin, Templ
         conseiller = self.request.user
         
         if conseiller.profile.is_admin():
+            # Les admins voient tous les clients avec rendez-vous et tous les utilisateurs
             clients_with_appointments = User.objects.filter(
                 appointments_as_client__isnull=False
             ).distinct()
             all_users = User.objects.exclude(id=conseiller.id).exclude(profile__role='conseiller')
+            context.update({
+                'clients': clients_with_appointments,
+                'all_users': all_users,
+            })
         else:
-            clients_with_appointments = User.objects.filter(
-                appointments_as_client__conseiller=conseiller
-            ).distinct()
-            all_users = User.objects.exclude(id=conseiller.id).exclude(
-                profile__role='conseiller'
-            ).exclude(profile__role='admin')
+            # Les conseillers ne voient que leurs clients (ceux avec qui ils ont des rendez-vous)
+            client_ids = Appointment.objects.filter(
+                conseiller=conseiller
+            ).values_list('client_id', flat=True).distinct()
+            
+            clients_with_appointments = User.objects.filter(id__in=client_ids).order_by('first_name', 'last_name', 'email')
+            context.update({
+                'clients': clients_with_appointments,
+                'all_users': None,  # Pas de liste "tous les utilisateurs" pour les conseillers
+            })
+        
+        return context
+
+
+class ConseillerClientDetailView(ConseillerRequiredMixin, UserProfileMixin, TemplateView):
+    """Vue pour afficher les détails d'un client avec ses prédictions"""
+    template_name = 'conseiller/client_detail.html'
+    
+    def dispatch(self, request, *args, **kwargs):
+        self.client = get_object_or_404(User, id=kwargs['client_id'])
+        conseiller = request.user
+        
+        # Vérifier que le conseiller a bien des rendez-vous avec ce client
+        if not conseiller.profile.is_admin():
+            has_appointment = Appointment.objects.filter(
+                conseiller=conseiller,
+                client=self.client
+            ).exists()
+            if not has_appointment:
+                messages.error(request, _('You do not have access to this client.'))
+                return redirect('insurance_web:conseiller_clients')
+        
+        return super().dispatch(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        conseiller = self.request.user
+        
+        # Récupérer les prédictions faites par ce conseiller pour ce client
+        predictions = Prediction.objects.filter(
+            user=self.client,
+            created_by=conseiller
+        ).order_by('-created_at')
+        
+        # Récupérer les rendez-vous avec ce client
+        appointments = Appointment.objects.filter(
+            conseiller=conseiller,
+            client=self.client
+        ).order_by('-date_time')
         
         context.update({
-            'clients': clients_with_appointments,
-            'all_users': all_users,
+            'client': self.client,
+            'predictions': predictions,
+            'appointments': appointments,
         })
         return context
+
+
+class DeletePredictionView(ConseillerRequiredMixin, View):
+    """Supprime une prédiction"""
+    
+    def post(self, request, prediction_id):
+        try:
+            prediction = get_object_or_404(Prediction, id=prediction_id)
+            
+            # Vérifier que le conseiller a bien créé cette prédiction
+            if prediction.created_by != request.user:
+                messages.error(request, _('You do not have permission to delete this prediction.'))
+                return redirect('insurance_web:conseiller_clients')
+            
+            client_id = prediction.user.id
+            prediction.delete()
+            messages.success(request, _('Prediction deleted successfully.'))
+            return redirect('insurance_web:conseiller_client_detail', client_id=client_id)
+        except Exception as e:
+            messages.error(request, _('An error occurred while deleting the prediction: %(error)s') % {'error': e})
+            return redirect('insurance_web:conseiller_clients')
+
+
+class RemoveClientView(ConseillerRequiredMixin, View):
+    """Supprime un client en annulant tous les rendez-vous avec lui"""
+    
+    def post(self, request, client_id):
+        try:
+            client = get_object_or_404(User, id=client_id)
+            conseiller = request.user
+            
+            # Vérifier que le conseiller a bien des rendez-vous avec ce client
+            if not conseiller.profile.is_admin():
+                appointments = Appointment.objects.filter(
+                    conseiller=conseiller,
+                    client=client
+                )
+                if not appointments.exists():
+                    messages.error(request, _('You do not have access to this client.'))
+                    return redirect('insurance_web:conseiller_clients')
+                
+                # Annuler tous les rendez-vous futurs
+                future_appointments = appointments.filter(
+                    date_time__gte=timezone.now()
+                )
+                count = future_appointments.count()
+                future_appointments.update(status='cancelled')
+                
+                messages.success(
+                    request, 
+                    _('Client removed successfully. %(count)s future appointment(s) cancelled.') % {'count': count}
+                )
+            else:
+                # Pour les admins, on peut supprimer tous les rendez-vous
+                appointments = Appointment.objects.filter(client=client)
+                count = appointments.count()
+                appointments.update(status='cancelled')
+                messages.success(
+                    request,
+                    _('Client removed successfully. %(count)s appointment(s) cancelled.') % {'count': count}
+                )
+            
+            return redirect('insurance_web:conseiller_clients')
+        except Exception as e:
+            messages.error(request, _('An error occurred while removing the client: %(error)s') % {'error': e})
+            return redirect('insurance_web:conseiller_clients')
 
 
 class NotificationListView(UserProfileMixin, TemplateView):

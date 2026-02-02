@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-{% block title %}{% trans "Prendre un Rendez-vous" %} - Assurement{% endblock %}
+{% block title %}{% trans "Prendre un rendez-vous" %} - Assurement{% endblock %}
 
 {% block content %}
 <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -12,7 +12,7 @@
             </svg>
             {% trans "Retour aux Disponibilités" %}
         </a>
-        <h1 class="text-3xl font-bold text-gray-900 mb-2">{% trans "Prendre un Rendez-vous" %}</h1>
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">{% trans "Prendre un rendez-vous" %}</h1>
         <div class="flex items-center space-x-3">
             <div class="w-12 h-12 bg-primary rounded-lg flex items-center justify-center shadow-sm">
                 <span class="text-white font-semibold text-lg">{{ conseiller.get_full_name|default:conseiller.email|first|upper }}</span>
@@ -20,23 +20,6 @@
             <p class="text-lg text-gray-600 font-medium">{{ conseiller.get_full_name|default:conseiller.email }}</p>
         </div>
     </div>
-    
-    {% if messages %}
-        {% for message in messages %}
-            <div class="mb-6 p-5 rounded {% if message.tags == 'success' %}bg-green-50 border border-green-200 text-green-800{% else %}bg-red-50 border border-red-200 text-red-800{% endif %}">
-                <div class="flex items-center">
-                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        {% if message.tags == 'success' %}
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        {% else %}
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        {% endif %}
-                    </svg>
-                    <p class="font-semibold">{{ message }}</p>
-                </div>
-            </div>
-        {% endfor %}
-    {% endif %}
 
     <div class="card p-8">
         <form method="post" class="space-y-5">
@@ -82,7 +65,7 @@
 
             <div class="pt-6 border-t border-gray-200 flex gap-4">
                 <button type="submit" class="btn-primary px-10 py-4 flex-1">
-                    {% trans "Confirmer le Rendez-vous" %}
+                    {% trans "Confirmer le rendez-vous" %}
                 </button>
                 <a href="{% url 'insurance_web:conseiller_availability' conseiller.id %}" class="btn-secondary px-8 py-4 inline-flex items-center">
                     {% trans "Annuler" %}

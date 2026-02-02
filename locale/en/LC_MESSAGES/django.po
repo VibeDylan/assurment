@@ -1112,7 +1112,7 @@ msgid "Total Rendez-vous"
 msgstr "Total Appointments"
 
 #: templates/conseiller/dashboard.html:31
-msgid "À Venir"
+msgid "À venir"
 msgstr "Upcoming"
 
 #: templates/conseiller/dashboard.html:47
@@ -1120,7 +1120,7 @@ msgid "Nouvelle Prédiction"
 msgstr "New Prediction"
 
 #: templates/conseiller/dashboard.html:62
-msgid "Rendez-vous à Venir"
+msgid "Rendez-vous à venir"
 msgstr "Upcoming Appointments"
 
 #: templates/conseiller/dashboard.html:64
