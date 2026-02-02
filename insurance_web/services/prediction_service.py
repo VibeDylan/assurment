@@ -116,7 +116,6 @@ def create_prediction(user, created_by, form_data, predicted_amount):
         raise PredictionError(_("User must have a profile"))
     
     try:
-        # Extraire additional_info du form_data car il n'existe pas dans le modèle Prediction
         additional_info = form_data.pop('additional_info', None)
         
         prediction = Prediction.objects.create(
@@ -126,7 +125,6 @@ def create_prediction(user, created_by, form_data, predicted_amount):
             **form_data
         )
         
-        # Remettre additional_info dans form_data pour la sauvegarde du profil
         if additional_info is not None:
             form_data['additional_info'] = additional_info
         
