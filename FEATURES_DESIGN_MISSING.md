@@ -4,23 +4,6 @@ Ce document identifie les fonctionnalités métier et améliorations de design/U
 
 ---
 
-## 🔴 Fonctionnalités Métier Critiques
-
-### 1. **Gestion des Rendez-vous**
-**Problème** : Les utilisateurs ne peuvent pas annuler ou modifier leurs rendez-vous.
-
-**Fonctionnalités manquantes** :
-- ❌ Annulation de rendez-vous (client et conseiller)
-- ❌ Modification/réprogrammation de rendez-vous
-- ❌ Statut des rendez-vous (confirmé, annulé, reporté)
-- ❌ Raison d'annulation
-- ❌ Historique des modifications de rendez-vous
-- ❌ Notifications automatiques lors des changements
-
-**Impact** : Les utilisateurs doivent contacter manuellement pour annuler/modifier, ce qui réduit l'autonomie et augmente la charge administrative.
-
----
-
 ### 2. **Système de Notifications et Emails**
 **Problème** : Aucun système de notification par email ou dans l'application.
 
@@ -33,24 +16,6 @@ Ce document identifie les fonctionnalités métier et améliorations de design/U
 - ❌ Préférences de notification (email, SMS, in-app)
 - ❌ Email de réinitialisation de mot de passe
 
-**Impact** : Les utilisateurs peuvent oublier leurs rendez-vous, pas de communication automatique.
-
----
-
-### 3. **Gestion de Disponibilité des Conseillers**
-**Problème** : Les conseillers ne peuvent pas définir leurs horaires de disponibilité personnalisés.
-
-**Fonctionnalités manquantes** :
-- ❌ Définition des horaires de travail par jour de la semaine
-- ❌ Gestion des jours fériés et congés
-- ❌ Créneaux récurrents (ex: tous les lundis 14h-16h indisponibles)
-- ❌ Pause déjeuner configurable
-- ❌ Disponibilité différente selon les jours
-- ❌ Interface pour bloquer/débloquer des créneaux
-
-**Impact** : Les créneaux disponibles sont hardcodés (9h-18h), pas de flexibilité.
-
----
 
 ### 4. **Recherche et Filtrage**
 **Problème** : Pas de fonctionnalité de recherche dans les listes.
