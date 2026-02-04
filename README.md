@@ -1,4 +1,4 @@
-# Assurement - Insurance Premium Prediction Platform
+# Assur'aimant - Insurance Premium Prediction Platform
 
 A Django-based web application for predicting insurance premiums using machine learning. The platform allows users to get insurance premium estimates and enables advisors to manage client predictions and appointments.
 

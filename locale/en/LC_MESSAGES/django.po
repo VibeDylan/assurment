@@ -865,8 +865,8 @@ msgid "Très Fort"
 msgstr "Very Strong"
 
 #: templates/base.html:7
-msgid "Assurement - Prédiction de Primes d'Assurance"
-msgstr "Assurement - Insurance Premium Prediction"
+msgid "Assur'aimant - Prédiction de Primes d'Assurance"
+msgstr "Assur'aimant - Insurance Premium Prediction"
 
 #: templates/base.html:252 templates/base.html:285
 msgid "Tableau de bord"
@@ -922,8 +922,8 @@ msgid "Se déconnecter"
 msgstr "Logout"
 
 #: templates/base.html:392 templates/base.html:483
-msgid "© 2026 Assurement. Tous droits réservés."
-msgstr "© 2026 Assurement. All rights reserved."
+msgid "© 2026 Assur'aimant. Tous droits réservés."
+msgstr "© 2026 Assur'aimant. All rights reserved."
 
 #: templates/base.html:433
 msgid "Commencer"
@@ -1273,8 +1273,8 @@ msgid "Confirmer le Rendez-vous"
 msgstr "Confirm Appointment"
 
 #: templates/home.html:4
-msgid "Assurement - Prédiction de Primes d'Assurance par IA"
-msgstr "Assurement - AI-powered Insurance Premium Prediction"
+msgid "Assur'aimant - Prédiction de Primes d'Assurance par IA"
+msgstr "Assur'aimant - AI-powered Insurance Premium Prediction"
 
 #: templates/home.html:10
 msgid "Estimez votre prime d'assurance"
@@ -1411,8 +1411,8 @@ msgid "Prediction de Prime"
 msgstr "Premium Prediction"
 
 #: templates/predict.html:4
-msgid "Assurement"
-msgstr "Assurement"
+msgid "Assur'aimant"
+msgstr "Assur'aimant"
 
 #: templates/predict.html:10
 msgid "Estimez Votre Prime"
@@ -1454,3 +1454,7 @@ msgid ""
 msgstr ""
 "The final premium amount may vary depending on the specific terms of "
 "the contract and the insurer's verification."
+
+#: templates/base.html:320
+msgid "Langue"
+msgstr "Language"

@@ -33,6 +33,17 @@ services:
       - DB_PORT=5432
       - SECRET_KEY=your-secret-key-here
       - DEBUG=True
+      - EMAIL_BACKEND=console
+      - DEFAULT_FROM_EMAIL=noreply@assuraimant.local
+      - SITE_URL=http://localhost:8000
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    ports:
+      - "1025:1025"  
+      - "8025:8025" 
+    profiles:
+      - mailhog
 
   test:
     build: .

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-{% block title %}{% trans "Tableau de bord Admin" %} - Assurement{% endblock %}
+{% block title %}{% trans "Tableau de bord Admin" %} - Assur'aimant{% endblock %}
 
 {% block content %}
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -145,6 +145,9 @@
             <div class="space-y-3">
                 <a href="{% url 'insurance_web:admin_user_management' %}" class="block w-full btn-primary text-center py-3">
                     {% trans "Gérer les utilisateurs" %}
+                </a>
+                <a href="{% url 'insurance_web:pricing_configuration' %}" class="block w-full btn-primary text-center py-3">
+                    {% trans "Configuration des Prix" %}
                 </a>
                 <a href="{% url 'insurance_web:conseiller_dashboard' %}" class="block w-full btn-secondary text-center py-3">
                     {% trans "Voir le Tableau de bord conseiller" %}

@@ -75,7 +75,7 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.getenv('DB_NAME', 'assurement'),
+            'NAME': os.getenv('DB_NAME', 'assuraimant'),
             'USER': os.getenv('DB_USER', 'postgres'),
             'PASSWORD': os.getenv('DB_PASSWORD', 'postgres'),
             'HOST': os.getenv('DB_HOST', 'db'),
@@ -124,6 +124,27 @@ LOGIN_URL = '/login/'
 
 AUTHENTICATION_BACKENDS = [
     'insurance_web.backends.EmailBackend',
+]
+
+
+EMAIL_BACKEND_TYPE = os.getenv('EMAIL_BACKEND', 'console')
+
+if EMAIL_BACKEND_TYPE == 'smtp':
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = os.getenv('EMAIL_HOST', 'mailhog')
+    EMAIL_PORT = int(os.getenv('EMAIL_PORT', '1025'))
+    EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'False').lower() in ('true', '1', 'yes')
+    EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL', 'False').lower() in ('true', '1', 'yes')
+    EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
+    EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'noreply@assuraimant.local')
+SERVER_EMAIL = os.getenv('SERVER_EMAIL', DEFAULT_FROM_EMAIL)
+
+ADMINS = [
+    ('Admin', os.getenv('ADMIN_EMAIL', 'admin@assuraimant.local')),
 ]
 
 LOGGING = {

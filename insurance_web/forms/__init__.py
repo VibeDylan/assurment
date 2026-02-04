@@ -1,7 +1,7 @@
 from .auth_forms import CustomUserCreationForm, ProfileForm
 from .prediction_forms import PredictionForm
 from .appointment_forms import AppointmentForm, UnavailabilityForm
-from .admin_forms import AdminUserManagementForm, AdminUserRoleForm
+from .admin_forms import AdminUserManagementForm, AdminUserRoleForm, PricingConfigurationForm
 
 __all__ = [
     'CustomUserCreationForm',
@@ -11,4 +11,5 @@ __all__ = [
     'UnavailabilityForm',
     'AdminUserManagementForm',
     'AdminUserRoleForm',
+    'PricingConfigurationForm',
 ]

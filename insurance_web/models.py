@@ -187,3 +187,58 @@ class Notification(models.Model):
                 'appointment': self.appointment.date_time.strftime('%m/%d/%Y %H:%M')
             }
         return _("Notification for %(user)s") % {'user': user_name}
+
+
+class PricingConfiguration(models.Model):
+    """
+    Configuration globale des prix (singleton).
+    Une seule instance doit exister dans la base de données.
+    """
+    monthly_base_fee = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=500.00,
+        verbose_name=_("Monthly Base Fee (€)"),
+        help_text=_("Frais fixes mensuels en euros")
+    )
+    additional_charges_percentage = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        default=0.00,
+        verbose_name=_("Additional Charges Percentage (%)"),
+        help_text=_("Pourcentage de charges supplémentaires à appliquer (ex: 15 pour 15%)")
+    )
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name=_("Active"),
+        help_text=_("Active ou désactive l'application de cette configuration")
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("Pricing Configuration")
+        verbose_name_plural = _("Pricing Configurations")
+        ordering = ['-created_at']
+
+    def __str__(self):
+        status = _("Active") if self.is_active else _("Inactive")
+        return _("Pricing Configuration (%(status)s)") % {'status': status}
+
+    def save(self, *args, **kwargs):
+        """S'assure qu'il n'y a qu'une seule instance active"""
+        if self.is_active:
+            PricingConfiguration.objects.filter(is_active=True).exclude(pk=self.pk).update(is_active=False)
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def get_active_config(cls):
+        """Récupère la configuration active ou crée une par défaut"""
+        config = cls.objects.filter(is_active=True).first()
+        if not config:
+            config = cls.objects.create(
+                monthly_base_fee=500.00,
+                additional_charges_percentage=0.00,
+                is_active=True
+            )
+        return config

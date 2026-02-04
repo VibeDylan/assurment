@@ -1,0 +1,26 @@
+{% load i18n %}
+{% trans "Report de rendez-vous" %}
+
+{% trans "Bonjour" %} {{ recipient.get_full_name|default:recipient.email }},
+
+{% trans "Nous vous informons que votre rendez-vous a été reporté par" %} {{ rescheduled_by_name }}.
+
+{% trans "Changement" %}:
+{% trans "Ancienne date" %}: {{ old_date }} {% trans "à" %} {{ old_time }}
+{% trans "Nouvelle date" %}: {{ new_date }} {% trans "à" %} {{ new_time }}
+
+{% trans "Nouveaux détails du rendez-vous" %}:
+{% trans "Date" %}: {{ new_date }}
+{% trans "Heure" %}: {{ new_time }}
+{% trans "Durée" %}: {{ appointment.duration_minutes }} {% trans "minutes" %}
+{% if appointment.notes %}
+{% trans "Notes" %}: {{ appointment.notes }}
+{% endif %}
+
+{% trans "Veuillez noter cette nouvelle date dans votre agenda." %}
+
+{% trans "Voir le détail du rendez-vous" %}: {{ appointment_url }}
+
+---
+{% trans "Cet email a été envoyé automatiquement, merci de ne pas y répondre." %}
+{% trans "Assur'aimant" %} - {% trans "Gestion de vos assurances" %}

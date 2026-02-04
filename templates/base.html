@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{% trans "Assurement - Prédiction de Primes d'Assurance" %}{% endblock %}</title>
+    <title>{% block title %}{% trans "Assur'aimant - Prédiction de Primes d'Assurance" %}{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -201,7 +201,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                             </svg>
                         </div>
-                        <span class="text-lg font-semibold text-gray-900">Assurement</span>
+                        <span class="text-lg font-semibold text-gray-900">{% trans "Assur'aimant" %}</span>
                     </a>
                 </div>
 
@@ -315,6 +315,24 @@
                         {% endif %}
                     </div>
 
+                    <!-- Language Selector -->
+                    <div class="mb-3">
+                        <label class="block text-xs font-medium text-gray-500 mb-1">{% trans "Langue" %}</label>
+                        <form action="{% url 'set_language' %}" method="post" class="w-full">
+                            {% csrf_token %}
+                            <input name="next" type="hidden" value="{{ request.get_full_path }}" />
+                            <select name="language" onchange="this.form.submit()" class="w-full text-sm border border-gray-300 rounded-md px-3 py-2 text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                {% get_current_language as CURRENT_LANGUAGE %}
+                                {% get_available_languages as LANGUAGES %}
+                                {% for lang_code, lang_name in LANGUAGES %}
+                                    <option value="{{ lang_code }}" {% if lang_code == CURRENT_LANGUAGE %}selected{% endif %}>
+                                        {{ lang_name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </form>
+                    </div>
+
                     <form method="post" action="{% url 'insurance_web:logout' %}">
                         {% csrf_token %}
                         <button type="submit" class="w-full flex items-center justify-center px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded transition-colors">
@@ -366,7 +384,7 @@
                 <footer class="bg-white border-t border-gray-200 py-4 px-6 mt-auto">
                     <div class="max-w-7xl mx-auto">
                         <p class="text-center text-xs text-gray-500">
-                            {% blocktrans %}© 2026 Assurement. Tous droits réservés.{% endblocktrans %}
+                            {% blocktrans %}© 2026 Assur'aimant. Tous droits réservés.{% endblocktrans %}
                         </p>
                     </div>
                 </footer>
@@ -384,10 +402,24 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                                     </svg>
                                 </div>
-                                <span class="text-lg font-semibold text-gray-900">Assurement</span>
+                                <span class="text-lg font-semibold text-gray-900">{% trans "Assur'aimant" %}</span>
                             </a>
                         </div>
-                        <div class="flex items-center space-x-4">                
+                        <div class="flex items-center space-x-4">
+                            <!-- Language Selector -->
+                            <form action="{% url 'set_language' %}" method="post" class="inline">
+                                {% csrf_token %}
+                                <input name="next" type="hidden" value="{{ request.get_full_path }}" />
+                                <select name="language" onchange="this.form.submit()" class="text-sm border border-gray-300 rounded-md px-3 py-1.5 text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    {% get_current_language as CURRENT_LANGUAGE %}
+                                    {% get_available_languages as LANGUAGES %}
+                                    {% for lang_code, lang_name in LANGUAGES %}
+                                        <option value="{{ lang_code }}" {% if lang_code == CURRENT_LANGUAGE %}selected{% endif %}>
+                                            {{ lang_name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </form>
                             <a href="{% url 'insurance_web:login' %}" class="text-gray-700 hover:text-gray-900 px-3 py-1.5 text-sm font-medium transition-colors">
                                 {% trans "Connexion" %}
                             </a>
@@ -434,7 +466,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                                     </svg>
                                 </div>
-                                <span class="text-lg font-semibold text-gray-900">Assurement</span>
+                                <span class="text-lg font-semibold text-gray-900">{% trans "Assur'aimant" %}</span>
                             </div>
                             <p class="text-gray-600 text-sm">{% trans "Plateforme de prédiction de primes d'assurance." %}</p>
                         </div>

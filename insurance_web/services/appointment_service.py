@@ -13,6 +13,12 @@ from .notification_service import (
     create_appointment_by_conseiller_notification,
     create_notification,
 )
+from .email_service import (
+    send_appointment_confirmation_email,
+    send_appointment_cancellation_email,
+    send_appointment_rescheduled_email,
+    send_appointment_request_email,
+)
 
 
 def get_available_slots(conseiller, selected_date, existing_appointments):
@@ -127,28 +133,65 @@ def create_appointment(conseiller, client, date_time, duration_minutes, notes=''
         AppointmentError: Si une erreur survient lors de la création
     """
     try:
+        # Si le conseiller crée le rendez-vous, il est automatiquement confirmé
+        status = 'confirmed' if created_by_conseiller else 'pending'
+        
         appointment = Appointment.objects.create(
             conseiller=conseiller,
             client=client,
             date_time=date_time,
             duration_minutes=duration_minutes,
-            notes=notes
+            notes=notes,
+            status=status
         )
         log_appointment(appointment, 'created')
+        
+        # S'assurer que le rendez-vous est bien sauvegardé
+        appointment.refresh_from_db()
     
         try:
             if created_by_conseiller:
                 create_appointment_by_conseiller_notification(appointment)
+                # Envoyer un email de confirmation au client
+                try:
+                    email_sent = send_appointment_confirmation_email(appointment, recipient=client)
+                    if not email_sent:
+                        log_warning(
+                            _("Email confirmation not sent (recipient may not have email address)"),
+                            extra={'appointment_id': appointment.id, 'client_id': client.id}
+                        )
+                except Exception as email_error:
+                    log_error(
+                        _("Failed to send confirmation email: %(error)s") % {'error': email_error},
+                        exc_info=True,
+                        extra={'appointment_id': appointment.id, 'client_id': client.id}
+                    )
             else:
                 create_appointment_request_notification(appointment)
+                # Envoyer un email de demande au conseiller
+                try:
+                    email_sent = send_appointment_request_email(appointment, recipient=conseiller)
+                    if not email_sent:
+                        log_warning(
+                            _("Email request not sent (recipient may not have email address)"),
+                            extra={'appointment_id': appointment.id, 'conseiller_id': conseiller.id}
+                        )
+                except Exception as email_error:
+                    log_error(
+                        _("Failed to send request email: %(error)s") % {'error': email_error},
+                        exc_info=True,
+                        extra={'appointment_id': appointment.id, 'conseiller_id': conseiller.id}
+                    )
         except Exception as notification_error:
-            log_warning(
+            log_error(
                 _("Failed to create notification for appointment: %(error)s") % {'error': notification_error},
+                exc_info=True,
                 extra={
                     'appointment_id': appointment.id,
                     'conseiller_id': conseiller.id,
                 }
             )
+        
         return appointment
     except Exception as e:
         log_error(
@@ -321,6 +364,14 @@ def accept_appointment(appointment_id, conseiller):
         
         try:
             create_appointment_response_notification(appointment, 'accepted')
+            # Envoyer un email de confirmation au client
+            try:
+                send_appointment_confirmation_email(appointment, recipient=appointment.client)
+            except Exception as email_error:
+                log_warning(
+                    _("Failed to send confirmation email: %(error)s") % {'error': email_error},
+                    extra={'appointment_id': appointment.id}
+                )
         except Exception as notification_error:
             log_warning(
                 _("Failed to create notification for appointment acceptance: %(error)s") % {'error': notification_error},
@@ -367,22 +418,26 @@ def reject_appointment(appointment_id, conseiller, reason=None):
     try:
         appointment = Appointment.objects.get(id=appointment_id)
         
-        # Vérifications de sécurité
         if appointment.conseiller != conseiller:
             raise AppointmentError(_("You can only reject appointments assigned to you."))
         
         if appointment.status != 'pending':
             raise AppointmentError(_("This appointment is not pending and cannot be rejected."))
         
-        # Mettre à jour le statut
         appointment.status = 'cancelled'
         appointment.save()
         
         log_appointment(appointment, 'rejected')
         
-        # Créer la notification pour le client
         try:
             create_appointment_response_notification(appointment, 'rejected', reason=reason)
+            try:
+                send_appointment_cancellation_email(appointment, cancelled_by=conseiller, recipient=appointment.client)
+            except Exception as email_error:
+                log_warning(
+                    _("Failed to send cancellation email: %(error)s") % {'error': email_error},
+                    extra={'appointment_id': appointment.id}
+                )
         except Exception as notification_error:
             log_warning(
                 _("Failed to create notification for appointment rejection: %(error)s") % {'error': notification_error},
@@ -453,6 +508,13 @@ def cancel_appointment(appointment_id, user):
                 message=message,
                 appointment=appointment,
             )
+            try:
+                send_appointment_cancellation_email(appointment, cancelled_by=user, recipient=other_user)
+            except Exception as email_error:
+                log_warning(
+                    _("Failed to send cancellation email: %(error)s") % {'error': email_error},
+                    extra={'appointment_id': appointment.id}
+                )
         except Exception as notification_error:
             log_warning(
                 _("Failed to create cancellation notification: %(error)s") % {'error': notification_error},
@@ -526,7 +588,6 @@ def reschedule_appointment(appointment_id, user, new_date_time, duration_minutes
         
         log_appointment(appointment, 'rescheduled')
         
-        # Notifier l'autre partie
         other_user = appointment.client if user == appointment.conseiller else appointment.conseiller
         rescheduler_name = user.get_full_name() or user.email
         new_date_str = new_date_time.strftime('%d/%m/%Y à %H:%M')
@@ -540,7 +601,19 @@ def reschedule_appointment(appointment_id, user, new_date_time, duration_minutes
                 notification_type='appointment_rescheduled',
                 message=message,
                 appointment=appointment,
-            )
+            )   
+            try:
+                send_appointment_rescheduled_email(
+                    appointment, 
+                    rescheduled_by=user, 
+                    old_date_time=old_date_time, 
+                    recipient=other_user
+                )
+            except Exception as email_error:
+                log_warning(
+                    _("Failed to send rescheduled email: %(error)s") % {'error': email_error},
+                    extra={'appointment_id': appointment.id}
+                )
         except Exception as notification_error:
             log_warning(
                 _("Failed to create reschedule notification: %(error)s") % {'error': notification_error},

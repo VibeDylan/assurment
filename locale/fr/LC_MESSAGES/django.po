@@ -1311,8 +1311,8 @@ msgid "Très Fort"
 msgstr "Très Fort"
 
 #: templates/base.html:7
-msgid "Assurement - Prédiction de Primes d'Assurance"
-msgstr "Assurement - Prédiction de Primes d'Assurance"
+msgid "Assur'aimant - Prédiction de Primes d'Assurance"
+msgstr "Assur'aimant - Prédiction de Primes d'Assurance"
 
 #: templates/base.html:210 templates/base.html:243
 msgid "Tableau de bord"
@@ -1368,8 +1368,8 @@ msgid "Se déconnecter"
 msgstr "Se déconnecter"
 
 #: templates/base.html:343 templates/base.html:419
-msgid "© 2026 Assurement. Tous droits réservés."
-msgstr "© 2026 Assurement. Tous droits réservés."
+msgid "© 2026 Assur'aimant. Tous droits réservés."
+msgstr "© 2026 Assur'aimant. Tous droits réservés."
 
 #: templates/base.html:369
 msgid "Commencer"
@@ -1762,8 +1762,8 @@ msgid "Confirmer le Rendez-vous"
 msgstr "Confirmer le Rendez-vous"
 
 #: templates/home.html:4
-msgid "Assurement - Prédiction de Primes d'Assurance par IA"
-msgstr "Assurement - Prédiction de Primes d'Assurance par IA"
+msgid "Assur'aimant - Prédiction de Primes d'Assurance par IA"
+msgstr "Assur'aimant - Prédiction de Primes d'Assurance par IA"
 
 #: templates/home.html:10
 msgid "Estimez votre prime d'assurance"
@@ -1971,8 +1971,8 @@ msgid "Prediction de Prime"
 msgstr "Prédiction de Prime"
 
 #: templates/predict.html:4
-msgid "Assurement"
-msgstr "Assurement"
+msgid "Assur'aimant"
+msgstr "Assur'aimant"
 
 #: templates/predict.html:10
 msgid "Estimez Votre Prime"
@@ -2017,6 +2017,10 @@ msgid ""
 msgstr ""
 "Le montant final de la prime peut varier selon les conditions spécifiques du "
 "contrat et la vérification de l'assureur."
+
+#: templates/base.html:320
+msgid "Langue"
+msgstr "Langue"
 
 #~ msgid "Email non fourni"
 #~ msgstr "Email non fourni"

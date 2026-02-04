@@ -5,7 +5,7 @@ import pandas as pd
 from django.db import transaction
 
 from django.utils.translation import gettext as _
-from ..models import Prediction
+from ..models import Prediction, PricingConfiguration
 from ..utils.logging import log_error, log_prediction, log_critical
 from ..exceptions import (
     PredictionError,
@@ -144,3 +144,68 @@ def create_prediction(user, created_by, form_data, predicted_amount):
             extra={'user_id': user.id, 'created_by_id': created_by.id}
         )
         raise PredictionError(_("Failed to create prediction: %(error)s") % {'error': e})
+
+
+def calculate_monthly_price(annual_amount):
+    """
+    Calcule le prix mensuel à partir du montant annuel prédit.
+    
+    Formule:
+    - Prix mensuel de base = (montant annuel / 12) + frais fixes mensuels
+    - Prix mensuel final = prix mensuel de base * (1 + charges supplémentaires / 100)
+    
+    Args:
+        annual_amount: Montant annuel prédit en euros
+        
+    Returns:
+        dict: Dictionnaire contenant:
+            - monthly_base_price: Prix mensuel de base (sans charges)
+            - monthly_final_price: Prix mensuel final (avec charges)
+            - annual_amount: Montant annuel original
+            - monthly_base_fee: Frais fixes mensuels appliqués
+            - additional_charges_percentage: Pourcentage de charges appliqué
+    """
+    try:
+        config = PricingConfiguration.get_active_config()
+        
+        if not config.is_active:
+            monthly_base_price = float(annual_amount) / 12
+            return {
+                'monthly_base_price': round(monthly_base_price, 2),
+                'monthly_final_price': round(monthly_base_price, 2),
+                'annual_amount': round(float(annual_amount), 2),
+                'monthly_base_fee': 0.00,
+                'additional_charges_percentage': 0.00,
+            }
+        
+        monthly_base_fee = float(config.monthly_base_fee)
+        additional_charges_percentage = float(config.additional_charges_percentage)
+        
+        monthly_base_price = (float(annual_amount) / 12) + monthly_base_fee
+        
+        if additional_charges_percentage > 0:
+            monthly_final_price = monthly_base_price * (1 + additional_charges_percentage / 100)
+        else:
+            monthly_final_price = monthly_base_price
+        
+        return {
+            'monthly_base_price': round(monthly_base_price, 2),
+            'monthly_final_price': round(monthly_final_price, 2),
+            'annual_amount': round(float(annual_amount), 2),
+            'monthly_base_fee': round(monthly_base_fee, 2),
+            'additional_charges_percentage': round(additional_charges_percentage, 2),
+        }
+    except Exception as e:
+        log_error(
+            _("Error calculating monthly price: %(error)s") % {'error': e},
+            exc_info=True,
+            extra={'annual_amount': annual_amount}
+        )
+        monthly_base_price = float(annual_amount) / 12
+        return {
+            'monthly_base_price': round(monthly_base_price, 2),
+            'monthly_final_price': round(monthly_base_price, 2),
+            'annual_amount': round(float(annual_amount), 2),
+            'monthly_base_fee': 0.00,
+            'additional_charges_percentage': 0.00,
+        }

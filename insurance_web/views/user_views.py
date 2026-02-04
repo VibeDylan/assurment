@@ -11,6 +11,7 @@ from ..forms import PredictionForm, AppointmentForm, ProfileForm
 from ..services import (
     calculate_insurance_premium,
     create_prediction,
+    calculate_monthly_price,
     get_available_slots,
     check_appointment_conflict,
     create_appointment,
@@ -161,10 +162,14 @@ class PredictView(UserProfileMixin, FormView):
                 predicted_amount=predicted_amount
             )
             
+            # Calculer le prix mensuel
+            monthly_pricing = calculate_monthly_price(predicted_amount)
+            
             messages.success(self.request, _('Your estimated insurance premium is %(amount).2f € per year.') % {'amount': predicted_amount})
             
             context = self.get_context_data()
             context['predicted_amount'] = predicted_amount
+            context['monthly_pricing'] = monthly_pricing
             context['form'] = self.form_class(initial=form.cleaned_data)
             return self.render_to_response(context)
         except InvalidPredictionDataError as e:

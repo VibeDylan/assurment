@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Configuration des Prix" %} - Assur'aimant{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="mb-8">
+        <div class="flex items-center justify-between mb-4">
+            <div>
+                <h1 class="text-3xl font-semibold text-gray-900 mb-2">{% trans "Configuration des Prix" %}</h1>
+                <p class="text-base text-gray-600">
+                    {% trans "Configurez les paramètres de calcul des prix mensuels pour les prédictions" %}
+                </p>
+            </div>
+            <a href="{% if is_admin %}{% url 'insurance_web:admin_dashboard' %}{% else %}{% url 'insurance_web:conseiller_dashboard' %}{% endif %}" class="btn-secondary px-4 py-2">
+                {% trans "Retour" %}
+            </a>
+        </div>
+    </div>
+
+    {% if current_config %}
+    <div class="mb-6 card p-6 bg-blue-50 border border-blue-200">
+        <div class="flex items-start">
+            <svg class="w-5 h-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <div>
+                <h3 class="text-sm font-semibold text-blue-900 mb-2">{% trans "Configuration actuelle" %}</h3>
+                <div class="text-sm text-blue-800 space-y-1">
+                    <p><strong>{% trans "Frais fixes mensuels :" %}</strong> {{ current_config.monthly_base_fee|floatformat:2 }} €</p>
+                    <p><strong>{% trans "Charges supplémentaires :" %}</strong> {{ current_config.additional_charges_percentage|floatformat:2 }}%</p>
+                    <p><strong>{% trans "Statut :" %}</strong> 
+                        {% if current_config.is_active %}
+                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                {% trans "Active" %}
+                            </span>
+                        {% else %}
+                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                {% trans "Inactive" %}
+                            </span>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="card p-8">
+        <div class="mb-6">
+            <h2 class="text-xl font-semibold text-gray-900 mb-2">{% trans "Modifier la configuration" %}</h2>
+            <p class="text-sm text-gray-600">
+                {% trans "Les modifications seront appliquées immédiatement aux nouvelles prédictions." %}
+            </p>
+        </div>
+
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            
+            <div>
+                <label for="{{ form.monthly_base_fee.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                    {{ form.monthly_base_fee.label }}
+                </label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <span class="text-gray-500 sm:text-sm">€</span>
+                    </div>
+                    {{ form.monthly_base_fee }}
+                </div>
+                {% if form.monthly_base_fee.help_text %}
+                    <p class="mt-2 text-sm text-gray-500">{{ form.monthly_base_fee.help_text }}</p>
+                {% endif %}
+                {% if form.monthly_base_fee.errors %}
+                    <p class="mt-2 text-sm text-red-600">{{ form.monthly_base_fee.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <div>
+                <label for="{{ form.additional_charges_percentage.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                    {{ form.additional_charges_percentage.label }}
+                </label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                        <span class="text-gray-500 sm:text-sm">%</span>
+                    </div>
+                    {{ form.additional_charges_percentage }}
+                </div>
+                {% if form.additional_charges_percentage.help_text %}
+                    <p class="mt-2 text-sm text-gray-500">{{ form.additional_charges_percentage.help_text }}</p>
+                {% endif %}
+                {% if form.additional_charges_percentage.errors %}
+                    <p class="mt-2 text-sm text-red-600">{{ form.additional_charges_percentage.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <div class="flex items-center">
+                {{ form.is_active }}
+                <label for="{{ form.is_active.id_for_label }}" class="ml-3 block text-sm font-medium text-gray-700">
+                    {{ form.is_active.label }}
+                </label>
+            </div>
+            {% if form.is_active.help_text %}
+                <p class="text-sm text-gray-500 ml-7">{{ form.is_active.help_text }}</p>
+            {% endif %}
+            {% if form.is_active.errors %}
+                <p class="mt-2 text-sm text-red-600 ml-7">{{ form.is_active.errors.0 }}</p>
+            {% endif %}
+
+            <div class="pt-4 border-t border-gray-200">
+                <button type="submit" class="btn-primary px-8 py-3">
+                    {% trans "Enregistrer la configuration" %}
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="mt-6 card p-6 bg-gray-50">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">{% trans "Comment fonctionne le calcul ?" %}</h3>
+        <div class="space-y-3 text-sm text-gray-700">
+            <div class="flex items-start">
+                <span class="font-semibold mr-2">1.</span>
+                <p>{% trans "Prix mensuel de base = (Prime annuelle prédite / 12) + Frais fixes mensuels" %}</p>
+            </div>
+            <div class="flex items-start">
+                <span class="font-semibold mr-2">2.</span>
+                <p>{% trans "Prix mensuel final = Prix mensuel de base × (1 + Charges supplémentaires / 100)" %}</p>
+            </div>
+            <div class="mt-4 p-4 bg-white rounded border border-gray-200">
+                <p class="font-semibold text-gray-900 mb-2">{% trans "Exemple :" %}</p>
+                <p class="text-gray-700">{% trans "Si la prime annuelle est de 12 000 €, les frais fixes de 500 € et les charges de 15% :" %}</p>
+                <ul class="mt-2 space-y-1 text-gray-600 ml-4 list-disc">
+                    <li>{% trans "Prix mensuel de base = (12 000 / 12) + 500 = 1 500 €" %}</li>
+                    <li>{% trans "Prix mensuel final = 1 500 × 1.15 = 1 725 €/mois" %}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

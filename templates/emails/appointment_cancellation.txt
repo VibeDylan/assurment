@@ -1,0 +1,19 @@
+{% load i18n %}
+{% trans "Annulation de rendez-vous" %}
+
+{% trans "Bonjour" %} {{ recipient.get_full_name|default:recipient.email }},
+
+{% trans "Nous vous informons que le rendez-vous suivant a été annulé par" %} {{ cancelled_by_name }}.
+
+{% trans "Rendez-vous annulé" %}:
+{% trans "Date" %}: {{ appointment_date }}
+{% trans "Heure" %}: {{ appointment_time }}
+{% if appointment.notes %}
+{% trans "Notes" %}: {{ appointment.notes }}
+{% endif %}
+
+{% trans "Si vous souhaitez prendre un nouveau rendez-vous, n'hésitez pas à nous contacter." %}
+
+---
+{% trans "Cet email a été envoyé automatiquement, merci de ne pas y répondre." %}
+{% trans "Assur'aimant" %} - {% trans "Gestion de vos assurances" %}

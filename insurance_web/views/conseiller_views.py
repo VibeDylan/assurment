@@ -13,6 +13,7 @@ from ..forms import PredictionForm, AppointmentForm, UnavailabilityForm
 from ..services import (
     calculate_insurance_premium,
     create_prediction,
+    calculate_monthly_price,
     get_profile_initial_data,
 )
 from ..services.appointment_service import (
@@ -161,6 +162,9 @@ class ConseillerPredictView(ConseillerRequiredMixin, UserProfileMixin, FormView)
                 predicted_amount=predicted_amount
             )
             
+            # Calculer le prix mensuel
+            monthly_pricing = calculate_monthly_price(predicted_amount)
+            
             creator_name = self.request.user.get_full_name() or self.request.user.email
             client_name = selected_client.get_full_name() or selected_client.email
             messages.success(
@@ -175,6 +179,7 @@ class ConseillerPredictView(ConseillerRequiredMixin, UserProfileMixin, FormView)
             # Afficher immédiatement le résultat sur la page (sans redirection)
             context = self.get_context_data()
             context['predicted_amount'] = predicted_amount
+            context['monthly_pricing'] = monthly_pricing
             context['client'] = selected_client
             context['form'] = self.form_class(initial=get_profile_initial_data(selected_client.profile))
             return self.render_to_response(context)
@@ -206,7 +211,9 @@ class ConseillerPredictView(ConseillerRequiredMixin, UserProfileMixin, FormView)
                     # Supprimer height et weight car le service attend seulement bmi
                     del form_data['height']
                     del form_data['weight']
-                    context['predicted_amount'] = calculate_insurance_premium(form_data)
+                    predicted_amount = calculate_insurance_premium(form_data)
+                    context['predicted_amount'] = predicted_amount
+                    context['monthly_pricing'] = calculate_monthly_price(predicted_amount)
                 except (PredictionError, InvalidPredictionDataError, ModelNotFoundError):
                     pass
         return context
@@ -304,6 +311,8 @@ class ConseillerCalendarCreateAppointmentView(ConseillerRequiredMixin, UserProfi
             if has_conflict:
                 messages.error(request, error_message)
                 return _calendar_redirect(week_start=week_start)
+            
+            # Créer le rendez-vous
             appointment = create_appointment(
                 conseiller=conseiller,
                 client=client,
@@ -312,19 +321,32 @@ class ConseillerCalendarCreateAppointmentView(ConseillerRequiredMixin, UserProfi
                 notes=notes,
                 created_by_conseiller=True
             )
+            
+            # Vérifier que le rendez-vous a bien été créé
+            if not appointment or not appointment.id:
+                messages.error(request, _('Erreur lors de la création du rendez-vous.'))
+                return _calendar_redirect(week_start=week_start)
+            
             messages.success(
                 request,
-                _('Rendez-vous créé avec %(name)s le %(date)s.') % {
+                _('Rendez-vous confirmé avec %(name)s le %(date)s.') % {
                     'name': client.get_full_name() or client.email,
                     'date': date_time.strftime('%d/%m/%Y à %H:%M')
                 }
             )
-            return redirect('insurance_web:appointment_detail', appointment_id=appointment.id)
+            # Rediriger vers le calendrier pour voir le rendez-vous apparaître
+            return _calendar_redirect(week_start=week_start)
         except AppointmentConflictError as e:
             messages.error(request, str(e))
             return _calendar_redirect(week_start=week_start)
         except AppointmentError as e:
             messages.error(request, _('Erreur : %(error)s') % {'error': str(e)})
+            return _calendar_redirect(week_start=week_start)
+        except Exception as e:
+            # Capturer toutes les autres exceptions pour éviter les erreurs silencieuses
+            messages.error(request, _('Une erreur inattendue s\'est produite : %(error)s') % {'error': str(e)})
+            import traceback
+            traceback.print_exc()
             return _calendar_redirect(week_start=week_start)
 
 
@@ -481,6 +503,8 @@ class ConseillerCreateAppointmentView(ConseillerRequiredMixin, UserProfileMixin,
             if has_conflict:
                 messages.error(self.request, error_message)
                 return self.form_invalid(form)
+            
+            # Créer le rendez-vous
             appointment = create_appointment(
                 conseiller=self.request.user,
                 client=self.client,
@@ -489,20 +513,41 @@ class ConseillerCreateAppointmentView(ConseillerRequiredMixin, UserProfileMixin,
                 notes=notes,
                 created_by_conseiller=True
             )
+            
+            # Vérifier que le rendez-vous a bien été créé
+            if not appointment or not appointment.id:
+                messages.error(self.request, _('Erreur lors de la création du rendez-vous.'))
+                return self.form_invalid(form)
+            
             messages.success(
                 self.request,
-                _('Rendez-vous créé avec %(name)s le %(date)s.') % {
+                _('Rendez-vous confirmé avec %(name)s le %(date)s.') % {
                     'name': self.client.get_full_name() or self.client.email,
                     'date': date_time.strftime('%d/%m/%Y à %H:%M')
                 }
             )
-            return redirect('insurance_web:appointment_detail', appointment_id=appointment.id)
+            # Rediriger vers la page du client pour voir le rendez-vous dans la liste
+            return redirect('insurance_web:conseiller_client_detail', client_id=self.client.id)
         except AppointmentConflictError as e:
             messages.error(self.request, str(e))
             return self.form_invalid(form)
         except AppointmentError as e:
             messages.error(self.request, _('Erreur : %(error)s') % {'error': str(e)})
             return self.form_invalid(form)
+        except Exception as e:
+            # Capturer toutes les autres exceptions pour éviter les erreurs silencieuses
+            messages.error(self.request, _('Une erreur inattendue s\'est produite : %(error)s') % {'error': str(e)})
+            import traceback
+            traceback.print_exc()
+            return self.form_invalid(form)
+    
+    def form_invalid(self, form):
+        # Logger les erreurs de validation pour déboguer
+        if form.errors:
+            import logging
+            logger = logging.getLogger('insurance_web')
+            logger.warning(f"Form validation errors: {form.errors}")
+        return super().form_invalid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

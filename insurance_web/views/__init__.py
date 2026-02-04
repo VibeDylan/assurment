@@ -34,7 +34,8 @@ from .admin_views import (
     AdminUserManagementView,
     AdminChangeUserRoleView,
     AdminToggleUserStatusView,
-    AdminDeleteUserView
+    AdminDeleteUserView,
+    PricingConfigurationView,
 )
 
 __all__ = [
@@ -72,4 +73,5 @@ __all__ = [
     'AdminChangeUserRoleView',
     'AdminToggleUserStatusView',
     'AdminDeleteUserView',
+    'PricingConfigurationView',
 ]

@@ -101,3 +101,68 @@ class AdminUserRoleForm(forms.Form):
             'class': 'w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors'
         })
     )
+
+
+class PricingConfigurationForm(forms.Form):
+    monthly_base_fee = forms.DecimalField(
+        label=_("Frais fixes mensuels (€)"),
+        required=True,
+        min_value=0,
+        max_digits=10,
+        decimal_places=2,
+        widget=forms.NumberInput(attrs={
+            'class': 'w-full pl-8 pr-4 py-3 bg-white border border-gray-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors',
+            'placeholder': _('e.g. 500.00'),
+            'step': '0.01'
+        }),
+        help_text=_("Frais fixes mensuels ajoutés au prix mensuel de base (ex: 500 €)")
+    )
+    
+    additional_charges_percentage = forms.DecimalField(
+        label=_("Charges supplémentaires (%)"),
+        required=True,
+        min_value=0,
+        max_value=100,
+        max_digits=5,
+        decimal_places=2,
+        widget=forms.NumberInput(attrs={
+            'class': 'w-full pl-4 pr-8 py-3 bg-white border border-gray-300 rounded-md text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors',
+            'placeholder': _('e.g. 15.00'),
+            'step': '0.01'
+        }),
+        help_text=_("Pourcentage de charges supplémentaires à appliquer sur le prix mensuel (ex: 15 pour 15%)")
+    )
+    
+    is_active = forms.BooleanField(
+        label=_("Configuration active"),
+        required=False,
+        widget=forms.CheckboxInput(attrs={
+            'class': 'w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2'
+        }),
+        help_text=_("Active ou désactive l'application de cette configuration")
+    )
+    
+    def save(self):
+        """Sauvegarde ou met à jour la configuration de pricing"""
+        from ..models import PricingConfiguration
+        
+        monthly_base_fee = self.cleaned_data.get('monthly_base_fee')
+        additional_charges_percentage = self.cleaned_data.get('additional_charges_percentage')
+        is_active = self.cleaned_data.get('is_active', True)
+        
+        # Récupérer la configuration active ou en créer une nouvelle
+        config = PricingConfiguration.objects.filter(is_active=True).first()
+        
+        if not config:
+            config = PricingConfiguration.objects.create(
+                monthly_base_fee=monthly_base_fee,
+                additional_charges_percentage=additional_charges_percentage,
+                is_active=is_active
+            )
+        else:
+            config.monthly_base_fee = monthly_base_fee
+            config.additional_charges_percentage = additional_charges_percentage
+            config.is_active = is_active
+            config.save()
+        
+        return config

@@ -5,9 +5,9 @@ from django.urls import reverse_lazy
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import gettext as _
 
-from ..models import User, Appointment, Prediction
-from ..forms import AdminUserManagementForm, AdminUserRoleForm
-from ..utils.mixins import AdminRequiredMixin, UserProfileMixin
+from ..models import User, Appointment, Prediction, PricingConfiguration
+from ..forms import AdminUserManagementForm, AdminUserRoleForm, PricingConfigurationForm
+from ..utils.mixins import AdminRequiredMixin, UserProfileMixin, ConseillerRequiredMixin
 from ..permissions import check_not_self_action
 
 
@@ -138,4 +138,47 @@ class AdminDeleteUserView(AdminRequiredMixin, UserProfileMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['target_user'] = self.target_user
+        return context
+
+
+class PricingConfigurationView(ConseillerRequiredMixin, UserProfileMixin, FormView):
+    """
+    Vue pour configurer les paramètres de pricing.
+    Accessible aux admins et conseillers.
+    """
+    form_class = PricingConfigurationForm
+    template_name = 'admin/pricing_configuration.html'
+    success_url = None  # Sera défini dans get_success_url
+    
+    def get_success_url(self):
+        """Redirige vers la même page après sauvegarde"""
+        return self.request.path
+    
+    def get_initial(self):
+        """Récupère les valeurs actuelles de la configuration"""
+        config = PricingConfiguration.get_active_config()
+        return {
+            'monthly_base_fee': config.monthly_base_fee,
+            'additional_charges_percentage': config.additional_charges_percentage,
+            'is_active': config.is_active,
+        }
+    
+    def form_valid(self, form):
+        """Sauvegarde la configuration"""
+        config = form.save()
+        
+        status = _("activated") if config.is_active else _("deactivated")
+        messages.success(
+            self.request,
+            _('Pricing configuration updated successfully. Configuration is %(status)s.') % {
+                'status': status
+            }
+        )
+        return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        config = PricingConfiguration.get_active_config()
+        context['current_config'] = config
+        context['is_admin'] = self.request.user.profile.is_admin()
         return context

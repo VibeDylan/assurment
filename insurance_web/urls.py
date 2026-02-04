@@ -35,6 +35,7 @@ from .views import (
     AdminChangeUserRoleView,
     AdminToggleUserStatusView,
     AdminDeleteUserView,
+    PricingConfigurationView,
 )
 
 app_name = 'insurance_web'
@@ -80,4 +81,5 @@ urlpatterns = [
     path('management/users/<int:user_id>/change-role/', AdminChangeUserRoleView.as_view(), name='admin_change_user_role'),
     path('management/users/<int:user_id>/toggle-status/', AdminToggleUserStatusView.as_view(), name='admin_toggle_user_status'),
     path('management/users/<int:user_id>/delete/', AdminDeleteUserView.as_view(), name='admin_delete_user'),
+    path('management/pricing/', PricingConfigurationView.as_view(), name='pricing_configuration'),
 ]

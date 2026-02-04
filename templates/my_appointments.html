@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-{% block title %}{% trans "Mes rendez-vous" %} - Assurement{% endblock %}
+{% block title %}{% trans "Mes rendez-vous" %} - Assur'aimant{% endblock %}
 
 {% block content %}
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -61,7 +61,7 @@
                                     </td>
                                     <td>
                                         <span class="inline-flex items-center px-3 py-1 rounded text-xs font-medium bg-gray-200 text-gray-700">
-                                            {{ appointment.duration_minutes }} min
+                                            {{ appointment.duration_minutes }} {% trans "min" %}
                                         </span>
                                     </td>
                                     <td>
@@ -148,7 +148,7 @@
                                     </td>
                                     <td>
                                         <span class="inline-flex items-center px-3 py-1 rounded text-xs font-medium bg-gray-200 text-gray-700">
-                                            {{ appointment.duration_minutes }} min
+                                            {{ appointment.duration_minutes }} {% trans "min" %}
                                         </span>
                                     </td>
                                     <td>
@@ -234,7 +234,7 @@
                                     </td>
                                     <td>
                                         <span class="inline-flex items-center px-3 py-1 rounded text-xs font-medium bg-gray-200 text-gray-700">
-                                            {{ appointment.duration_minutes }} min
+                                            {{ appointment.duration_minutes }} {% trans "min" %}
                                         </span>
                                     </td>
                                     <td>

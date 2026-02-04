@@ -1,6 +1,6 @@
-# 🎯 Fonctionnalités et Design Manquants - Assurement
+# 🎯 Fonctionnalités et Design Manquants - Assur'aimant
 
-Ce document identifie les fonctionnalités métier et améliorations de design/UX qui manquent actuellement à l'application Assurement.
+Ce document identifie les fonctionnalités métier et améliorations de design/UX qui manquent actuellement à l'application Assur'aimant.
 
 ---
 

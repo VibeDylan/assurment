@@ -1,0 +1,23 @@
+{% load i18n %}
+{% trans "Nouvelle demande de rendez-vous" %}
+
+{% trans "Bonjour" %} {{ recipient.get_full_name|default:recipient.email }},
+
+{% trans "Vous avez reçu une nouvelle demande de rendez-vous de" %} {{ client_name }}.
+
+{% trans "Détails de la demande" %}:
+{% trans "Client" %}: {{ client_name }}
+{% trans "Date demandée" %}: {{ appointment_date }}
+{% trans "Heure demandée" %}: {{ appointment_time }}
+{% trans "Durée" %}: {{ appointment.duration_minutes }} {% trans "minutes" %}
+{% if appointment.notes %}
+{% trans "Notes" %}: {{ appointment.notes }}
+{% endif %}
+
+{% trans "Veuillez accepter ou refuser cette demande depuis votre tableau de bord." %}
+
+{% trans "Voir la demande" %}: {{ appointment_url }}
+
+---
+{% trans "Cet email a été envoyé automatiquement, merci de ne pas y répondre." %}
+{% trans "Assur'aimant" %} - {% trans "Gestion de vos assurances" %}

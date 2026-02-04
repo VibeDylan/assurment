@@ -1,0 +1,23 @@
+{% load i18n %}
+{% trans "Confirmation de rendez-vous" %}
+
+{% trans "Bonjour" %} {{ recipient.get_full_name|default:recipient.email }},
+
+{% trans "Votre rendez-vous a été confirmé avec succès." %}
+
+{% trans "Détails du rendez-vous" %}:
+{% trans "Conseiller" %}: {{ conseiller.get_full_name|default:conseiller.email }}
+{% trans "Date" %}: {{ appointment_date }}
+{% trans "Heure" %}: {{ appointment_time }}
+{% trans "Durée" %}: {{ appointment.duration_minutes }} {% trans "minutes" %}
+{% if appointment.notes %}
+{% trans "Notes" %}: {{ appointment.notes }}
+{% endif %}
+
+{% trans "Nous vous attendons à cette date et heure." %}
+
+{% trans "Voir le détail du rendez-vous" %}: {{ appointment_url }}
+
+---
+{% trans "Cet email a été envoyé automatiquement, merci de ne pas y répondre." %}
+{% trans "Assur'aimant" %} - {% trans "Gestion de vos assurances" %}

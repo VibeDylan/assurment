@@ -35,9 +35,24 @@ services:
       - DB_HOST=db
       - DB_PORT=5432
       - DEBUG=False
+      - EMAIL_BACKEND=smtp
+      - EMAIL_HOST=${EMAIL_HOST:-smtp.gmail.com}
+      - EMAIL_PORT=${EMAIL_PORT:-587}
+      - EMAIL_USE_TLS=${EMAIL_USE_TLS:-True}
     restart: unless-stopped
     networks:
       - app-network
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    ports:
+      - "1025:1025"  
+      - "8025:8025"
+    restart: unless-stopped
+    networks:
+      - app-network
+    profiles:
+      - mailhog
 
 volumes:
   postgres_data_prod:

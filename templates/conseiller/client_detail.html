@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-{% block title %}{% trans "Détails du client" %} - Assurement{% endblock %}
+{% block title %}{% trans "Détails du client" %} - Assur'aimant{% endblock %}
 
 {% block content %}
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -121,7 +121,7 @@
                     <div class="space-y-3">
                         {% for appointment in appointments|slice:":5" %}
                             <a href="{% url 'insurance_web:appointment_detail' appointment.id %}" class="block p-3 bg-gray-50 rounded border border-gray-200 hover:bg-gray-100 transition-colors">
-                                <p class="text-sm font-medium text-gray-900">{{ appointment.date_time|date:"d M Y à H:i" }}</p>
+                                <p class="text-sm font-medium text-gray-900">{{ appointment.date_time|date:"d M Y" }} {% trans "à" %} {{ appointment.date_time|date:"H:i" }}</p>
                                 <p class="text-xs text-gray-500 mt-1">
                                     {% if appointment.status == 'pending' %}
                                         <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">

@@ -1,6 +1,7 @@
 from .prediction_service import (
     calculate_insurance_premium,
     create_prediction,
+    calculate_monthly_price,
     _validate_prediction_data,
 )
 from .appointment_service import (
@@ -23,6 +24,7 @@ from .user_service import (
 __all__ = [
     'calculate_insurance_premium',
     'create_prediction',
+    'calculate_monthly_price',
     '_validate_prediction_data',
     'get_available_slots',
     'check_appointment_conflict',
