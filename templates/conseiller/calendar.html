@@ -37,42 +37,84 @@
         </div>
         <table class="w-full border-collapse min-w-[800px]">
             <thead>
-                <tr>
-                    <th class="w-16 py-2 text-left text-xs font-bold text-gray-600 uppercase">{% trans "Heure" %}</th>
+                <tr class="border-b-2 border-gray-300">
+                    <th class="w-20 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">{% trans "Heure" %}</th>
                     {% for d in week_dates %}
-                    <th class="py-2 px-1 text-center text-xs font-bold text-gray-600 border-l border-gray-200 {% if d == today %}bg-primary/10{% endif %}">
-                        {{ d|date:"D" }}<br><span class="text-base">{{ d.day }}</span>
+                    {% with day_of_week=d|date:"w" %}
+                    <th class="py-3 px-2 text-center border-l border-gray-200 
+                        {% if d == today %}bg-primary/10 text-primary font-semibold
+                        {% elif day_of_week == '0' or day_of_week == '6' %}bg-gray-50 text-gray-400
+                        {% elif d < today %}bg-gray-50 text-gray-300
+                        {% else %}text-gray-700 font-medium{% endif %}">
+                        <div class="text-xs uppercase tracking-wide mb-1">{{ d|date:"D" }}</div>
+                        <div class="text-lg font-bold">{{ d.day }}</div>
                     </th>
+                    {% endwith %}
                     {% endfor %}
                 </tr>
             </thead>
             <tbody>
                 {% for hour, label, row in slots_grid %}
-                <tr class="border-t border-gray-200">
-                    <td class="py-1 pr-2 text-xs font-semibold text-gray-600 align-top">{{ label }}</td>
+                <tr class="border-t border-gray-100 hover:bg-gray-50/50 transition-colors">
+                    <td class="py-2 pr-3 text-xs font-medium text-gray-500 align-top">{{ label }}</td>
                     {% for d, ev in row %}
-                    <td class="border-l border-gray-100 align-top p-0.5 min-w-[100px] min-h-[44px] {% if d == today %}bg-gray-50/50{% endif %}">
-                        {% if ev %}
+                    {% with day_of_week=d|date:"w" date_str=d|date:"Y-m-d" %}
+                    {% if ev %}
                         {% if ev.type == 'appointment' %}
-                        <a href="{% url 'insurance_web:appointment_detail' ev.obj.id %}" class="block text-xs rounded px-2 py-1.5 border {% if ev.obj.status == 'confirmed' %}bg-green-100 border-green-300 text-green-900 hover:bg-green-200{% elif ev.obj.status == 'pending' %}bg-yellow-100 border-yellow-300 text-yellow-900 hover:bg-yellow-200{% else %}bg-gray-100 border-gray-200 text-gray-900{% endif %} transition-colors" title="{{ ev.obj.client.get_full_name|default:ev.obj.client.email }} - {{ ev.obj.date_time|date:'H:i' }} ({{ ev.obj.duration_minutes }} min)">
-                            <span class="font-semibold">{{ ev.obj.date_time|date:"H:i" }}</span>
-                            <span class="block truncate">{{ ev.obj.client.get_full_name|default:ev.obj.client.email|truncatechars:14 }}</span>
-                        </a>
+                        <td class="border-l border-gray-100 align-top p-0.5 min-w-[100px] min-h-[44px] {% if d == today %}bg-blue-50/30{% endif %}">
+                            <a href="{% url 'insurance_web:appointment_detail' ev.obj.id %}" class="block text-xs rounded-md px-2 py-1.5 border transition-all hover:shadow-sm {% if ev.obj.status == 'confirmed' %}bg-green-50 border-green-200 text-green-800 hover:bg-green-100 hover:border-green-300{% elif ev.obj.status == 'pending' %}bg-yellow-50 border-yellow-200 text-yellow-800 hover:bg-yellow-100 hover:border-yellow-300{% else %}bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100 hover:border-gray-300{% endif %}" title="{{ ev.obj.client.get_full_name|default:ev.obj.client.email }} - {{ ev.obj.date_time|date:'H:i' }} ({{ ev.obj.duration_minutes }} min)">
+                                <span class="font-semibold text-xs">{{ ev.obj.date_time|date:"H:i" }}</span>
+                                <span class="block truncate text-xs mt-0.5">{{ ev.obj.client.get_full_name|default:ev.obj.client.email|truncatechars:12 }}</span>
+                            </a>
+                        </td>
                         {% else %}
-                        <div class="relative w-full min-h-[42px] rounded-md overflow-hidden group bg-gray-200" style="background-image: linear-gradient(135deg, transparent 47%, #9ca3af 47%, #9ca3af 53%, transparent 53%);">
-                            <form method="post" action="{% url 'insurance_web:conseiller_delete_unavailability' ev.obj.id %}" class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-gray-200/95" data-confirm="{% trans 'Retirer cette indisponibilité ?' %}">
-                                {% csrf_token %}
-                                <input type="hidden" name="week_start" value="{{ week_start|date:'Y-m-d' }}">
-                                <button type="submit" class="p-1.5 text-gray-500 hover:text-gray-700 rounded hover:bg-gray-300 text-sm leading-none" title="{% trans 'Retirer' %}">×</button>
-                            </form>
-                        </div>
+                        <td class="border-l border-gray-100 align-top p-0.5 min-w-[100px] min-h-[44px] {% if d == today %}bg-gray-50/50{% endif %}">
+                            <div class="relative w-full min-h-[42px] rounded border border-gray-300 bg-gray-200 group hover:bg-gray-250 transition-colors">
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <span class="text-xs text-gray-500 font-medium">{% trans "Indisponible" %}</span>
+                                </div>
+                                <form method="post" action="{% url 'insurance_web:conseiller_delete_unavailability' ev.obj.id %}" class="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity z-10" data-confirm="{% trans 'Retirer cette indisponibilité ?' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="week_start" value="{{ week_start|date:'Y-m-d' }}">
+                                    <button type="submit" class="w-5 h-5 flex items-center justify-center text-gray-500 hover:text-gray-700 hover:bg-gray-300 rounded text-xs font-bold" title="{% trans 'Retirer' %}">×</button>
+                                </form>
+                            </div>
+                        </td>
                         {% endif %}
+                    {% else %}
+                        {% if day_of_week == '0' or day_of_week == '6' %}
+                        <td class="border-l border-gray-100 align-top p-0.5 min-w-[100px] min-h-[44px] bg-gray-50">
+                            <div class="w-full h-full min-h-[42px] bg-gray-50 rounded border-0"></div>
+                        </td>
+                        {% elif d < today %}
+                        <td class="border-l border-gray-100 align-top p-0.5 min-w-[100px] min-h-[44px] bg-gray-50">
+                            <div class="w-full h-full min-h-[42px] bg-gray-50 rounded border-0"></div>
+                        </td>
                         {% else %}
-                        <button type="button" @click="calendarSelectedDate = '{{ d|date:'Y-m-d' }}'; calendarSelectedTime = '{{ label }}'; calendarModalOpen = true" class="w-full h-full min-h-[42px] text-xs font-medium text-gray-400 hover:text-primary hover:bg-primary/5 border border-dashed border-gray-200 hover:border-primary/30 rounded px-2 py-1.5 transition-colors flex items-center justify-center">
-                            +
-                        </button>
+                        <td class="border-l border-gray-100 align-top p-0.5 min-w-[100px] min-h-[44px] {% if d == today %}bg-blue-50/30{% endif %}" 
+                            x-data="{ 
+                                isPastTime: false,
+                                init() {
+                                    const dateStr = '{{ date_str }}';
+                                    const timeStr = '{{ label }}';
+                                    const [year, month, day] = dateStr.split('-').map(Number);
+                                    const [hours, minutes] = timeStr.split(':').map(Number);
+                                    const slotDateTime = new Date(year, month - 1, day, hours, minutes);
+                                    this.isPastTime = slotDateTime < new Date();
+                                }
+                            }">
+                            <button type="button" 
+                                    x-show="!isPastTime"
+                                    @click="calendarSelectedDate = '{{ date_str }}'; calendarSelectedTime = '{{ label }}'; calendarModalOpen = true" 
+                                    class="w-full h-full min-h-[42px] text-gray-400 hover:text-primary hover:bg-primary/10 border border-transparent hover:border-primary/20 rounded transition-all duration-150 flex items-center justify-center group">
+                                <span class="text-lg opacity-40 group-hover:opacity-100 group-hover:scale-110 transition-all">+</span>
+                            </button>
+                            <div x-show="isPastTime" 
+                                 class="w-full h-full min-h-[42px] bg-gray-50 rounded border-0"></div>
+                        </td>
                         {% endif %}
-                    </td>
+                    {% endif %}
+                    {% endwith %}
                     {% endfor %}
                 </tr>
                 {% endfor %}
